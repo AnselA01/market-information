@@ -1,0 +1,54 @@
+.whole_body {
+    margin-left: 50px;
+    margin-top: 20px;
+}
+.header_image {
+    float: left;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    width: 100px;
+}
+.company_name {
+    font-size: 25px;
+}
+.logo {
+    width: 50px;
+    vertical-align:middle
+}
+.price_and_currency {
+    margin-left: 54px;
+}
+.current_price {
+    font-size: 35px;
+}
+.change {
+    margin-bottom: 10px;
+}
+.day_change {
+    margin-left: 2px;
+}
+.pos_day_change {
+    color: green;
+    margin-left: 1px;
+}
+.neg_day_change {
+    color: red;
+    margin-left: 1px;
+}
+.eq_day_change {
+    color: gray;
+    margin-left: 1px;
+}
+
+.currency {
+    color: gray;
+    font-size: 20px;
+    margin-left: 1px;
+}
+
+.footer {
+    text-align: left;
+    position: fixed;
+    bottom: 0;
+    left:0
+}

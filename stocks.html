@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Looker Upper</title>
+    <link href="styles.css" rel="stylesheet"></link>
+</head>
+<body>
+    <header>
+        <div>
+            <span><h1>Stock Looker Upper</h1></span>
+        </div>
+    </header>
+    <div class="whole_body">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <div>
+        <span><img id="logo" class="logo"></span>
+        <span id="company_name" class="company_name"></span>
+        <span id="ticker" style="font-size: 15px"></span>
+        <span id="pos_day_change" class=" day_change pos_day_change"></span>
+        <span id="neg_day_change" class="day_change neg_day_change"></span>
+        <span id="eq_day_change" class="day_change eq_day_change"></span>
+        <script src="stocks_script.js"></script>
+    </div>
+    <div class="price_and_currency">
+        <span id="current_price"class="current_price"></span>
+        <span id="currency" class="currency"></span>
+    </div>
+</div>
+    <footer>
+        <a class="footer"href="index.html">look up another</a>
+    </footer>
+
+</body>
+
+</html>
