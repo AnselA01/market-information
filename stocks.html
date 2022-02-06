@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Stock Looker Upper</title>
+    <script type="text/javascript" src="helpers.js"></script>
+    <title>Stock Information</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link href="styles.css" rel="stylesheet"></link>
 </head>
 <body>
     <header>
         <div>
-            <span><h1>Stock Looker Upper</h1></span>
-        </div>
+            <span class="title">Stocks</span>
+            <span><a href="crypto_currency.html" class="next_page">Crypto Currency</a></span>
+            <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        </div>
     </header>
     <div class="whole_body">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -16,20 +19,30 @@
         <span><img id="logo" class="logo"></span>
         <span id="company_name" class="company_name"></span>
         <span id="ticker" style="font-size: 15px"></span>
-        <span id="pos_day_change" class=" day_change pos_day_change"></span>
-        <span id="neg_day_change" class="day_change neg_day_change"></span>
-        <span id="eq_day_change" class="day_change eq_day_change"></span>
+        
         <script src="stocks_script.js"></script>
     </div>
     <div class="price_and_currency">
         <span id="current_price"class="current_price"></span>
+        
         <span id="currency" class="currency"></span>
+        <span class ="change">
+            <span id="pos_day_change" class=" day_change pos_day_change"></span>
+            <span id="neg_day_change" class="day_change neg_day_change"></span>
+            <span id="eq_day_change" class="day_change eq_day_change"></span>
+        </span>
+        <div class="bid_ask">   
+            <span style="color: #666666">B:</span>
+            <span id="bid"></span>
+            <span style="color: #666666">A:</span>
+            <span id="ask"></span>
+        </div>
+
     </div>
 </div>
     <footer>
-        <a class="footer"href="index.html">look up another</a>
+        <a class="footer_link"href="index.html">look up another</a>
     </footer>
-
 </body>
 
 </html>

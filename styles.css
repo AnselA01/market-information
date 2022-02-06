@@ -6,23 +6,35 @@
     float: left;
     margin-bottom: 10px;
     margin-right: 10px;
-    width: 100px;
+    width: 150px;
+}
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+.index_search {
+    width: 50px;
+}
+.next_page {
+    font-size: 17px;
 }
 .company_name {
-    font-size: 25px;
+    font-size: 30px;
 }
 .logo {
-    width: 50px;
+    width: 70px;
     vertical-align:middle
 }
 .price_and_currency {
-    margin-left: 54px;
+    margin-left: 74px;
 }
 .current_price {
-    font-size: 35px;
+    font-size: 40px;
 }
 .change {
     margin-bottom: 10px;
+    font-size: 17px;
 }
 .day_change {
     margin-left: 2px;
@@ -39,14 +51,17 @@
     color: gray;
     margin-left: 1px;
 }
+.bid_ask {
+    font-size: 15px;
+    margin-left: 5px;
+}
 
 .currency {
     color: gray;
     font-size: 20px;
     margin-left: 1px;
 }
-
-.footer {
+.footer_link {
     text-align: left;
     position: fixed;
     bottom: 0;

@@ -1,10 +1,25 @@
-src="https://unpkg.com/axios/dist/axios.min.js"
+var symbol = "aapl";
+var axios = require('axios');
+var url = 'https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=';
+url = url.concat(symbol)
+var config = {
+  method: 'get',
+  url: url,
+  headers: { 
+    'accept': 'application/json', 
+    'X-API-KEY': 'VmKAUWKlFm1sHGmUkQQqd1eacYPTTYfFKAAfflEe'
+  }
+};
 
-var url = "https://api.twelvedata.com/previous_close?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol=aapl"
+axios(config)
+.then(function (response) {
+  var bid = parseFloat(response.data.quoteResponse.result[0].bid);
+  var ask = parseFloat(response.data.quoteResponse.result[0].ask);
+  var price = (bid+ask)/2;
+  console.log(price);
+  
 
-axios.get(url)
-.then(response => {
-    var total = JSON.parse(response.data);
-        var previous_close = total.values[0].previous_close;
-        console.log(previous_close); 
 })
+.catch(function (error) {
+  console.log(error);
+});
