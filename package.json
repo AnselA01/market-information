@@ -6,6 +6,7 @@
     "request": "^2.88.2",
     "require": "^2.4.20",
     "twelvedata": "^2.0.0",
-    "xhr2": "^0.2.1"
+    "xhr2": "^0.2.1",
+    "yahoo-finance": "^0.3.7"
   }
 }
