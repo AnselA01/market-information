@@ -1,3 +1,14 @@
+.symbol_input {
+    width: 250px;
+    
+}
+.symbol_submit {
+    border-radius: 3px;
+    background-color: white;
+    border-color: gray;
+    border-width: 1px;
+    height: 21px;
+}
 .whole_body {
     margin-left: 50px;
     margin-top: 20px;
@@ -27,7 +38,10 @@
     vertical-align:middle
 }
 .price_and_currency {
-    margin-left: 74px;
+    margin-top: 40px;
+    border-top: solid gray 1.5px;
+    border-bottom: solid gray 1.5px;
+    width: 50%;
 }
 .current_price {
     font-size: 40px;
@@ -53,7 +67,7 @@
 }
 .bid_ask {
     font-size: 15px;
-    margin-left: 5px;
+    margin-left: 10px;
 }
 
 .currency {
@@ -67,3 +81,7 @@
     bottom: 0;
     left:0
 }
+.company_info {
+
+}
+
