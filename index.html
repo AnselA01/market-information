@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script type="text/javascript" src="helpers.js"></script>
+    <script type="text/javascript"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <title>Securities Information</title>
@@ -12,13 +12,17 @@
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
   </head>
   <body>
-    <script src="scripts/index.js"></script>
+    <script src="index.js"></script>
     <header>
         <span><img class="header_image" src="images/header-image.png"></span>
         <span><h1>Stocks, Crypto, and Forex</h1></span>
-        <div class="homepage_search"></div><input placeholder="Enter a symbol">        </div>
     </header>
     <div>
+      <form id="form" onsubmit="return false;">
+        <input class="symbol_input" type="text" id="symbolInput" placeholder="Input a symbol, separate pairs with -">
+        <input class="symbol_submit" type="submit" onclick="getSymbol()" value="search">
+        </form> 
+      </header>
     </div>
   </body>
-</html>
+</html
