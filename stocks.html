@@ -13,30 +13,33 @@
             <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        </div>
     </header>
     <div class="whole_body">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="stocks_script.js"></script>
     <div>
         <span><img id="logo" class="logo"></span>
         <span id="company_name" class="company_name"></span>
-        <span id="ticker" style="font-size: 15px"></span>
+        <span id="ticker" style="font-size: 17px"></span>
         
-        <script src="scripts/stocks_script.js"></script>
     </div>
     <div class="price_and_currency">
         <span id="current_price"class="current_price"></span>
-        
         <span id="currency" class="currency"></span>
-        <span class ="change">
+        <span class="change">
             <span id="pos_day_change" class=" day_change pos_day_change"></span>
             <span id="neg_day_change" class="day_change neg_day_change"></span>
             <span id="eq_day_change" class="day_change eq_day_change"></span>
         </span>
         <div class="bid_ask">   
-            <span style="color: #666666">B:</span>
+            <span style="color: #666666">B/A:</span>
             <span id="bid"></span>
-            <span style="color: #666666">A:</span>
+            <span>x</span>
+            <span id="bid_size"></span>
+            <span>/</span>
             <span id="ask"></span>
+            <span>x</span> 
+            <span id="ask_size"></span>
         </div>
-
+        <div class="company_info"></div>
     </div>
 </div>
     <footer>
