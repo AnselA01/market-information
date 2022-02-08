@@ -87,11 +87,25 @@
     margin-top: 40px;
     margin-bottom: 40px;
 }
+
 .info_line {
     height: 26px;
-    border-bottom: solid gray 1px; 
+    border-bottom: solid gray 1px;
     margin-top: 7px;
     color: rgb(58, 58, 58);
 
 }
+.column {
+    float: left;
+    width: 15%;
+  }
+  
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  
+
 
