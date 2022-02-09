@@ -7,6 +7,7 @@ function saveData(symbol) {
 }
 function getSymbol(){
     var symbol = document.getElementById("symbolInput").value;
+    //saveData(symbol); //Turn API calls on and off
     var url = "https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=";
     url = url.concat(symbol)
     var config = {
@@ -34,7 +35,5 @@ axios(config)  //receive data
         })
     return symbol;
 }
-saveData(symbol);
 
-//exchange and where to direct user
 
