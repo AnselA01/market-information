@@ -30,6 +30,9 @@
 .next_page {
     font-size: 17px;
 }
+.name_and_image {
+    
+}
 .company_name {
     font-size: 30px;
     font-weight: bold;
@@ -92,9 +95,9 @@
     margin-bottom: 40px;
 }
 .info_line {
-    height: 26px;
+    height: 29px;
     border-bottom: solid gray 1px;
-    margin-top: 7px;
+    margin-top: 10px;
     color: rgb(58, 58, 58);
 }
 .info_line_text {

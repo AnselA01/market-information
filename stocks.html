@@ -13,118 +13,128 @@
             <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        </div>
     </header>
     <div class="whole_body">
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="stocks_script.js"></script>
-    <div>
-        <span><img id="logo" class="logo"></span>
-        <span id="company_name" class="company_name"></span>
-        <span class="ticker "id="ticker"></span>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="stocks_script.js"></script>
         
-    </div>
-    <!-- regular market price -->
-    <div class="price_and_currency">
-        <span id="current_price"class="current_price"></span>
-        <span id="currency" class="currency"></span>
-        <!-- regular market change -->
-        <span class="change">
-            <span id="pos_day_change" class="pos_change"></span>
-            <span id="neg_day_change" class="neg_change"></span>
-            <span id="eq_day_change" class="eq_change"></span>
-        </span>
-        <!-- bid and ask -->
-        <div class="bid_ask">   
-            <span class="bid_ask_text">Bid/Ask</span>
-            <span id="bid"></span>
-            <span>/</span>
-            <span id="ask"></span>
-        </div>
-        <!-- after hours price and change-->
-        <div class="after_hours">
-            <span id="ah_price"></span>
-                <span class="ah_change">
-                    <span id="pos_ah_change" class=" pos_change"></span>
-                    <span id="neg_ah_change" class="neg_change"></span>
-                    <span id="eq_ah_change" class="eq_change"></span>
-            </span>
+        <!-- company name and image -->
+        <div class="name_and_image">
+            <span><img id="logo" class="logo"></span>
+            <span id="company_name" class="company_name"></span>
+            <div>
+                <span id="exchange"></span>
+            </div>
+            <span class="ticker "id="ticker"></span>
         </div>
         
-        
-    </div>
-    <!-- company info: three columns -->
-    <div class="row">
-        <!-- column one -->
-        <div class="column">
-            <div class="info_line">
-                <span class="info_line_text">Previous Close</span>
-                <span class="info_line_data" id="previous_close"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Open</span>
-                <span class="info_line_data" id="open"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Volume</span>
-                <span class="info_line_data" id="volume"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Day Range</span>
-                <span class="info_line_data" id="day_range"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">52 Week Range</span>
-                <span class="info_line_data" id="52_range"></span>
-            </div>
-        </div>
-        <!-- column two -->
-        <div style="margin-left: 20px" class="column">
-            <div class="info_line">
-                <span class="info_line_text">Market Cap</span>
-                <span class="info_line_data" id="market_cap"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">P/E Ratio</span>
-                <span class="info_line_data" id="pe_ratio"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Average Volume</span>
-                <span class="info_line_data" id="avg_volume"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Dividend Yield</span>
-                <span class="info_line_data" id="div_yield"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">52 Week Change</span>
-                <span class="info_line_data" id="52_change"></span>
-            </div>
-        </div>
-        <!-- column three -->
-        <div style="margin-left: 20px" class="column">
-            <div class="info_line">
-                <span class="info_line_text">Market Cap</span>
-                <span class="info_line_data" id="market_cap"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">P/E Ratio</span>
-                <span class="info_line_data" id="pe_ratio"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Average Volume</span>
-                <span class="info_line_data" id="avg_volume"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">Dividend Yield</span>
-                <span class="info_line_data" id="div_yield"></span>
-            </div>
-            <div class="info_line">
-                <span class="info_line_text">52 Week Change</span>
-                <span class="info_line_data" id="52_change"></span>
-            </div>
-        </div>
-    </div>
-
+        <!-- regular market price -->
+        <div class="price_and_currency">
+            <span id="current_price"class="current_price"></span>
+            <span id="currency" class="currency"></span>
             
-    </div>
+            <!-- regular market change -->
+            <span class="change">
+                <span id="pos_day_change" class="pos_change"></span>
+                <span id="neg_day_change" class="neg_change"></span>
+                <span id="eq_day_change" class="eq_change"></span>
+            </span>
+            
+            <!-- bid and ask -->
+            <div class="bid_ask">   
+                <span class="bid_ask_text">Bid/Ask</span>
+                <span id="bid"></span>
+                <span>/</span>
+                <span id="ask"></span>
+            </div>
+            
+            <!-- after hours price and change-->
+            <div class="after_hours">
+                <span id="ah_price">span</span>
+                    <span class="ah_change">
+                        <span id="pos_ah_change" class=" pos_change"></span>
+                        <span id="neg_ah_change" class="neg_change"></span>
+                        <span id="eq_ah_change" class="eq_change"></span>
+                </span>
+            </div>
+        </div>
+        
+        <!-- company info: three columns -->
+        <div class="row">
+            
+            <!-- column one -->
+            <div class="column">
+                <div class="info_line">
+                    <span class="info_line_text">Previous Close</span>
+                    <span class="info_line_data" id="previous_close"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">Open</span>
+                    <span class="info_line_data" id="open"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">Volume</span>
+                    <span class="info_line_data" id="volume"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">Day Range</span>
+                    <span class="info_line_data" id="day_range"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">52 Week Range</span>
+                    <span class="info_line_data" id="52_range"></span>
+                </div>
+            </div>
+            
+            <!-- column two -->
+            <div style="margin-left: 20px" class="column">
+                <div class="info_line">
+                    <span class="info_line_text">Market Cap</span>
+                    <span class="info_line_data" id="market_cap"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">P/E Ratio</span>
+                    <span class="info_line_data" id="pe_ratio"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">Average Volume</span>
+                    <span class="info_line_data" id="avg_volume"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">52 Week Range</span>
+                    <span class="info_line_data" id="52_range"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">52 Week Change</span>
+                    <span class="info_line_data" id="52_change"></span>
+                </div>
+            </div>
+            
+            <!-- column three -->
+            <div style="margin-left: 20px" class="column">
+                <div class="info_line">
+                    <span class="info_line_text">Market Cap</span>
+                    <span class="info_line_data" id="market_cap"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">P/E Ratio</span>
+                    <span class="info_line_data" id="pe_ratio"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">Average Volume</span>
+                    <span class="info_line_data" id="avg_volume"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">Dividend Yield</span>
+                    <span class="info_line_data" id="div_yield"></span>
+                </div>
+                <div class="info_line">
+                    <span class="info_line_text">52 Week Change</span>
+                    <span class="info_line_data" id="52_change"></span>
+                </div>
+            </div>
+        </div>
+
+                
+        </div>
 
 </div>
     <footer>

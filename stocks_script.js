@@ -3,7 +3,7 @@ function loadData() {
     if (!symbol) return false;
     return symbol;
     }
-console.log(loadData());
+
 //request with curl
 var url = "https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=";
 url = url.concat(loadData())
@@ -16,7 +16,8 @@ var config = {
     }
 };
 
-axios(config)  //receive data
+//receive data
+axios(config)  
 .then(function (response) {
     
     //bid, ask, price
@@ -25,9 +26,10 @@ axios(config)  //receive data
     var price = parseFloat(response.data.quoteResponse.result[0].regularMarketPrice);   
     
     //after hours data
-    if (response.data.quoteResponse.result[0].marketState == "POSTPOST") { 
-        var AHPrice = JSON.stringify(response.data.quoteResponse.result[0].postMarketPrice);
-        AHPrice = "After Hours " + AHPrice;
+    if (response.data.quoteResponse.result[0].marketState == "POST" || "POSTPOST") { 
+        var ahPrice = parseFloat(response.data.quoteResponse.result[0].postMarketPrice);
+        ahPrice = ahPrice.toFixed(2);
+        ahPrice = "After Hours " + ahPrice;
         var ahChange = parseFloat(response.data.quoteResponse.result[0].postMarketChange);
         ahChange = ahChange.toFixed(2);
         var ahPercentChange = (ahChange/response.data.quoteResponse.result[0].regularMarketPrice) * 100;
@@ -46,24 +48,27 @@ axios(config)  //receive data
             document.getElementById("neg_ah_change").innerHTML = ahChange;
     
         }
-        else {
+        else if (ahChange == 0) {
             toString(ahChange);
             toString(ahPercentChange);
             ahChange = ahChange + " " + "(" + ahPercentChange + "%)";
             document.getElementById("eq_ah_change").innerHTML = ahChange;
         }
-        
     }
     
     //price and percent changes
     var open = parseFloat(response.data.quoteResponse.result[0].regularMarketOpen);
     document.getElementById("open").innerHTML = open;
+    
     var prevClose = parseFloat(response.data.quoteResponse.result[0].regularMarketPreviousClose);
     document.getElementById("previous_close").innerHTML = prevClose;
+    
     var dayChange = parseFloat(response.data.quoteResponse.result[0].regularMarketChange);
-    var percentChange = (dayChange/prevClose) * 100;
-    percentChange = percentChange.toFixed(2);
     dayChange = dayChange.toFixed(2);
+    
+    var percentChange = (dayChange/prevClose) * 100;
+    
+    percentChange = percentChange.toFixed(2);
 
     if (dayChange > 0) {
         toString(dayChange);
@@ -92,8 +97,16 @@ axios(config)  //receive data
     document.getElementById("bid").innerHTML = bid;
     document.getElementById("ask").innerHTML = ask;
     document.getElementById("current_price").innerHTML = price;  
-    document.getElementById("ah_price").innerHTML = AHPrice;
+    document.getElementById("ah_price").innerHTML = ahPrice;
     
+    //day and 52 week range
+    var dayRange = response.data.quoteResponse.result[0].regularMarketDayRange;
+    document.getElementById("day_range").innerHTML = dayRange;
+    console.log(dayRange);
+
+    var fiftyTwoWeekRange = response.data.quoteResponse.result[0].fiftyTwoWeekRange;
+    document.getElementById("52_range").innerHTML = fiftyTwoWeekRange;
+
     //company name
     var companyName = response.data.quoteResponse.result[0].shortName;
     document.getElementById("company_name").innerHTML = companyName;
@@ -114,6 +127,7 @@ axios(config)  //receive data
     var avgVolume = parseInt(response.data.quoteResponse.result[0].averageDailyVolume3Month);
     avgVolume = avgVolume.toLocaleString();
     document.getElementById("avg_volume").innerHTML = avgVolume;
+            //TODO: MAKE IT SO YOU HAVE ONE VARIABLE FOR THE WHOLE HTML RESPONSE TO MINIMIZE API CALLS
 
     
 
@@ -121,6 +135,7 @@ axios(config)  //receive data
 .catch(function (error) {
     console.log(error);
 });
+//using twelvedata
 
 //logo
 var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol="
@@ -130,5 +145,14 @@ axios.get(compLogoUrl)
         var logoParsed = response.data;
         var logo = logoParsed.url;
         document.getElementById("logo").src = logo;
-        
+    })
+
+//exchange
+var exchangeUrl = "https://api.twelvedata.com/quote?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol="
+exchangeUrl = exchangeUrl.concat(loadData());
+axios.get(exchangeUrl)
+    .then(response => {
+        var logoParsed = response.data;
+        var logo = logoParsed.url;
+        document.getElementById("logo").src = logo;
     })
