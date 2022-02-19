@@ -19,20 +19,21 @@ var config = {
 //receive data
 axios(config)  
 .then(function (response) {
+    var HTTPResponse = response.data.quoteResponse.result[0];
     
     //bid, ask, price
-    var bid = parseFloat(response.data.quoteResponse.result[0].bid);
-    var ask = parseFloat(response.data.quoteResponse.result[0].ask);
-    var price = parseFloat(response.data.quoteResponse.result[0].regularMarketPrice);   
+    var bid = parseFloat(HTTPResponse.bid);
+    var ask = parseFloat(HTTPResponse.ask);
+    var price = parseFloat(HTTPResponse.regularMarketPrice);   
     
     //after hours data
-    if (response.data.quoteResponse.result[0].marketState == "POST" || "POSTPOST") { 
-        var ahPrice = parseFloat(response.data.quoteResponse.result[0].postMarketPrice);
+    if (HTTPResponse.marketState == "POST" || "POSTPOST") { 
+        var ahPrice = parseFloat(HTTPResponse.postMarketPrice);
         ahPrice = ahPrice.toFixed(2);
         ahPrice = "After Hours " + ahPrice;
-        var ahChange = parseFloat(response.data.quoteResponse.result[0].postMarketChange);
+        var ahChange = parseFloat(HTTPResponse.postMarketChange);
         ahChange = ahChange.toFixed(2);
-        var ahPercentChange = (ahChange/response.data.quoteResponse.result[0].regularMarketPrice) * 100;
+        var ahPercentChange = (ahChange/HTTPResponse.regularMarketPrice) * 100;
         ahPercentChange = ahPercentChange.toFixed(2);
         
         if (ahChange > 0) {
@@ -57,13 +58,13 @@ axios(config)
     }
     
     //price and percent changes
-    var open = parseFloat(response.data.quoteResponse.result[0].regularMarketOpen);
+    var open = parseFloat(HTTPResponse.regularMarketOpen);
     document.getElementById("open").innerHTML = open;
     
-    var prevClose = parseFloat(response.data.quoteResponse.result[0].regularMarketPreviousClose);
+    var prevClose = parseFloat(HTTPResponse.regularMarketPreviousClose);
     document.getElementById("previous_close").innerHTML = prevClose;
     
-    var dayChange = parseFloat(response.data.quoteResponse.result[0].regularMarketChange);
+    var dayChange = parseFloat(HTTPResponse.regularMarketChange);
     dayChange = dayChange.toFixed(2);
     
     var percentChange = (dayChange/prevClose) * 100;
@@ -100,42 +101,69 @@ axios(config)
     document.getElementById("ah_price").innerHTML = ahPrice;
     
     //day and 52 week range
-    var dayRange = response.data.quoteResponse.result[0].regularMarketDayRange;
+    var dayRange = HTTPResponse.regularMarketDayRange;
     document.getElementById("day_range").innerHTML = dayRange;
-    console.log(dayRange);
 
-    var fiftyTwoWeekRange = response.data.quoteResponse.result[0].fiftyTwoWeekRange;
+    var fiftyTwoWeekRange = HTTPResponse.fiftyTwoWeekRange;
     document.getElementById("52_range").innerHTML = fiftyTwoWeekRange;
 
     //company name
-    var companyName = response.data.quoteResponse.result[0].shortName;
+    var companyName = HTTPResponse.shortName;
     document.getElementById("company_name").innerHTML = companyName;
 
     //ticker
-    var ticker = "(" + response.data.quoteResponse.result[0].symbol + ")";
+    var ticker = "(" + HTTPResponse.symbol + ")";
     document.getElementById("ticker").innerHTML = ticker;
    
     //currency
-    var currency = response.data.quoteResponse.result[0].currency;
+    var currency = HTTPResponse.currency;
     document.getElementById("currency").innerHTML = currency;
 
     //volume
-    var volume = parseInt(response.data.quoteResponse.result[0].regularMarketVolume);
+    var volume = parseInt(HTTPResponse.regularMarketVolume);
     volume = volume.toLocaleString();
     document.getElementById("volume").innerHTML = volume;
 
-    var avgVolume = parseInt(response.data.quoteResponse.result[0].averageDailyVolume3Month);
+    var avgVolume = parseInt(HTTPResponse.averageDailyVolume3Month);
     avgVolume = avgVolume.toLocaleString();
     document.getElementById("avg_volume").innerHTML = avgVolume;
-            //TODO: MAKE IT SO YOU HAVE ONE VARIABLE FOR THE WHOLE HTML RESPONSE TO MINIMIZE API CALLS
-
-    
-
+            
+    //exchange
+    var exchange = HTTPResponse.fullExchangeName;
+    exchange+= ": ";
+    document.getElementById("exchange").innerHTML = exchange;
 })
 .catch(function (error) {
     console.log(error);
 });
-//using twelvedata
+
+//graph with Yahoo Finance
+var urlFirstHalf = "https://yfapi.net/v8/finance/chart/" + loadData();
+var chartUrl = urlFirstHalf + "?range=1&region=US&interval=15m&lang=en";
+console.log(chartUrl);
+var config = {
+    method: 'get',
+    url: 'https://yfapi.net/v8/finance/chart/AAPL?range=1&region=US&interval=15m&lang=en',
+    headers: { 
+      'accept': 'application/json', 
+      'X-API-KEY': 'VmKAUWKlFm1sHGmUkQQqd1eacYPTTYfFKAAfflEe'
+    }
+  };
+  
+  axios(config)
+  .then(function (response) {
+    var allPriceValues = response.data.chart.result[0].indicators.quote[0].close;
+    for (var i = 0; i < 22; i++) {
+        Number(allPriceValues[i]);
+        allPriceValues[i] = allPriceValues[i].toFixed(2);
+        console.log(allPriceValues[i]);
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+  //using twelvedata
 
 //logo
 var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol="
@@ -147,12 +175,3 @@ axios.get(compLogoUrl)
         document.getElementById("logo").src = logo;
     })
 
-//exchange
-var exchangeUrl = "https://api.twelvedata.com/quote?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol="
-exchangeUrl = exchangeUrl.concat(loadData());
-axios.get(exchangeUrl)
-    .then(response => {
-        var logoParsed = response.data;
-        var logo = logoParsed.url;
-        document.getElementById("logo").src = logo;
-    })

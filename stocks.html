@@ -10,20 +10,22 @@
         <div>
             <span class="title">Stocks</span>
             <span><a href="crypto_currency.html" class="next_page">Crypto Currency</a></span>
-            <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        </div>
+            <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        
+        </div>
     </header>
     <div class="whole_body">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="stocks_script.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+        <script src="stocks_script.js"></script>
         
         <!-- company name and image -->
         <div class="name_and_image">
             <span><img id="logo" class="logo"></span>
             <span id="company_name" class="company_name"></span>
-            <div>
-                <span id="exchange"></span>
-            </div>
-            <span class="ticker "id="ticker"></span>
+            <span class="exchange_and_ticker">
+                <span class="exchange" id="exchange"></span>
+                <span class="ticker "id="ticker"></span>
+            </span>
         </div>
         
         <!-- regular market price -->
@@ -107,30 +109,6 @@
                     <span class="info_line_data" id="52_change"></span>
                 </div>
             </div>
-            
-            <!-- column three -->
-            <div style="margin-left: 20px" class="column">
-                <div class="info_line">
-                    <span class="info_line_text">Market Cap</span>
-                    <span class="info_line_data" id="market_cap"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">P/E Ratio</span>
-                    <span class="info_line_data" id="pe_ratio"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">Average Volume</span>
-                    <span class="info_line_data" id="avg_volume"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">Dividend Yield</span>
-                    <span class="info_line_data" id="div_yield"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">52 Week Change</span>
-                    <span class="info_line_data" id="52_change"></span>
-                </div>
-            </div>
         </div>
 
                 
@@ -138,6 +116,9 @@
 
 </div>
     <footer>
+        <div id="chartDiv" style="width: 100%; height: 400px;">
+                <!-- TODO: WORK ON CHARTING THE ARRAY YOU HAVE IN STOCKS_SCRIPT -->
+        </div>
         <a class="footer_link"href="index.html">look up another</a>
     </footer>
 </body>

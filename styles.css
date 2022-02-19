@@ -5,7 +5,7 @@
 .symbol_submit {
     border-radius: 3px;
     background-color: white;
-    border-color: gray;
+    border-color: rgb(58, 58, 58);
     border-width: 1px;
     height: 21px;
 }
@@ -31,7 +31,7 @@
     font-size: 17px;
 }
 .name_and_image {
-    
+    width: 50%;
 }
 .company_name {
     font-size: 30px;
@@ -42,23 +42,29 @@
     vertical-align:middle
 }
 .price_and_currency {
-    margin-top: 20px;
+    margin-top: 10px;
+    padding-top: 10px;
     margin-bottom: 20px;
-    border-top: solid gray 1.5px;
-    border-bottom: solid gray 1.5px;
-    width: 50%;
+    padding-bottom: 10px;
+    border-top: solid rgb(71, 71, 71) 1.25px;
+    border-bottom: solid rgb(71, 71, 71) 1.25px;
+    width: 41.5%;
 }
 .current_price {
     font-size: 40px;
     font-weight: bold;
 }
 .currency {
-    color: rgb(71, 71, 71);
+    color: rgb(58, 58, 58);
     font-size: 20px;
     margin-left: 1px;
 }
-.ticker {
-    font-size: 17px;
+.exchange_and_ticker {
+    margin-left: 15px;
+    font-size: 18px;
+}
+.exchange {
+    color: rgb(58, 58, 58);
 }
 .change {
     margin-bottom: 10px;
@@ -73,7 +79,7 @@
     margin-left: 3px;
 }
 .eq_change {
-    color: gray;
+    color: rgb(58, 58, 58);
     margin-left: 3px;
 }
 .bid_ask {
@@ -81,7 +87,7 @@
     margin-left: 5px;
 }
 .bid_ask_text {
-    color: rgb(71, 71, 71);
+    color: rgb(58, 58, 58);
 }
 .footer_link {
     text-align: left;
@@ -96,7 +102,7 @@
 }
 .info_line {
     height: 29px;
-    border-bottom: solid gray 1px;
+    border-bottom: solid rgb(71, 71, 71) 1.25px;
     margin-top: 10px;
     color: rgb(58, 58, 58);
 }
