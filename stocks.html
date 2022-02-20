@@ -18,6 +18,7 @@
             <div class="left-side">
                 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
                 <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+                <script src="https://www.gstatic.com/charts/loader.js"></script>
                 <script src="stocks.js"></script>
                 
                 <!-- company name and image -->
@@ -63,7 +64,6 @@
                 
                 <!-- company info: three columns -->
                 <div class="row">
-                    
                     <!-- column one -->
                     <div class="stats-column">
                         <div class="info-line">
@@ -140,16 +140,32 @@
                 <!-- right side -->
             <div class="right-side">
                 <div class="about-text">About</div>
-                <div class="company-description">company description</div>
-            </div>
+                <div id="company-description" class="company-description">company description</div>
+                    <div class="info-line">
+                        <span class="info-line-text">CEO</span>
+                        <span  class="info-line-data" id="CEO"></span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-line-text">Headquarters</span>
+                        <span class="info-line-data" id="headquarters"></span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-line-text">Founded</span>
+                        <span class="info-line-data" id="founded"></span>
+                    </div>
+                    <div class="info-line">
+                        <span class="info-line-text">Website</span>
+                        <span class="info-line-data" id="website"></span>
+                    </div>
+                </div>
         </div>  
     </div>
     <footer>
-        <div id="chartDiv" style="width: 100%; height: 400px;">
+        <div id="15m-chart" style="width: 320px; height: 180px"></div>
                 <!-- TODO: WORK ON CHARTING THE ARRAY YOU HAVE IN STOCKS-SCRIPT -->
+                
         </div>
         <a class="footer-link"href="index.html">look up another</a>
     </footer>
 </body>
-
 </html>
