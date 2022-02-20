@@ -13,108 +13,112 @@
             <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        
         </div>
     </header>
-    <div class="whole_body">
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://code.jscharting.com/latest/jscharting.js"></script>
-        <script src="stocks_script.js"></script>
-        
-        <!-- company name and image -->
-        <div class="name_and_image">
-            <span><img id="logo" class="logo"></span>
-            <span id="company_name" class="company_name"></span>
-            <span class="exchange_and_ticker">
-                <span class="exchange" id="exchange"></span>
-                <span class="ticker "id="ticker"></span>
-            </span>
-        </div>
-        
-        <!-- regular market price -->
-        <div class="price_and_currency">
-            <span id="current_price"class="current_price"></span>
-            <span id="currency" class="currency"></span>
-            
-            <!-- regular market change -->
-            <span class="change">
-                <span id="pos_day_change" class="pos_change"></span>
-                <span id="neg_day_change" class="neg_change"></span>
-                <span id="eq_day_change" class="eq_change"></span>
-            </span>
-            
-            <!-- bid and ask -->
-            <div class="bid_ask">   
-                <span class="bid_ask_text">Bid/Ask</span>
-                <span id="bid"></span>
-                <span>/</span>
-                <span id="ask"></span>
-            </div>
-            
-            <!-- after hours price and change-->
-            <div class="after_hours">
-                <span id="ah_price">span</span>
-                    <span class="ah_change">
-                        <span id="pos_ah_change" class=" pos_change"></span>
-                        <span id="neg_ah_change" class="neg_change"></span>
-                        <span id="eq_ah_change" class="eq_change"></span>
-                </span>
-            </div>
-        </div>
-        
-        <!-- company info: three columns -->
-        <div class="row">
-            
-            <!-- column one -->
-            <div class="column">
-                <div class="info_line">
-                    <span class="info_line_text">Previous Close</span>
-                    <span class="info_line_data" id="previous_close"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">Open</span>
-                    <span class="info_line_data" id="open"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">Volume</span>
-                    <span class="info_line_data" id="volume"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">Day Range</span>
-                    <span class="info_line_data" id="day_range"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">52 Week Range</span>
-                    <span class="info_line_data" id="52_range"></span>
-                </div>
-            </div>
-            
-            <!-- column two -->
-            <div style="margin-left: 20px" class="column">
-                <div class="info_line">
-                    <span class="info_line_text">Market Cap</span>
-                    <span class="info_line_data" id="market_cap"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">P/E Ratio</span>
-                    <span class="info_line_data" id="pe_ratio"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">Average Volume</span>
-                    <span class="info_line_data" id="avg_volume"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">52 Week Range</span>
-                    <span class="info_line_data" id="52_range"></span>
-                </div>
-                <div class="info_line">
-                    <span class="info_line_text">52 Week Change</span>
-                    <span class="info_line_data" id="52_change"></span>
-                </div>
-            </div>
-        </div>
-
+    <div class="wrapper">
+        <div class="grid-container">
+            <div class="left-side">
+                <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+                <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+                <script src="stocks.js"></script>
                 
-        </div>
-
-</div>
+                <!-- company name and image -->
+                <div class="name_and_image">
+                    <span><img id="logo" class="logo"></span>
+                    <span id="company_name" class="company_name"></span>
+                    <span class="exchange_and_ticker">
+                        <span class="exchange" id="exchange"></span>
+                        <span class="ticker "id="ticker"></span>
+                    </span>
+                </div>
+                
+                <!-- regular market price -->
+                <div class="price_and_currency">
+                    <span id="current_price"class="current_price"></span>
+                    <span id="currency" class="currency"></span>
+                    
+                    <!-- regular market change -->
+                    <span class="change">
+                        <span id="pos_day_change" class="pos_change"></span>
+                        <span id="neg_day_change" class="neg_change"></span>
+                        <span id="eq_day_change" class="eq_change"></span>
+                    </span>
+                    
+                    <!-- bid and ask -->
+                    <div class="bid_ask">   
+                        <span class="bid_ask_text">Bid/Ask</span>
+                        <span id="bid"></span>
+                        <span>/</span>
+                        <span id="ask"></span>
+                    </div>
+                    
+                    <!-- after hours price and change-->
+                    <div class="after_hours">
+                        <span id="ah_price">span</span>
+                            <span class="ah_change">
+                                <span id="pos_ah_change" class=" pos_change"></span>
+                                <span id="neg_ah_change" class="neg_change"></span>
+                                <span id="eq_ah_change" class="eq_change"></span>
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- company info: three columns -->
+                <div class="row">
+                    
+                    <!-- column one -->
+                    <div class="column">
+                        <div class="info_line">
+                            <span class="info_line_text">Previous Close</span>
+                            <span class="info_line_data" id="previous_close"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">Open</span>
+                            <span class="info_line_data" id="open"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">Volume</span>
+                            <span class="info_line_data" id="volume"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">Day Range</span>
+                            <span class="info_line_data" id="day_range"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">52 Week Range</span>
+                            <span class="info_line_data" id="52_range"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- column two -->
+                    <div style="margin-left: 20px" class="column">
+                        <div class="info_line">
+                            <span class="info_line_text">Market Cap</span>
+                            <span class="info_line_data" id="market_cap"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">P/E Ratio</span>
+                            <span class="info_line_data" id="pe_ratio"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">Average Volume</span>
+                            <span class="info_line_data" id="avg_volume"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">52 Week Range</span>
+                            <span class="info_line_data" id="52_range"></span>
+                        </div>
+                        <div class="info_line">
+                            <span class="info_line_text">52 Week Change</span>
+                            <span class="info_line_data" id="52_change"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-side">
+                <div class="about_text">About</div>
+                <div class="company_description">company description</div>
+            </div>
+        </div>  
+    </div>
     <footer>
         <div id="chartDiv" style="width: 100%; height: 400px;">
                 <!-- TODO: WORK ON CHARTING THE ARRAY YOU HAVE IN STOCKS_SCRIPT -->

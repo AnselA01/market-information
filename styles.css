@@ -9,9 +9,32 @@
     border-width: 1px;
     height: 21px;
 }
-.whole_body {
+.wrapper {
     margin-left: 50px;
     margin-top: 20px;
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.left_side {
+}
+.right-side {
+    padding-left: 10px;
+    height: 100%;
+    border-left: solid 1.25px rgb(119, 119, 119);
+
+}
+.about_text {
+    width: 10x;
+    font-size: 20px;
+    color: black; 
+    font-weight: bold;
+}
+.company_description {
+    width: 500px;
+    font-size: 15px;
+    color:rgb(83, 83, 83)
 }
 .header_image {
     float: left;
@@ -46,9 +69,9 @@
     padding-top: 10px;
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-top: solid rgb(71, 71, 71) 1.25px;
-    border-bottom: solid rgb(71, 71, 71) 1.25px;
-    width: 41.5%;
+    border-top: solid rgb(119, 119, 119) 1.25px;
+    border-bottom: solid rgb(119, 119, 119) 1.25px;
+    width: 90%;
 }
 .current_price {
     font-size: 40px;
@@ -96,13 +119,13 @@
     left:0
 }
 .company_info {
-    width: 50%;
+    width: 100%;
     margin-top: 40px;
     margin-bottom: 40px;
 }
 .info_line {
     height: 29px;
-    border-bottom: solid rgb(71, 71, 71) 1.25px;
+    border-bottom: solid rgbrgb(119, 119, 119) 1.25px;
     margin-top: 10px;
     color: rgb(58, 58, 58);
 }
@@ -116,7 +139,8 @@
 }
 .column {
     float: left;
-    width: 20%;
+    width: 43.5%;
+    padding-bottom: 15px; 
   }
   .row:after {
     content: "";

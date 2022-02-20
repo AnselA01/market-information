@@ -23,6 +23,7 @@ axios(config)  //receive data
 .then(function (response) {
     //bid, ask, price
     var exchange = response.data.quoteResponse.result[0].exchange;
+    console.log(exchange);
             if (exchange == "NYSE" || "NasdaqGS" || "OTC") {
                 document.location.href="stocks.html"
             }
