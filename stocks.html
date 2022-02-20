@@ -9,8 +9,8 @@
     <header>
         <div>
             <span class="title">Stocks</span>
-            <span><a href="crypto_currency.html" class="next_page">Crypto Currency</a></span>
-            <span><a href="forex.html" class="next_page" style="margin-left: 2px">Forex</a></span>        
+            <span><a href="crypto_currency.html" class="next-page">Crypto Currency</a></span>
+            <span><a href="forex.html" class="next-page" style="margin-left: 2px">Forex</a></span>        
         </div>
     </header>
     <div class="wrapper">
@@ -21,42 +21,42 @@
                 <script src="stocks.js"></script>
                 
                 <!-- company name and image -->
-                <div class="name_and_image">
+                <div class="name-and-image">
                     <span><img id="logo" class="logo"></span>
-                    <span id="company_name" class="company_name"></span>
-                    <span class="exchange_and_ticker">
+                    <span id="company-name" class="company-name"></span>
+                    <span class="exchange-and-ticker">
                         <span class="exchange" id="exchange"></span>
                         <span class="ticker "id="ticker"></span>
                     </span>
                 </div>
                 
                 <!-- regular market price -->
-                <div class="price_and_currency">
-                    <span id="current_price"class="current_price"></span>
+                <div class="price-and-currency">
+                    <span id="current-price"class="current-price"></span>
                     <span id="currency" class="currency"></span>
                     
                     <!-- regular market change -->
                     <span class="change">
-                        <span id="pos_day_change" class="pos_change"></span>
-                        <span id="neg_day_change" class="neg_change"></span>
-                        <span id="eq_day_change" class="eq_change"></span>
+                        <span id="pos-day-change" class="pos-change"></span>
+                        <span id="neg-day-change" class="neg-change"></span>
+                        <span id="eq-day-change" class="eq-change"></span>
                     </span>
                     
                     <!-- bid and ask -->
-                    <div class="bid_ask">   
-                        <span class="bid_ask_text">Bid/Ask</span>
+                    <div class="bid-ask">   
+                        <span class="bid-ask-text">Bid/Ask</span>
                         <span id="bid"></span>
                         <span>/</span>
                         <span id="ask"></span>
                     </div>
                     
                     <!-- after hours price and change-->
-                    <div class="after_hours">
-                        <span id="ah_price">span</span>
-                            <span class="ah_change">
-                                <span id="pos_ah_change" class=" pos_change"></span>
-                                <span id="neg_ah_change" class="neg_change"></span>
-                                <span id="eq_ah_change" class="eq_change"></span>
+                    <div class="after-hours">
+                        <span id="ah-price">span</span>
+                            <span class="ah-change">
+                                <span id="pos-ah-change" class=" pos-change"></span>
+                                <span id="neg-ah-change" class="neg-change"></span>
+                                <span id="eq-ah-change" class="eq-change"></span>
                         </span>
                     </div>
                 </div>
@@ -65,65 +65,90 @@
                 <div class="row">
                     
                     <!-- column one -->
-                    <div class="column">
-                        <div class="info_line">
-                            <span class="info_line_text">Previous Close</span>
-                            <span class="info_line_data" id="previous_close"></span>
+                    <div class="stats-column">
+                        <div class="info-line">
+                            <span class="info-line-text">Previous Close</span>
+                            <span class="info-line-data" id="previous-close"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">Open</span>
-                            <span class="info_line_data" id="open"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">Open</span>
+                            <span class="info-line-data" id="open"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">Volume</span>
-                            <span class="info_line_data" id="volume"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">Volume</span>
+                            <span class="info-line-data" id="volume"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">Day Range</span>
-                            <span class="info_line_data" id="day_range"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">Day Range</span>
+                            <span class="info-line-data" id="day-range"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">52 Week Range</span>
-                            <span class="info_line_data" id="52_range"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">52 Week Range</span>
+                            <span class="info-line-data" id="52-range"></span>
                         </div>
                     </div>
                     
                     <!-- column two -->
-                    <div style="margin-left: 20px" class="column">
-                        <div class="info_line">
-                            <span class="info_line_text">Market Cap</span>
-                            <span class="info_line_data" id="market_cap"></span>
+                    <div style="margin-left: 20px" class="stats-column">
+                        <div class="info-line">
+                            <span class="info-line-text">Market Cap</span>
+                            <span class="info-line-data" id="market-cap"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">P/E Ratio</span>
-                            <span class="info_line_data" id="pe_ratio"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">P/E Ratio</span>
+                            <span class="info-line-data" id="pe-ratio"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">Average Volume</span>
-                            <span class="info_line_data" id="avg_volume"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">Average Volume</span>
+                            <span class="info-line-data" id="avg-volume"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">52 Week Range</span>
-                            <span class="info_line_data" id="52_range"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">52 Week Range</span>
+                            <span class="info-line-data" id="52-range"></span>
                         </div>
-                        <div class="info_line">
-                            <span class="info_line_text">52 Week Change</span>
-                            <span class="info_line_data" id="52_change"></span>
+                        <div class="info-line">
+                            <span class="info-line-text">52 Week Change</span>
+                            <span class="info-line-data" id="52-change"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- column three -->
+                    <div style="margin-left: 20px" class="stats-column">
+                        <div class="info-line">
+                            <span class="info-line-text">Market Cap</span>
+                            <span class="info-line-data" id="market-cap"></span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-line-text">P/E Ratio</span>
+                            <span class="info-line-data" id="pe-ratio"></span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-line-text">Average Volume</span>
+                            <span class="info-line-data" id="avg-volume"></span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-line-text">52 Week Range</span>
+                            <span class="info-line-data" id="52-range"></span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-line-text">52 Week Change</span>
+                            <span class="info-line-data" id="52-change"></span>
                         </div>
                     </div>
                 </div>
             </div>
+                <!-- right side -->
             <div class="right-side">
-                <div class="about_text">About</div>
-                <div class="company_description">company description</div>
+                <div class="about-text">About</div>
+                <div class="company-description">company description</div>
             </div>
         </div>  
     </div>
     <footer>
         <div id="chartDiv" style="width: 100%; height: 400px;">
-                <!-- TODO: WORK ON CHARTING THE ARRAY YOU HAVE IN STOCKS_SCRIPT -->
+                <!-- TODO: WORK ON CHARTING THE ARRAY YOU HAVE IN STOCKS-SCRIPT -->
         </div>
-        <a class="footer_link"href="index.html">look up another</a>
+        <a class="footer-link"href="index.html">look up another</a>
     </footer>
 </body>
 
