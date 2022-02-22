@@ -20,8 +20,8 @@ body {
     display: grid;
     grid-template-columns: 1fr 37%;
 }
-.left-side {
-}
+/* .left-side {
+} */
 .right-side {
     padding-left: 10px;
     height: 100%;
