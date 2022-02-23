@@ -55,17 +55,22 @@
                     <div class="after-hours">
                         <span id="ah-price">span</span>
                             <span class="ah-change">
-                                <span id="pos-ah-change" class=" pos-change"></span>
+                                <span id="pos-ah-change" class="pos-change"></span>
                                 <span id="neg-ah-change" class="neg-change"></span>
                                 <span id="eq-ah-change" class="eq-change"></span>
                         </span>
                     </div>
                 </div>
-                
-                <!-- company info: three columns -->
-                <div class="row">
-                    <!-- column one -->
-                    <div class="stats-column">
+            </div>
+                <!-- company and stock price info -->
+            <div class="right-side">
+                <div class="about-header">About</div>
+                <div> <!--company info-->
+                     <div id="company-website" class="company-website">company website</div>
+
+                </div>
+                <div class="row"> <!-- stock price info -->
+                    <div class="column"> <!--left column-->
                         <div class="info-line">
                             <span class="info-line-text">Previous Close</span>
                             <span class="info-line-data" id="previous-close"></span>
@@ -87,9 +92,7 @@
                             <span class="info-line-data" id="52-range"></span>
                         </div>
                     </div>
-                    
-                    <!-- column two -->
-                    <div style="margin-left: 20px" class="stats-column">
+                    <div class="column right"> <!--right column-->
                         <div class="info-line">
                             <span class="info-line-text">Market Cap</span>
                             <span class="info-line-data" id="market-cap"></span>
@@ -112,12 +115,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-                <!-- right side -->
-            <div class="right-side">
-                <div class="about-text">About</div>
-                
-                
         </div>  
     </div>
     <footer>
