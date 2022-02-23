@@ -197,7 +197,7 @@ axios(config)
 .catch(function (error) {
 console.log(error);
 });
-
+                            // TODO: SWITCH TO USING THE NEW API REQUEST. NO MORE API CAPS!
 //logo using twelvedata
 var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol="
 compLogoUrl = compLogoUrl.concat(loadData());
