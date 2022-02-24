@@ -5,22 +5,23 @@ function saveData(symbol) {
     symbol = symbol.Symbol;
     localStorage.setItem('_symbol', symbol);
 }
-function getSymbol(){
-    var symbol = document.getElementById("symbolInput").value;
-    saveData(symbol); //Turn API calls on and off
-    var url = "https://yfapi.net/v6/finance/quote?region=US&lang=en&symbols=";
-    url = url.concat(symbol)
-    var config = {
-    method: 'get',
-    url: url,
-    headers: { 
-    'accept': 'application/json', 
-    'X-API-KEY': 'VmKAUWKlFm1sHGmUkQQqd1eacYPTTYfFKAAfflEe'
-    }
-};
 
-axios(config)  //receive data
-.then(function (response) {
+function loadData() {
+    var symbol = localStorage.getItem('_symbol');
+    if (!symbol) return false;
+    return symbol;
+    }
+
+function getSymbol(){
+    var symbol = document.getElementById("symbol-input").value;
+    console.log(symbol);
+    saveData(symbol); //Turn API calls on and off
+    
+}
+var url = "https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?region=US&lang=en&symbols=";
+url = url.concat(loadData());
+axios.get(url)
+    .then(response => {
     //bid, ask, price
     var exchange = response.data.quoteResponse.result[0].exchange;
     console.log(exchange);
@@ -34,7 +35,6 @@ axios(config)  //receive data
                 document.location.href="forex.html";
             }
         })
-    return symbol;
-}
+
 
 
