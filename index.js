@@ -15,7 +15,7 @@ function loadData() {
 function getSymbol(){
     var symbol = document.getElementById("symbol-input").value;
     console.log(symbol);
-    saveData(symbol); //Turn API calls on and off
+    saveData(symbol); 
     
 }
 var url = "https://cors-anywhere.herokuapp.com/https://query1.finance.yahoo.com/v7/finance/quote?region=US&lang=en&symbols=";

@@ -1,6 +1,6 @@
 body {
     font-size: 100%;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica;
 }
 .header-image {
     float: left;
@@ -43,7 +43,7 @@ body {
     padding-bottom: 18px;
 }
 .company-description {
-    width: 500px;
+    width:500px;
     font-size: 15px;
     color:rgb(83, 83, 83)
 }
@@ -63,7 +63,7 @@ body {
     font-size: 17px;
 }
 .name-and-image {
-    width: 50%;
+    width: 75%;
 }
 .company-name {
     font-size: 30px;
@@ -134,19 +134,19 @@ body {
     margin-bottom: 40px;
 }
 .info-line {
-    height: 29px;
+    height: 22px;
     border-bottom: solid 1.25px rgb(185, 185, 185);
-    margin-top: 10px;
+    margin-top: 7px;
     color: rgb(58, 58, 58);
 }
 .info-line-text {
-    font-size: 13px;
+    font-size: 11.5px;
     color: rgb(71, 71, 71);
     float: left;
     font-weight: 500;
 }
 .info-line-data {
-    font-size: 13px;
+    font-size: 11.5px;
     float: right;
     font-weight: bold;
 }
@@ -156,7 +156,7 @@ body {
     padding-bottom: 15px; 
   }
   .right {
-      margin-left: 35px;
+      margin-left: 30px;
   }
   .row:after {
     content: "";
@@ -168,6 +168,12 @@ body {
     margin-left: 5px;
     color: rgb(71, 71, 71)
 }
+.chart {
+    /* margin-left: 7.5%; */
+    padding-right: 28px;
+    width: 100%;
+    height: 275px;
+} 
 
   
 
