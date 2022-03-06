@@ -17,11 +17,11 @@ var config = {
 axios(config)
 .then(function (response) {
     var accessToken = "Bearer " + response.data.access_token;
-    //refresh token used to get access token will expire 5/1
+    //refresh token used to get access token. Expires 5/1
     
     var url = 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH'
   
-    var config = {
+    var quoteConfig = {
         method: 'get',
         url: url,
         headers: { 
@@ -29,24 +29,10 @@ axios(config)
         },
     };
     console.log(accessToken)
-
-    function marketStatus() {
-        var config = {
-            method: 'get',
-            url: 'https://api.tdameritrade.com/v1/marketdata/EQUITY/hours?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH',
-            headers: { 
-              Authorization: accessToken
-            }
-          };
-          
-        axios(config)
-          .then(function (response) {
-            console.log(response.data);
-          })
-    }
     
-    axios(config)
+    axios(quoteConfig)
     .then(function (response) {
+        console.log(response.data)
         var symbol = loadData().toUpperCase();
         var parsedResponse = response.data[symbol];
         
@@ -95,9 +81,53 @@ axios(config)
         var percentChange = parsedResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
 
-         
-        
+        axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
+    .then(response => {
+        if (response.data[0].is_market_open) {
+            var ahPrice = parsedResponse.lastPrice;
+            var ahChange = regularMarketLastPrice - ahPrice;
+
+            var ahPercentChange = (ahChange / regularMarketLastPrice) * 100;
+
+            if (ahChange > 0) {
+                toString(ahChange);
+                toString(ahPercentChange);
+                ahChange = "+" + ahChange + " " + "(" + ahPercentChange + "%)";
+                document.getElementById("pos-ah-change").innerHTML = ahChange;
+            }
+            if (ahChance < 0) {
+                toString(ahChange);
+                toString(ahPercentChange);
+                ahChange = "-" + ahChange + " " + "(" + ahPercentChange + "%)";
+                document.getElementById("neg-ah-change").innerHTML = ahChange;
+            }
+            if (ahChange == 0) {
+                toString(ahChange);
+                toString(ahPercentChange);
+                ahChange = ahChange + " " + "(" + ahPercentChange + "%)";
+                document.getElementById("eq-ah-change").innerHTML = ahChange;
+            }
+        }
+    })
+
     })  
+
+    //chart data
+    var chartConfig = {
+        method: 'get',
+        url: 'https://api.tdameritrade.com/v1/marketdata/aapl/pricehistory?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH&periodType=day&period=1&frequencyType=minute&frequency=1',
+        headers: { 
+          'Authorization': accessToken
+        }
+      };
+      
+      axios(chartConfig)
+      .then(function (response) {
+        console.log("price history: \n" + JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });    
   
 })
 .catch(function (error) {
