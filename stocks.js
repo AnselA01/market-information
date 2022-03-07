@@ -4,7 +4,9 @@ function loadData() {
     return symbol;
     }
 
-//get data
+
+    
+    //get data
 var config = {
   method: 'post',
   url: 'https://api.tdameritrade.com/v1/oauth2/token',
@@ -32,59 +34,137 @@ axios(config)
     
     axios(quoteConfig)
     .then(function (response) {
-        console.log(response.data)
+        console.log(response.data);
         var symbol = loadData().toUpperCase();
-        var parsedResponse = response.data[symbol];
+        var quoteResponse = response.data[symbol];
         
-        var companyName = parsedResponse.description;
+        var companyName = JSON.stringify(quoteResponse.description);
+        companyName = companyName.substring(1, companyName.indexOf("-")-1);
         document.getElementById("company-name").innerHTML = companyName;
+        var exchange = quoteResponse.exchangeName;
+        if (exchange == "NASD") exchange = "NASDAQ"
+        document.getElementById("exchange").innerHTML = exchange + ": ";
+        document.getElementById("ticker").innerHTML = loadData();
 
-        var bid = parsedResponse.bidPrice;
+        var bid = quoteResponse.bidPrice;
         
-        var ask = parsedResponse.askPrice;
+        var ask = quoteResponse.askPrice;
 
-        var price = parsedResponse.regularMarketLastPrice;
+        var price = quoteResponse.regularMarketLastPrice;
 
         document.getElementById("bid").innerHTML = bid;
         document.getElementById("ask").innerHTML = ask;
         document.getElementById("current-price").innerHTML = price;
 
-        var dayChange = parsedResponse.regularMarketNetChange;
+                                //TODO: GET MARKET STATE DATA 
 
-        var percentChange = parsedResponse.netPercentChangeInDouble;
+        var dayChange = quoteResponse.regularMarketNetChange;
+
+        var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
 
         if (dayChange > 0) {
             toString(dayChange);
             toString(percentChange);
-            dayChange = "+" + dayChange + " " + "(" + percentChange + "%)";
-            document.getElementById("pos-day-change").innerHTML = dayChange;
+            var stringDayChange = "+" + dayChange + " " + "(" + percentChange + "%)";
+            document.getElementById("pos-day-change").innerHTML = stringDayChange;
             var color = 'green';
 
         }
         else if (dayChange < 0) {
             toString(dayChange);
             toString(percentChange);
-            dayChange = dayChange + " " + "(" + percentChange + "%)";
-            document.getElementById("neg-day-change").innerHTML = dayChange;
+            var stringDayChange = dayChange + " " + "(" + percentChange + "%)";
+            document.getElementById("neg-day-change").innerHTML = stringDayChange;
             var color = 'red';
 
         }
         else {
             toString(dayChange);
             toString(percentChange);
-            dayChange = dayChange + " " + "(" + percentChange + "%)";
-            document.getElementById("eq-day-change").innerHTML = dayChange;
+            var stringDayChange = dayChange + " " + "(" + percentChange + "%)";
+            document.getElementById("eq-day-change").innerHTML = stringDayChange;
             var color = '#7e7e7e';
         }
+        dayChange = Number(dayChange);
+        percentChange = Number(percentChange);
 
-        var percentChange = parsedResponse.netPercentChangeInDouble;
+        var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
 
-        axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
+    //Right side
+        
+        //top- Company information
+        document.getElementById("about-company-name").innerHTML = "About " + companyName;
+        
+        //botom- Stock data
+        var previousClose = price-dayChange;
+        document.getElementById("previous-close").innerHTML = previousClose;
+        document.getElementById("open").innerHTML = quoteResponse.openPrice;
+        var volume = quoteResponse.totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("volume").innerHTML = volume;
+        document.getElementById("day-range").innerHTML = quoteResponse.lowPrice + " - " + quoteResponse.highPrice;
+        document.getElementById("52-range").innerHTML = quoteResponse["52WkLow"] + " - " + quoteResponse["52WkHigh"];
+        document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
+
+        var fundamentals = {
+            method: 'get',
+            url: 'https://api.tdameritrade.com/v1/instruments?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH&symbol=aapl&projection=fundamental',
+            headers: { 
+              'Authorization': accessToken
+            }
+          };
+          axios(fundamentals)
+          .then(function (response) {
+            var fundamentalsParsed = response.data[symbol].fundamental;
+            console.log(fundamentalsParsed);
+            var marketCap = price * fundamentalsParsed.sharesOutstanding;
+            marketCap = marketCap.toLocaleString("en-US");
+            var numCommas = 0;
+            for(var i = 0; i < marketCap.length; i++) { //find number of commas in market cap
+                if (marketCap[i] == ",") {
+                    numCommas++;
+                }
+            }
+            //find where to put the decimal
+            var numsBeforeComma = (marketCap.substring(0, marketCap.indexOf(','))).length;
+            if (numsBeforeComma == 1) {
+                marketCap = marketCap.substring(0,1) + "." + marketCap.substring(1 ,2);
+            }
+            if (numsBeforeComma == 2) {
+                marketCap = marketCap.substring(0,2) + "." + marketCap.substring(2, 4);
+            }
+            if (numsBeforeComma == 3) {
+                marketCap = marketCap.substring(0,3) + "." + marketCap.substring(3, 5);
+            }            
+            //add suffix letter
+            if (numCommas == 2) { 
+                marketcap+="M";
+            }
+            if (numCommas == 3) { 
+                marketCap+="B";
+            }
+            if(numCommas == 4) {
+                marketCap+="T";
+            }
+            
+            document.getElementById("market-cap").innerHTML = marketCap;
+            
+            
+            
+            var peRatio = fundamentalsParsed.peRatio.toFixed(2);
+            document.getElementById("pe-ratio").innerHTML = peRatio;
+            var avgVolume = fundamentalsParsed.vol1DayAvg;
+            avgVolume = avgVolume.toLocaleString("en-US");
+            document.getElementById("avg-volume").innerHTML = avgVolume;
+            document.getElementById("div-amount").innerHTML = fundamentalsParsed.dividendAmount;
+          })
+
+    axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
     .then(response => {
         if (response.data[0].is_market_open) {
-            var ahPrice = parsedResponse.lastPrice;
+            var ahPrice = quoteResponse.lastPrice;
             var ahChange = regularMarketLastPrice - ahPrice;
 
             var ahPercentChange = (ahChange / regularMarketLastPrice) * 100;
