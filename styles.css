@@ -19,7 +19,7 @@ body {
     height: 21px;
 }
 .wrapper {
-    margin-left: 50px;
+    margin-left: 25px;
     margin-top: 20px;
 }
 .grid-container {
@@ -29,10 +29,14 @@ body {
 /* .left-side {
 } */
 .right-side {
-    padding-left: 37px;
+    padding-left: 30px;
     height: 100%;
     border-left: solid 1.325px rgb(119, 119, 119);
-
+}
+.about-company-name {
+    font-size: 20px;
+    font-weight: bold;
+    
 }
 .about-header {
     width: 87.5%;
@@ -47,9 +51,7 @@ body {
     font-size: 15px;
     color:rgb(83, 83, 83)
 }
-.company-website {
 
-}
 
 .title {
     font-size: 30px;
@@ -93,6 +95,7 @@ body {
     margin-left: 1px;
 }
 .exchange-and-ticker {
+    color: rgb(71, 71, 71);
     margin-left: 15px;
     font-size: 18px;
 }
@@ -117,9 +120,11 @@ body {
 }
 .bid-ask {
     font-size: 17px;
-    margin-left: 5px;
 }
 .bid-ask-text {
+    color: rgb(58, 58, 58);
+}
+.market-status {
     color: rgb(58, 58, 58);
 }
 .footer-link {
@@ -140,23 +145,24 @@ body {
     color: rgb(58, 58, 58);
 }
 .info-line-text {
-    font-size: 11.5px;
+    font-size: 12.5px;
     color: rgb(71, 71, 71);
     float: left;
-    font-weight: 500;
+    font-weight: 530;
 }
 .info-line-data {
-    font-size: 11.5px;
+    color: black;
+    font-size: 12.5px;
     float: right;
     font-weight: bold;
 }
 .column {
     float: left;
-    width: 40%;
+    width: 45%;
     padding-bottom: 15px; 
   }
   .right {
-      margin-left: 30px;
+      margin-left: 20px;
   }
   .row:after {
     content: "";
@@ -169,7 +175,7 @@ body {
     color: rgb(71, 71, 71)
 }
 .chart {
-    /* margin-left: 7.5%; */
+    margin-left: 7.5%;
     padding-right: 28px;
     width: 100%;
     height: 275px;

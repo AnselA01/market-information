@@ -50,7 +50,9 @@
                         <span>/</span>
                         <span id="ask"></span>
                     </div>
-                    
+                    <div id="market-status" class="market-status">
+                        market status
+                    </div>
                     <!-- after hours price and change-->
                     <div class="after-hours">
                         <span id="ah-price"></span>
@@ -63,13 +65,9 @@
                 </div>
                 <div id="chart" class="chart"></div>
             </div>
-                <!-- company and stock price info -->
             <div class="right-side"> <!--right side-->
-                <div class="about-header">About</div>
-                <div> <!--company info-->
-                     <div id="company-website" class="company-website">company website</div>
-                </div>
-                <div class="row"> <!-- stock price info -->
+                <div class="about-company-name" id="about-company-name"></div>
+                <div class="row company-info"> <!-- stock price info -->
                     <div class="column"> <!--left column-->
                         <div class="info-line">
                             <span class="info-line-text">Previous Close</span>
@@ -106,12 +104,12 @@
                             <span class="info-line-data" id="avg-volume"></span>
                         </div>
                         <div class="info-line">
-                            <span class="info-line-text">52 Week Range</span>
-                            <span class="info-line-data" id="52-range"></span>
+                            <span class="info-line-text">Dividend Amount</span>
+                            <span class="info-line-data" id="div-amount"></span>
                         </div>
                         <div class="info-line">
-                            <span class="info-line-text">52 Week Change</span>
-                            <span class="info-line-data" id="52-change"></span>
+                            <span class="info-line-text">Dividend Yield</span>
+                            <span class="info-line-data" id="div-yield"></span>
                         </div>
                     </div>
                 </div>
