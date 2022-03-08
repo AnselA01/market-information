@@ -1,13 +1,23 @@
+function saveData(symbol) {
+    var symbol = {
+      Symbol: symbol
+    };
+    symbol = symbol.Symbol;
+    localStorage.setItem('_symbol', symbol);
+}
 function loadData() {
     var symbol = localStorage.getItem('_symbol');
     if (!symbol) return false;
     return symbol;
     }
+function getSymbol(){
+    var symbol = document.getElementById("symbol-input").value;
+    console.log(symbol);
+    saveData(symbol); 
+    document.location.href="stocks.html";
+}
 
-
-    
-    //get data
-var config = {
+var accessTokenConfig = {
   method: 'post',
   url: 'https://api.tdameritrade.com/v1/oauth2/token',
   headers: { 
@@ -16,16 +26,14 @@ var config = {
   data: "grant_type=refresh_token&refresh_token=BUY4ZCSoWjkToT8kTgInvAtEggLA%2BLLlTa66lvVj9CjDt930rFflJSmf0SM44saweYAbEiXOOgQMhAM0ZIhP18nLIgrbn5aG2Hj%2BdaW0ddF68SWgZy2kkMLZf2Jlb3hcE8I2%2B4z%2FhUXE%2B5Or535dNXcyL5SBrJmPWZakczm%2F%2Bq98nkvY2HlLHvhf%2FQ6yj9Efbko%2FBAINEWq2eaQfleoUKhg6NF8FEaaxNc2weCuVBm66Ckcf4sCMrHMBVUhOipKTuec6l9Na%2F%2FT4hRArnazy8%2Fk%2Fh0mBNhxJ3R1N2hVdTP0PYCYRYxD5QvJKwkWBtpUQ0dKKPCWiWHMLlUzIdQ97JPhlCySr2bCjTFOQzH%2FFuFjHVK9hM0KbPhquqfhYjDKN5AMiqWMZLG86Ya2zEMgghzzfYke3lcPKzDDVq6cHA0Hv0j3BOLwuM5k81vQ100MQuG4LYrgoVi%2FJHHvlSNvBIZCK7NaBieyGS7YOT0rc5GeqKNWPl5C7K4RLYa1XUfIrjo5WqVOpexyQkhNNZ5vZm3MtabHwenqpGZJ9PPnBLQ3pW8ArZQ6xmQgAWWqYgrOU7xwPdSOmN%2F0x%2Fu6OtBPBQdcjeaAI5HH6lXdtVmmaNqx%2BqJL2fs%2BzzUL6XhVrp8TI0qpFGeVEp%2FGDuFqUXUVegSnCiMPU4GFRpIGPLYG0uGDNk%2BuokaP2LZCzPjF35UbmSR7XyCrM8RHcT%2BrMuZRh3VKsX0m6gibjT4Ptyktl60G6MYH6U%2FJp0AdyjuK%2Bz%2FanlWlkeHzTWgsGoiQA1EyfhVSKewbWJBFzTbeYPv6t38eQ0a5x8tLQ83KSa3ol7G%2B90x3GGPmMiyL7JXQXqf4BF6nv5z7%2FcnsLxGq3NJL3cEAf3tw%2Bm8xOddHzQJ6RRG3qQlCKnLtZ0eA%3D212FD3x19z9sWBHDJACbC00B75E&access_type=refresh_token&code=&client_id=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH%40AMER.OAUTHAP&redirect_uri=http%3A%2F%2Flocalhost"
 };
 
-axios(config)
+axios(accessTokenConfig)
 .then(function (response) {
     var accessToken = "Bearer " + response.data.access_token;
     //refresh token used to get access token. Expires 5/1
     
-    var url = 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH'
-  
     var quoteConfig = {
         method: 'get',
-        url: url,
+        url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH',
         headers: { 
             Authorization: accessToken
         },
@@ -44,21 +52,21 @@ axios(config)
         var exchange = quoteResponse.exchangeName;
         if (exchange == "NASD") exchange = "NASDAQ"
         document.getElementById("exchange").innerHTML = exchange + ": ";
-        document.getElementById("ticker").innerHTML = loadData();
+        document.getElementById("ticker").innerHTML = quoteResponse.symbol;
 
         var bid = quoteResponse.bidPrice;
         
         var ask = quoteResponse.askPrice;
 
         var price = quoteResponse.regularMarketLastPrice;
+        price = price.toFixed(2);
 
         document.getElementById("bid").innerHTML = bid;
         document.getElementById("ask").innerHTML = ask;
         document.getElementById("current-price").innerHTML = price;
 
-                                //TODO: GET MARKET STATE DATA 
-
         var dayChange = quoteResponse.regularMarketNetChange;
+        dayChange = dayChange.toFixed(2);
 
         var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
@@ -99,6 +107,7 @@ axios(config)
         
         //botom- Stock data
         var previousClose = price-dayChange;
+        previousClose = previousClose.toFixed(2);
         document.getElementById("previous-close").innerHTML = previousClose;
         document.getElementById("open").innerHTML = quoteResponse.openPrice;
         var volume = quoteResponse.totalVolume;
@@ -107,16 +116,16 @@ axios(config)
         document.getElementById("day-range").innerHTML = quoteResponse.lowPrice + " - " + quoteResponse.highPrice;
         document.getElementById("52-range").innerHTML = quoteResponse["52WkLow"] + " - " + quoteResponse["52WkHigh"];
         document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
-
         var fundamentals = {
             method: 'get',
-            url: 'https://api.tdameritrade.com/v1/instruments?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH&symbol=aapl&projection=fundamental',
+            url: 'https://api.tdameritrade.com/v1/instruments?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH&projection=fundamental&symbol=' + loadData(),
             headers: { 
               'Authorization': accessToken
             }
           };
           axios(fundamentals)
           .then(function (response) {
+            var symbol = loadData().toUpperCase();
             var fundamentalsParsed = response.data[symbol].fundamental;
             console.log(fundamentalsParsed);
             var marketCap = price * fundamentalsParsed.sharesOutstanding;
@@ -130,13 +139,13 @@ axios(config)
             //find where to put the decimal
             var numsBeforeComma = (marketCap.substring(0, marketCap.indexOf(','))).length;
             if (numsBeforeComma == 1) {
-                marketCap = marketCap.substring(0,1) + "." + marketCap.substring(1 ,2);
+                marketCap = marketCap.substring(0,1) + "." + marketCap.substring(2, 4);
             }
             if (numsBeforeComma == 2) {
-                marketCap = marketCap.substring(0,2) + "." + marketCap.substring(2, 4);
+                marketCap = marketCap.substring(0,2) + "." + marketCap.substring(3, 5);
             }
             if (numsBeforeComma == 3) {
-                marketCap = marketCap.substring(0,3) + "." + marketCap.substring(3, 5);
+                marketCap = marketCap.substring(0,3) + "." + marketCap.substring(4, 6);
             }            
             //add suffix letter
             if (numCommas == 2) { 
@@ -150,9 +159,6 @@ axios(config)
             }
             
             document.getElementById("market-cap").innerHTML = marketCap;
-            
-            
-            
             var peRatio = fundamentalsParsed.peRatio.toFixed(2);
             document.getElementById("pe-ratio").innerHTML = peRatio;
             var avgVolume = fundamentalsParsed.vol1DayAvg;
@@ -163,22 +169,26 @@ axios(config)
 
     axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
     .then(response => {
-        if (response.data[0].is_market_open) {
-            var ahPrice = quoteResponse.lastPrice;
-            var ahChange = regularMarketLastPrice - ahPrice;
-
-            var ahPercentChange = (ahChange / regularMarketLastPrice) * 100;
-
+        if (!response.data[0].is_market_open) {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const date = new Date();
+            var month = monthNames[date.getMonth()];
+            document.getElementById("market-status").innerHTML = "Closed: " + month + " " + date.getDate() + " 5:00 PM EST";
+            var ahChange = quoteResponse.mark - quoteResponse.regularMarketLastPrice;
+            ahChange = ahChange.toFixed(2);
+            var ahPercentChange = (ahChange / quoteResponse.regularMarketLastPrice) * 100;
+            ahPercentChange = ahPercentChange.toFixed(2);
+            
             if (ahChange > 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
                 ahChange = "+" + ahChange + " " + "(" + ahPercentChange + "%)";
                 document.getElementById("pos-ah-change").innerHTML = ahChange;
             }
-            if (ahChance < 0) {
+            if (ahChange < 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
-                ahChange = "-" + ahChange + " " + "(" + ahPercentChange + "%)";
+                ahChange = ahChange + " " + "(" + ahPercentChange + "%)";
                 document.getElementById("neg-ah-change").innerHTML = ahChange;
             }
             if (ahChange == 0) {
@@ -187,6 +197,9 @@ axios(config)
                 ahChange = ahChange + " " + "(" + ahPercentChange + "%)";
                 document.getElementById("eq-ah-change").innerHTML = ahChange;
             }
+        }
+        else { //TODO: Get timezone?
+            document.getElementById("market-status").innerHTML = "Open " + month + " " + date.getDate() + " " + date.getHour() + " " + date.getMinute();
         }
     })
 

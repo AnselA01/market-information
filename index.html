@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script type="text/javascript"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 
     <title>Securities Information</title>
     <link rel="stylesheet" href="styles.css">
@@ -18,7 +20,7 @@
         <span><h1>Symbol Lookup</h1></span>
     </header>
     <div>
-      <form id="form" onsubmit="return false;">
+      <form id="form">
         <input class="symbol-input" type="text" id="symbol-input" placeholder="Input a symbol, separate pairs with -">
         <input class="symbol-submit" type="submit" onclick="getSymbol()" value="search">
         </form> 

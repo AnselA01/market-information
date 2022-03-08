@@ -7,10 +7,11 @@
 </head>
 <body>
     <header>
-        <div>
-            <span class="title">Stocks</span>
-            <span><a href="crypto_currency.html" class="next-page">Crypto Currency</a></span>
-            <span><a href="forex.html" class="next-page" style="margin-left: 2px">Forex</a></span>        
+        <div id="header">
+            <form id="search-stock">
+                <input class="stock-symbol-input" type="text" id="symbol-input" placeholder="Find another... ">
+                <input class="stock-symbol-submit" type="submit" onclick="getSymbol()" value="search">
+            </form> 
         </div>
     </header>
     <div class="wrapper">
@@ -45,17 +46,14 @@
                     
                     <!-- bid and ask -->
                     <div class="bid-ask">   
-                        <span class="bid-ask-text">Bid/Ask</span>
                         <span id="bid"></span>
                         <span>/</span>
                         <span id="ask"></span>
                     </div>
-                    <div id="market-status" class="market-status">
-                        market status
-                    </div>
+                    <div id="market-status" class="market-status"></div>
                     <!-- after hours price and change-->
                     <div class="after-hours">
-                        <span id="ah-price"></span>
+                        <span id="ah-price">After Hours: </span>
                             <span class="ah-change">
                                 <span id="pos-ah-change" class="pos-change"></span>
                                 <span id="neg-ah-change" class="neg-change"></span>
@@ -115,8 +113,5 @@
                 </div>
             </div>      
     </div>
-    <footer>
-        <a class="footer-link"href="index.html">look up another</a>
-    </footer>
 </body>
 </html>
