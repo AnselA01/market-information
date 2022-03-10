@@ -97,9 +97,6 @@ axios(accessTokenConfig)
         dayChange = Number(dayChange);
         percentChange = Number(percentChange);
 
-        var percentChange = quoteResponse.netPercentChangeInDouble;
-        percentChange = percentChange.toFixed(2);
-
     //Right side
         
         //top- Company information
@@ -199,11 +196,12 @@ axios(accessTokenConfig)
                 document.getElementById("eq-ah-change").innerHTML = ahChange;
             }
         }
-        else { //TODO: Get timezone?
+        else {
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const date = new Date();
+            var date = new Date();
             var month = monthNames[date.getMonth()];
-            document.getElementById("market-status").innerHTML = "Open: " + month + " " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+            var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+            document.getElementById("market-status").innerHTML = "Open: " + month + " " + date.getDate() + " " + time;
         }
     })
 
@@ -326,6 +324,7 @@ axios.get(compLogoUrl)
         });
 
 function updatePrice() {
+    //document.getElementById("market-status").innerHTML = "Open: " + month + " " + date.getDate() + " " + time;
     const symbol = loadData().toUpperCase();
     var accessTokenConfig = {
         method: 'post',
@@ -349,14 +348,56 @@ function updatePrice() {
                     axios(quoteConfig)
                     .then(function (response) {
                         var price = response.data[symbol].mark;
+                        price = price.toFixed(2);
                         document.getElementById("current-price").innerHTML = price;
-                    })
+                        var bid = response.data[symbol].bidPrice;
+                        bid = bid.toFixed(2);
+                        document.getElementById("bid").innerHTML = bid + " / ";
+                        var ask = response.data[symbol].askPrice;
+                        ask = ask.toFixed(2);
+                        document.getElementById("ask").innerHTML = ask;
+                        
+                        var dayChange = response.data[symbol].regularMarketNetChange;
+                        dayChange = dayChange.toFixed(2);
+                        var percentChange = response.data[symbol].netPercentChangeInDouble;
+                        percentChange = percentChange.toFixed(2);
 
+                        if (dayChange > 0) {
+                            toString(dayChange);
+                            toString(percentChange);
+                            var stringDayChange = "+" + dayChange + " " + "(" + percentChange + "%)";
+                            document.getElementById("pos-day-change").innerHTML = stringDayChange;
+                            var color = 'green';
+                
+                        }
+                        else if (dayChange < 0) {
+                            toString(dayChange);
+                            toString(percentChange);
+                            var stringDayChange = dayChange + " " + "(" + percentChange + "%)";
+                            document.getElementById("neg-day-change").innerHTML = stringDayChange;
+                            var color = 'red';
+                
+                        }
+                        else {
+                            toString(dayChange);
+                            toString(percentChange);
+                            var stringDayChange = dayChange + " " + "(" + percentChange + "%)";
+                            document.getElementById("eq-day-change").innerHTML = stringDayChange;
+                            var color = '#7e7e7e';
+                        }
+                    })
     })
+}
+function updateTime() {
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var date = new Date();
+    var month = monthNames[date.getMonth()];
+    var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
 }
 setInterval(function(){ 
     updatePrice();    
-}, 2500);
+}, 3500);
 
-
-
+setInterval(function() {
+    updateTime();
+}, 30000);
