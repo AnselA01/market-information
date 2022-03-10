@@ -11,7 +11,7 @@ function loadData() {
     return symbol;
     }
 function getSymbol(){
-    var symbol = document.getElementById("symbol-input").value;
+    var symbol = document.getElementById("stock-symbol-input").value;
     console.log(symbol);
     saveData(symbol); 
     document.location.href="stocks.html";
@@ -58,10 +58,10 @@ axios(accessTokenConfig)
         
         var ask = quoteResponse.askPrice;
 
-        var price = quoteResponse.regularMarketLastPrice;
+        var price = quoteResponse.mark;
         price = price.toFixed(2);
 
-        document.getElementById("bid").innerHTML = bid;
+        document.getElementById("bid").innerHTML = bid + " / "
         document.getElementById("ask").innerHTML = ask;
         document.getElementById("current-price").innerHTML = price;
 
@@ -170,6 +170,7 @@ axios(accessTokenConfig)
     axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
     .then(response => {
         if (!response.data[0].is_market_open) {
+            document.getElementById("ah-text").innerHTML = "After Hours: "
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const date = new Date();
             var month = monthNames[date.getMonth()];
@@ -199,7 +200,10 @@ axios(accessTokenConfig)
             }
         }
         else { //TODO: Get timezone?
-            document.getElementById("market-status").innerHTML = "Open " + month + " " + date.getDate() + " " + date.getHour() + " " + date.getMinute();
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const date = new Date();
+            var month = monthNames[date.getMonth()];
+            document.getElementById("market-status").innerHTML = "Open: " + month + " " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
         }
     })
 
@@ -320,3 +324,39 @@ axios.get(compLogoUrl)
     .catch(function (error) {
         console.log(error);
         });
+
+function updatePrice() {
+    const symbol = loadData().toUpperCase();
+    var accessTokenConfig = {
+        method: 'post',
+        url: 'https://api.tdameritrade.com/v1/oauth2/token',
+        headers: { 
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }, 
+        data: "grant_type=refresh_token&refresh_token=BUY4ZCSoWjkToT8kTgInvAtEggLA%2BLLlTa66lvVj9CjDt930rFflJSmf0SM44saweYAbEiXOOgQMhAM0ZIhP18nLIgrbn5aG2Hj%2BdaW0ddF68SWgZy2kkMLZf2Jlb3hcE8I2%2B4z%2FhUXE%2B5Or535dNXcyL5SBrJmPWZakczm%2F%2Bq98nkvY2HlLHvhf%2FQ6yj9Efbko%2FBAINEWq2eaQfleoUKhg6NF8FEaaxNc2weCuVBm66Ckcf4sCMrHMBVUhOipKTuec6l9Na%2F%2FT4hRArnazy8%2Fk%2Fh0mBNhxJ3R1N2hVdTP0PYCYRYxD5QvJKwkWBtpUQ0dKKPCWiWHMLlUzIdQ97JPhlCySr2bCjTFOQzH%2FFuFjHVK9hM0KbPhquqfhYjDKN5AMiqWMZLG86Ya2zEMgghzzfYke3lcPKzDDVq6cHA0Hv0j3BOLwuM5k81vQ100MQuG4LYrgoVi%2FJHHvlSNvBIZCK7NaBieyGS7YOT0rc5GeqKNWPl5C7K4RLYa1XUfIrjo5WqVOpexyQkhNNZ5vZm3MtabHwenqpGZJ9PPnBLQ3pW8ArZQ6xmQgAWWqYgrOU7xwPdSOmN%2F0x%2Fu6OtBPBQdcjeaAI5HH6lXdtVmmaNqx%2BqJL2fs%2BzzUL6XhVrp8TI0qpFGeVEp%2FGDuFqUXUVegSnCiMPU4GFRpIGPLYG0uGDNk%2BuokaP2LZCzPjF35UbmSR7XyCrM8RHcT%2BrMuZRh3VKsX0m6gibjT4Ptyktl60G6MYH6U%2FJp0AdyjuK%2Bz%2FanlWlkeHzTWgsGoiQA1EyfhVSKewbWJBFzTbeYPv6t38eQ0a5x8tLQ83KSa3ol7G%2B90x3GGPmMiyL7JXQXqf4BF6nv5z7%2FcnsLxGq3NJL3cEAf3tw%2Bm8xOddHzQJ6RRG3qQlCKnLtZ0eA%3D212FD3x19z9sWBHDJACbC00B75E&access_type=refresh_token&code=&client_id=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH%40AMER.OAUTHAP&redirect_uri=http%3A%2F%2Flocalhost"
+        };
+        
+        axios(accessTokenConfig)
+        .then(function (response) {
+            var accessToken = "Bearer " + response.data.access_token;
+                var quoteConfig = {
+                method: 'get',
+                url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH',
+                headers: { 
+                    Authorization: accessToken
+                },
+                };
+                    axios(quoteConfig)
+                    .then(function (response) {
+                        var price = response.data[symbol].mark;
+                        document.getElementById("current-price").innerHTML = price;
+                    })
+
+    })
+}
+setInterval(function(){ 
+    updatePrice();    
+}, 2500);
+
+
+
