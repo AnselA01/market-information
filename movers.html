@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Trending Tickers</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	  <script src="movers.js"></script>
+    <header>
+        <div class="header-content">
+            <div class="input-field">
+                <form id="search-stock">
+                  <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Search for another company... ">
+                  <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search">                 
+              </form>             </div>
+            <div class="header-links">
+                <span><a class=header-link href="markets.html">Markets</a></span>
+                <span><a class=header-link href="movers.html">Trending</a></span>
+                <span><a class=header-link href="#">Text</a></span>
+                <span><a class=header-link href="#">Text</a></span>
+            </div>
+        </div>
+    </header>
+    <div id="top-movers" class="top-movers">
+      <div id="top-mover-1" class="top-mover">
+        <span id="top-mover-1-name" class="mover-name"></span>
+      </div>
+      <div id="top-mover-2" class="top-mover">
+        <span id="top-mover-2-name" class="mover-name"></span>
+      </div>
+      <div id="top-mover-3" class="top-mover">
+        <span id="top-mover-3-name" class="mover-name"></span>
+      </div>
+      <div id="top-mover-4" class="top-mover">
+        <span id="top-mover-4-name" class="mover-name"></span>
+      </div>
+      <div id="top-mover-5" class="top-mover">
+        <span id="top-mover-5-name" class="mover-name"></span>
+      </div>
+    </div>
+    <div id="bottom-movers" class="bottom-movers">
+      <div id="bottom-mover-1" class="bottom-mover-2">
+        <span id="botom-mover-1-name" class="mover-name"></span>
+      </div>
+      <div id="bottom-mover-2" class="bottom-mover-2">
+        <span id="bottom-mover-2-name" class="mover-name"></span>
+      </div>
+      <div id="bottom-mover-3" class="bottom-mover-3">
+        <span id="bottom-mover-3-name" class="mover-name"></span>
+      </div>
+      <div id="bottom-mover-4" class="bottom-mover-4">
+        <span id="bottom-mover-4-name" class="mover-name"></span>
+      </div>
+      <div id="bottom-mover-5" class="bottom-mover-5">
+        <span id="bottom-mover-5-name" class="mover-name"></span>
+      </div>
+    </div>
+  </body>
+</html>

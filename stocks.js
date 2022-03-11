@@ -12,10 +12,22 @@ function loadData() {
     }
 function getSymbol(){
     var symbol = document.getElementById("stock-symbol-input").value;
-    console.log(symbol);
     saveData(symbol); 
     document.location.href="stocks.html";
 }
+
+var companyNameUrl = "https://api.twelvedata.com/stocks?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&country=US&symbol=";
+companyNameUrl = companyNameUrl.concat(loadData());
+axios.get(companyNameUrl)
+    .then(response => {
+        var companyName = response.data.data[0].name;
+        document.getElementById("company-name").innerHTML = companyName;
+        document.getElementById("about-company-name").innerHTML = "About " + companyName;
+
+    })
+    .catch(function (error) {
+        console.log(error);
+        });
 
 var accessTokenConfig = {
   method: 'post',
@@ -23,17 +35,16 @@ var accessTokenConfig = {
   headers: { 
 'Content-Type': 'application/x-www-form-urlencoded'
   }, 
-  data: "grant_type=refresh_token&refresh_token=BUY4ZCSoWjkToT8kTgInvAtEggLA%2BLLlTa66lvVj9CjDt930rFflJSmf0SM44saweYAbEiXOOgQMhAM0ZIhP18nLIgrbn5aG2Hj%2BdaW0ddF68SWgZy2kkMLZf2Jlb3hcE8I2%2B4z%2FhUXE%2B5Or535dNXcyL5SBrJmPWZakczm%2F%2Bq98nkvY2HlLHvhf%2FQ6yj9Efbko%2FBAINEWq2eaQfleoUKhg6NF8FEaaxNc2weCuVBm66Ckcf4sCMrHMBVUhOipKTuec6l9Na%2F%2FT4hRArnazy8%2Fk%2Fh0mBNhxJ3R1N2hVdTP0PYCYRYxD5QvJKwkWBtpUQ0dKKPCWiWHMLlUzIdQ97JPhlCySr2bCjTFOQzH%2FFuFjHVK9hM0KbPhquqfhYjDKN5AMiqWMZLG86Ya2zEMgghzzfYke3lcPKzDDVq6cHA0Hv0j3BOLwuM5k81vQ100MQuG4LYrgoVi%2FJHHvlSNvBIZCK7NaBieyGS7YOT0rc5GeqKNWPl5C7K4RLYa1XUfIrjo5WqVOpexyQkhNNZ5vZm3MtabHwenqpGZJ9PPnBLQ3pW8ArZQ6xmQgAWWqYgrOU7xwPdSOmN%2F0x%2Fu6OtBPBQdcjeaAI5HH6lXdtVmmaNqx%2BqJL2fs%2BzzUL6XhVrp8TI0qpFGeVEp%2FGDuFqUXUVegSnCiMPU4GFRpIGPLYG0uGDNk%2BuokaP2LZCzPjF35UbmSR7XyCrM8RHcT%2BrMuZRh3VKsX0m6gibjT4Ptyktl60G6MYH6U%2FJp0AdyjuK%2Bz%2FanlWlkeHzTWgsGoiQA1EyfhVSKewbWJBFzTbeYPv6t38eQ0a5x8tLQ83KSa3ol7G%2B90x3GGPmMiyL7JXQXqf4BF6nv5z7%2FcnsLxGq3NJL3cEAf3tw%2Bm8xOddHzQJ6RRG3qQlCKnLtZ0eA%3D212FD3x19z9sWBHDJACbC00B75E&access_type=refresh_token&code=&client_id=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH%40AMER.OAUTHAP&redirect_uri=http%3A%2F%2Flocalhost"
+  data: "grant_type=refresh_token&refresh_token=sJZJw7RCDpjE6Pf1RX8dkje7C%2B6W4c71E7OB45ij1iQ9ixYFnPVf8V2FAwK1xvL4zHuqw%2Fz4ASdygVcB0dLHoAsau9HrTj3RGafRyUyQDIiRhk8xtUXYYxXC3KKaJbVefg6diunxKzGIq%2Fpmwk3UYKEbq3JXlqFwcnM5Nh6vjXn9Z8MA0Fk9hpRvDpBIg0UqqFN7wvCgBLmzQeZV39bld%2B%2FycC1q7HsLA18rG9gB7cT94QXu4XKhWAvebReNB4JevLXR8%2Fc0AsRiUdKWggYPeMjkQSI7eQYpOnJgH0i1zB8DEGrnqP%2Fe5jy8R2PFr4T1Q%2FSG1a1%2B%2BTZ%2BeEmz1I1sS7Wyy4gVrLYKERU67x71uJD4Rn3ofXX8GIXhgykpY8oBsQ%2BJrNHNt039KcVFfHrKtWacI0bj%2BZWIKeCKboGNks9nc%2B3cETJjmCO8Bwo100MQuG4LYrgoVi%2FJHHvlsX2BEUUjT4MT9JMKq4RUTjTMyN2BlGrqA7OU%2BKE5gv5e0V92FncXmSf8UXTMfVeD6xnmEdzub1nNmyo2nRbIRPJVob3xYjBe1bdsL7mmQD0ltfZdlTm85MHehQZXJtGuDZDQsyYYPzmn4n%2BQPZC8rRMKyrlAieLQEXBe7%2BZkahv9Mn7DvZZHrWivvcwICHwsJHCSD4jUnb0rfrK%2BEp9szl4igfXykVyMIRWblZHr7TVV8PtwdLSdXm7BKc0cPshQ6wPZVyoKULwPU05JSgnmSimEAnlS2PYpaFmv7NNnP45MK1kfve5ApUIcSxwd4CdIp2H8S2kqzy%2BddBh8e%2BXM9ih8KT5c4FyI%2B9xmHfFNxKAPq8yXso1L6DGdDxiRqT4dskV3OM9JptRjQ7QjnoARPEbzRCJUB90MwI6k9nqdfr%2FZbGMQPm%2BxZ%2BUIEKo%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH%40AMER.OAUTHAP&redirect_uri=http%3A%2F%2Flocalhost"
 };
 
 axios(accessTokenConfig)
 .then(function (response) {
     var accessToken = "Bearer " + response.data.access_token;
-    //refresh token used to get access token. Expires 5/1
     
     var quoteConfig = {
         method: 'get',
-        url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH',
+        url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
         headers: { 
             Authorization: accessToken
         },
@@ -42,13 +53,10 @@ axios(accessTokenConfig)
     
     axios(quoteConfig)
     .then(function (response) {
-        console.log(response.data);
         var symbol = loadData().toUpperCase();
         var quoteResponse = response.data[symbol];
+        console.log(quoteResponse);
         
-        var companyName = JSON.stringify(quoteResponse.description);
-        companyName = companyName.substring(1, companyName.indexOf("-")-1);
-        document.getElementById("company-name").innerHTML = companyName;
         var exchange = quoteResponse.exchangeName;
         if (exchange == "NASD") exchange = "NASDAQ"
         document.getElementById("exchange").innerHTML = exchange + ": ";
@@ -58,8 +66,10 @@ axios(accessTokenConfig)
         
         var ask = quoteResponse.askPrice;
 
-        var price = quoteResponse.mark;
+        var price = quoteResponse.regularMarketLastPrice;
         price = price.toFixed(2);
+        price = price.toLocaleString("en-US");
+
 
         document.getElementById("bid").innerHTML = bid + " / "
         document.getElementById("ask").innerHTML = ask;
@@ -70,6 +80,13 @@ axios(accessTokenConfig)
 
         var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
+
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const date = new Date();
+        var month = monthNames[date.getMonth()];
+        var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        document.getElementById("month-and-day").innerHTML = month + " " + date.getDate() + " ";
+        document.getElementById("time").innerHTML = time;
 
         if (dayChange > 0) {
             toString(dayChange);
@@ -100,7 +117,6 @@ axios(accessTokenConfig)
     //Right side
         
         //top- Company information
-        document.getElementById("about-company-name").innerHTML = "About " + companyName;
         
         //botom- Stock data
         var previousClose = price-dayChange;
@@ -115,7 +131,7 @@ axios(accessTokenConfig)
         document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
         var fundamentals = {
             method: 'get',
-            url: 'https://api.tdameritrade.com/v1/instruments?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH&projection=fundamental&symbol=' + loadData(),
+            url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&projection=fundamental&symbol=' + loadData(),
             headers: { 
               'Authorization': accessToken
             }
@@ -124,7 +140,6 @@ axios(accessTokenConfig)
           .then(function (response) {
             var symbol = loadData().toUpperCase();
             var fundamentalsParsed = response.data[symbol].fundamental;
-            console.log(fundamentalsParsed);
             var marketCap = price * fundamentalsParsed.sharesOutstanding;
             marketCap = marketCap.toLocaleString("en-US");
             var numCommas = 0;
@@ -168,14 +183,12 @@ axios(accessTokenConfig)
     .then(response => {
         if (!response.data[0].is_market_open) {
             document.getElementById("ah-text").innerHTML = "After Hours: "
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const date = new Date();
-            var month = monthNames[date.getMonth()];
-            document.getElementById("market-status").innerHTML = "Closed: " + month + " " + date.getDate() + " 5:00 PM EST";
-            var ahChange = quoteResponse.mark - quoteResponse.regularMarketLastPrice;
+            document.getElementById("market-status").innerHTML = "Closed: ";
+            var ahChange = quoteResponse.lastPrice - quoteResponse.regularMarketLastPrice;
             ahChange = ahChange.toFixed(2);
             var ahPercentChange = (ahChange / quoteResponse.regularMarketLastPrice) * 100;
             ahPercentChange = ahPercentChange.toFixed(2);
+            document.getElementById("ah-price").innerHTML = quoteResponse.lastPrice;
             
             if (ahChange > 0) {
                 toString(ahChange);
@@ -200,17 +213,15 @@ axios(accessTokenConfig)
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var date = new Date();
             var month = monthNames[date.getMonth()];
-            var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-            document.getElementById("market-status").innerHTML = "Open: " + month + " " + date.getDate() + " " + time;
+            document.getElementById("market-status").innerHTML = "Open: ";
         }
     })
-
     })  
-
+    
     //chart data
     var chartConfig = {
         method: 'get',
-        url: 'https://api.tdameritrade.com/v1/marketdata/aapl/pricehistory?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH&periodType=day&period=1&frequencyType=minute&frequency=1',
+        url: 'https://api.tdameritrade.com/v1/marketdata/aapl/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=1',
         headers: { 
           'Authorization': accessToken
         }
@@ -218,7 +229,6 @@ axios(accessTokenConfig)
       
       axios(chartConfig)
       .then(function (response) {
-        console.log("price history: \n" + JSON.stringify(response.data));
       })
       .catch(function (error) {
         console.log(error);
@@ -324,7 +334,6 @@ axios.get(compLogoUrl)
         });
 
 function updatePrice() {
-    //document.getElementById("market-status").innerHTML = "Open: " + month + " " + date.getDate() + " " + time;
     const symbol = loadData().toUpperCase();
     var accessTokenConfig = {
         method: 'post',
@@ -332,7 +341,7 @@ function updatePrice() {
         headers: { 
         'Content-Type': 'application/x-www-form-urlencoded'
         }, 
-        data: "grant_type=refresh_token&refresh_token=BUY4ZCSoWjkToT8kTgInvAtEggLA%2BLLlTa66lvVj9CjDt930rFflJSmf0SM44saweYAbEiXOOgQMhAM0ZIhP18nLIgrbn5aG2Hj%2BdaW0ddF68SWgZy2kkMLZf2Jlb3hcE8I2%2B4z%2FhUXE%2B5Or535dNXcyL5SBrJmPWZakczm%2F%2Bq98nkvY2HlLHvhf%2FQ6yj9Efbko%2FBAINEWq2eaQfleoUKhg6NF8FEaaxNc2weCuVBm66Ckcf4sCMrHMBVUhOipKTuec6l9Na%2F%2FT4hRArnazy8%2Fk%2Fh0mBNhxJ3R1N2hVdTP0PYCYRYxD5QvJKwkWBtpUQ0dKKPCWiWHMLlUzIdQ97JPhlCySr2bCjTFOQzH%2FFuFjHVK9hM0KbPhquqfhYjDKN5AMiqWMZLG86Ya2zEMgghzzfYke3lcPKzDDVq6cHA0Hv0j3BOLwuM5k81vQ100MQuG4LYrgoVi%2FJHHvlSNvBIZCK7NaBieyGS7YOT0rc5GeqKNWPl5C7K4RLYa1XUfIrjo5WqVOpexyQkhNNZ5vZm3MtabHwenqpGZJ9PPnBLQ3pW8ArZQ6xmQgAWWqYgrOU7xwPdSOmN%2F0x%2Fu6OtBPBQdcjeaAI5HH6lXdtVmmaNqx%2BqJL2fs%2BzzUL6XhVrp8TI0qpFGeVEp%2FGDuFqUXUVegSnCiMPU4GFRpIGPLYG0uGDNk%2BuokaP2LZCzPjF35UbmSR7XyCrM8RHcT%2BrMuZRh3VKsX0m6gibjT4Ptyktl60G6MYH6U%2FJp0AdyjuK%2Bz%2FanlWlkeHzTWgsGoiQA1EyfhVSKewbWJBFzTbeYPv6t38eQ0a5x8tLQ83KSa3ol7G%2B90x3GGPmMiyL7JXQXqf4BF6nv5z7%2FcnsLxGq3NJL3cEAf3tw%2Bm8xOddHzQJ6RRG3qQlCKnLtZ0eA%3D212FD3x19z9sWBHDJACbC00B75E&access_type=refresh_token&code=&client_id=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH%40AMER.OAUTHAP&redirect_uri=http%3A%2F%2Flocalhost"
+        data: "grant_type=refresh_token&refresh_token=sJZJw7RCDpjE6Pf1RX8dkje7C%2B6W4c71E7OB45ij1iQ9ixYFnPVf8V2FAwK1xvL4zHuqw%2Fz4ASdygVcB0dLHoAsau9HrTj3RGafRyUyQDIiRhk8xtUXYYxXC3KKaJbVefg6diunxKzGIq%2Fpmwk3UYKEbq3JXlqFwcnM5Nh6vjXn9Z8MA0Fk9hpRvDpBIg0UqqFN7wvCgBLmzQeZV39bld%2B%2FycC1q7HsLA18rG9gB7cT94QXu4XKhWAvebReNB4JevLXR8%2Fc0AsRiUdKWggYPeMjkQSI7eQYpOnJgH0i1zB8DEGrnqP%2Fe5jy8R2PFr4T1Q%2FSG1a1%2B%2BTZ%2BeEmz1I1sS7Wyy4gVrLYKERU67x71uJD4Rn3ofXX8GIXhgykpY8oBsQ%2BJrNHNt039KcVFfHrKtWacI0bj%2BZWIKeCKboGNks9nc%2B3cETJjmCO8Bwo100MQuG4LYrgoVi%2FJHHvlsX2BEUUjT4MT9JMKq4RUTjTMyN2BlGrqA7OU%2BKE5gv5e0V92FncXmSf8UXTMfVeD6xnmEdzub1nNmyo2nRbIRPJVob3xYjBe1bdsL7mmQD0ltfZdlTm85MHehQZXJtGuDZDQsyYYPzmn4n%2BQPZC8rRMKyrlAieLQEXBe7%2BZkahv9Mn7DvZZHrWivvcwICHwsJHCSD4jUnb0rfrK%2BEp9szl4igfXykVyMIRWblZHr7TVV8PtwdLSdXm7BKc0cPshQ6wPZVyoKULwPU05JSgnmSimEAnlS2PYpaFmv7NNnP45MK1kfve5ApUIcSxwd4CdIp2H8S2kqzy%2BddBh8e%2BXM9ih8KT5c4FyI%2B9xmHfFNxKAPq8yXso1L6DGdDxiRqT4dskV3OM9JptRjQ7QjnoARPEbzRCJUB90MwI6k9nqdfr%2FZbGMQPm%2BxZ%2BUIEKo%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH%40AMER.OAUTHAP&redirect_uri=http%3A%2F%2Flocalhost"
         };
         
         axios(accessTokenConfig)
@@ -340,14 +349,14 @@ function updatePrice() {
             var accessToken = "Bearer " + response.data.access_token;
                 var quoteConfig = {
                 method: 'get',
-                url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=TA8QXGC9NEZL02XFWPA3PYUKIRNAGLCH',
+                url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
                 headers: { 
                     Authorization: accessToken
                 },
                 };
                     axios(quoteConfig)
                     .then(function (response) {
-                        var price = response.data[symbol].mark;
+                        var price = response.data[symbol].regularMarketLastPrice;
                         price = price.toFixed(2);
                         document.getElementById("current-price").innerHTML = price;
                         var bid = response.data[symbol].bidPrice;
@@ -389,15 +398,14 @@ function updatePrice() {
     })
 }
 function updateTime() {
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var date = new Date();
-    var month = monthNames[date.getMonth()];
     var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+    document.getElementById("time").innerHTML = time;
 }
 setInterval(function(){ 
     updatePrice();    
-}, 3500);
+}, 2500);
 
 setInterval(function() {
     updateTime();
-}, 30000);
+}, 2000);

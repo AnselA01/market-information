@@ -16,7 +16,6 @@ function getSymbol(){
     var symbol = document.getElementById("symbol-input").value;
     saveData(symbol); 
     document.location.href="stocks.html";
-
 }
 
 

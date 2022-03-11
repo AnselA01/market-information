@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Stock Information</title>
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link href="styles.css" rel="stylesheet"></link>
 </head>
 <body>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="stocks.js"></script>
     <header>
         <div class="header-content">
-            <div>
+            <div class="input-field">
                 <form id="search-stock">
-                    <input class="stock-symbol-input" type="text" id="stock-symbol-input" placeholder="Search for another company... ">
-                    <input class="stock-symbol-submit" type="submit" onclick="getSymbol()" value="search">
+                    <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Search for another company... ">
+                    <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search">                 
                 </form> 
             </div>
             <div class="header-links">
-                <span class="header-link">Markets</span>
-                <span class="header-link">Movers</span>
-                <span class="header-link">text</span>
-                <span class="header-link">text</span>
+                <span><a class=header-link href="markets.html">Markets</a></span>
+                <span><a class=header-link href="movers.html">Trending</a></span>
+                <span><a class=header-link href="#">Text</a></span>
+                <span><a class=header-link href="#">Text</a></span>
             </div>
         </div>
     </header>
     <div class="wrapper">
         <div class="grid-container">
             <div class="left-side"> <!--left side-->
-                <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-                <script src="https://code.jscharting.com/latest/jscharting.js"></script>
-                <script src="https://www.gstatic.com/charts/loader.js"></script>
-                <script src="stocks.js"></script>
+                
                 
                 <!-- company name and image -->
                 <div class="name-and-image">
@@ -55,17 +57,21 @@
                     <!-- bid and ask -->
                     <div class="bid-ask">   
                         <span id="bid"></span>
-                        <span>/</span>
                         <span id="ask"></span>
                     </div>
-                    <div id="market-status" class="market-status"></div>
+                    <div class="market-status">
+                        <span id="market-status"></span>
+                        <span id="month-and-day"></span>
+                        <span id="time"></span>
+                    </div>
                     <!-- after hours price and change-->
                     <div class="after-hours">
-                        <span id="ah-price">After Hours: </span>
-                            <span class="ah-change">
-                                <span id="pos-ah-change" class="pos-change"></span>
-                                <span id="neg-ah-change" class="neg-change"></span>
-                                <span id="eq-ah-change" class="eq-change"></span>
+                        <span id="ah-text"></span>
+                        <span class="ah-price" id="ah-price"></span>
+                        <span class="ah-change">
+                            <span id="pos-ah-change" class="pos-change"></span>
+                            <span id="neg-ah-change" class="neg-change"></span>
+                            <span id="eq-ah-change" class="eq-change"></span>
                         </span>
                     </div>
                 </div>
