@@ -1,63 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Trending Tickers</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	  <script src="movers.js"></script>
-    <header>
-        <div class="header-content">
-            <div class="input-field">
-                <form id="search-stock">
-                  <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Search for another company... ">
-                  <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search">                 
-              </form>             </div>
-            <div class="header-links">
-                <span><a class=header-link href="markets.html">Markets</a></span>
-                <span><a class=header-link href="movers.html">Trending</a></span>
-                <span><a class=header-link href="#">Text</a></span>
-                <span><a class=header-link href="#">Text</a></span>
-            </div>
-        </div>
-    </header>
-    <div id="top-movers" class="top-movers">
-      <div id="top-mover-1" class="top-mover">
-        <span id="top-mover-1-name" class="mover-name"></span>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Trending Tickers</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="movers.js"></script>
+  <header>
+    <div class="header-content">
+      <div class="input-field">
+        <form id="search-stock">
+          <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input"
+            placeholder="Search for another company... ">
+          <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search">
+        </form>
       </div>
-      <div id="top-mover-2" class="top-mover">
-        <span id="top-mover-2-name" class="mover-name"></span>
-      </div>
-      <div id="top-mover-3" class="top-mover">
-        <span id="top-mover-3-name" class="mover-name"></span>
-      </div>
-      <div id="top-mover-4" class="top-mover">
-        <span id="top-mover-4-name" class="mover-name"></span>
-      </div>
-      <div id="top-mover-5" class="top-mover">
-        <span id="top-mover-5-name" class="mover-name"></span>
+      <div class="header-links">
+        <span><a class=header-link href="markets.html">Markets</a></span>
+        <span><a class=header-link href="movers.html">Trending</a></span>
+        <span><a class=header-link href="#">Text</a></span>
+        <span><a class=header-link href="#">Text</a></span>
       </div>
     </div>
-    <div id="bottom-movers" class="bottom-movers">
-      <div id="bottom-mover-1" class="bottom-mover-2">
-        <span id="botom-mover-1-name" class="mover-name"></span>
-      </div>
-      <div id="bottom-mover-2" class="bottom-mover-2">
-        <span id="bottom-mover-2-name" class="mover-name"></span>
-      </div>
-      <div id="bottom-mover-3" class="bottom-mover-3">
-        <span id="bottom-mover-3-name" class="mover-name"></span>
-      </div>
-      <div id="bottom-mover-4" class="bottom-mover-4">
-        <span id="bottom-mover-4-name" class="mover-name"></span>
-      </div>
-      <div id="bottom-mover-5" class="bottom-mover-5">
-        <span id="bottom-mover-5-name" class="mover-name"></span>
-      </div>
-    </div>
-  </body>
+  </header>
+  <div id="movers-wrapper" class="movers-wrapper">
+    <table>
+      <tr>
+        <th class="header-symbol">Symbol</th>
+        <th class="header-name">Name</th>
+        <th class="header-last">Last</th>
+        <th class="header-change">Change</th>
+        <th class="header-change-percent">Change %</th>
+        <th class="header-volume">Volume</th>
+        <th class="header-average-volume">Average Volume</th>
+
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-1-symbol" class="row-symbol"></td>
+        <td id="row-1-name" class="row-name"></td>
+        <td id="row-1-last" class="row-last"></td>
+        <td id="row-1-change" class="row-change"></td>
+        <td id="row-1-percent-change" class="up-percent-change"></td>
+        <td id="row-1-volume" class="row-volume"></td>
+        <td id="row-1-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-2-symbol" class="row-symbol"></td>
+        <td id="row-2-name" class="row-name"></td>
+        <td id="row-2-last" class="row-last"></td>
+        <td id="row-2-change" class="row-change"></td>
+        <td id="row-2-percent-change" class="up-percent-change"></td>
+        <td id="row-2-volume" class="row-volume"></td>
+        <td id="row-2-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-3-symbol" class="row-symbol"></td>
+        <td id="row-3-name" class="row-name"></td>
+        <td id="row-3-last" class="row-last"></td>
+        <td id="row-3-change" class="row-change"></td>
+        <td id="row-3-percent-change" class="up-percent-change"></td>
+        <td id="row-3-volume" class="row-volume"></td>
+        <td id="row-3-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-4-symbol" class="row-symbol"></td>
+        <td id="row-4-name" class="row-name"></td>
+        <td id="row-4-last" class="row-last"></td>
+        <td id="row-4-change" class="row-change"></td>
+        <td id="row-4-percent-change" class="up-percent-change"></td>
+        <td id="row-4-volume" class="row-volume"></td>
+        <td id="row-4-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-5-symbol" class="row-symbol"></td>
+        <td id="row-5-name" class="row-name"></td>
+        <td id="row-5-last" class="row-last"></td>
+        <td id="row-5-change" class="row-change"></td>
+        <td id="row-5-percent-change" class="up-percent-change"></td>
+        <td id="row-5-volume" class="row-volume"></td>
+        <td id="row-5-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-6-symbol" class="row-symbol"></td>
+        <td id="row-6-name" class="row-name"></td>
+        <td id="row-6-last" class="row-last"></td>
+        <td id="row-6-change" class="row-change"></td>
+        <td id="row-6-percent-change" class="up-percent-change"></td>
+        <td id="row-6-volume" class="row-volume"></td>
+        <td id="row-6-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-7-symbol" class="row-symbol"></td>
+        <td id="row-7-name" class="row-name"></td>
+        <td id="row-7-last" class="row-last"></td>
+        <td id="row-7-change" class="row-change"></td>
+        <td id="row-7-percent-change" class="up-percent-change"></td>
+        <td id="row-7-volume" class="row-volume"></td>
+        <td id="row-7-average-volume" class="row-average-volume"></td>
+      </tr
+    </table>
+  </div>
+</body>
 </html>
