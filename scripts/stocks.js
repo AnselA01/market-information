@@ -15,7 +15,7 @@ function getSymbol() {
   saveData(symbol);
   document.location.href = "stocks.html";
 }
-
+document.title = loadData();
 var companyNameUrl = "https://api.twelvedata.com/stocks?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&country=US&symbol=";
 companyNameUrl = companyNameUrl.concat(loadData());
 axios.get(companyNameUrl)
@@ -62,6 +62,12 @@ axios(accessTokenConfig)
         document.getElementById("exchange").innerHTML = exchange + ": ";
         document.getElementById("ticker").innerHTML = quoteResponse.symbol;
 
+        var currency = "";
+        var assetType = quoteResponse.assetType;
+        if (assetType == "EQUITY") {
+          currency = "$"
+        }
+
         var bid = quoteResponse.bidPrice;
 
         var ask = quoteResponse.askPrice;
@@ -70,10 +76,10 @@ axios(accessTokenConfig)
         price = price.toFixed(2);
         price = price.toLocaleString("en-US");
 
-
+        document.getElementById("currency").innerHTML = currency;
+        document.getElementById("current-price").innerHTML = price;
         document.getElementById("bid").innerHTML = bid + " / "
         document.getElementById("ask").innerHTML = ask;
-        document.getElementById("current-price").innerHTML = price;
 
         var dayChange = quoteResponse.regularMarketNetChange;
         dayChange = dayChange.toFixed(2);
@@ -87,13 +93,19 @@ axios(accessTokenConfig)
         var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         document.getElementById("month-and-day").innerHTML = month + " " + date.getDate() + " ";
         document.getElementById("time").innerHTML = time;
-        document.getElementById("eq-day-price-change").style.backgroundColor = "green";
+
         if (dayChange > 0) {
           toString(dayChange);
           toString(percentChange);
           document.getElementById("pos-day-price-change").innerHTML =  " + " + dayChange;
           document.getElementById("pos-day-percent-change").innerHTML =  " (" + percentChange + "%" + ")"; 
           var color = 'green';
+          document.getElementById("pos-day-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
+          document.getElementById("neg-dayprice-change").style.paddingLeft = ("0");
+          document.getElementById("neg-dayprice-change").style.paddingRight = ("0");
+          document.getElementById("eq-day-price-change").style.paddingLeft = ("0");
+          document.getElementById("eq-day-price-change").style.paddingRight = ("0");
+          document.title = loadData() + " " + currency + price + " " + "+" + "(" + percentChange + "%)";
 
         }
         else if (dayChange < 0) {
@@ -101,15 +113,29 @@ axios(accessTokenConfig)
           toString(percentChange);
           document.getElementById("neg-day-price-change").innerHTML = dayChange;
           document.getElementById("neg-day-percent-change").innerHTML =  " (" + percentChange + "%" + ")"; 
+          document.getElementById("neg-day-price-change").style.backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
           var color = 'red';
+          document.getElementById("pos-dayprice-change").style.paddingLeft = ("0");
+          document.getElementById("pos-dayprice-change").style.paddingRight = ("0");
+          document.getElementById("eq-dayprice-change").style.paddingLeft = ("0");
+          document.getElementById("eq-dayprice-change").style.paddingRight = ("0");
+          document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)";
 
         }
         else {
           toString(dayChange);
+          percentChange = 0;
           toString(percentChange);
           document.getElementById("eq-day-price-change").innerHTML =  dayChange;
           document.getElementById("eq-day-percent-change").innerHTML =  " (" + percentChange + "%" + ")"; 
+          document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
           var color = '#7e7e7e';
+          document.getElementById("neg-day-price-change").style.paddingLeft = ("0");
+          document.getElementById("neg-day-price-change").style.paddingRight = ("0");
+          document.getElementById("pos-day-price-change").style.paddingLeft = ("0");
+          document.getElementById("pos-day-price-change").style.paddingRight = ("0");
+          document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)";
+
         }
         dayChange = Number(dayChange);
         percentChange = Number(percentChange);
@@ -123,7 +149,7 @@ axios(accessTokenConfig)
         document.getElementById("volume").innerHTML = volume;
         document.getElementById("day-range").innerHTML = quoteResponse.lowPrice + " - " + quoteResponse.highPrice;
         document.getElementById("52-range").innerHTML = quoteResponse["52WkLow"] + " - " + quoteResponse["52WkHigh"];
-        document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
+        //document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
         var fundamentals = {
           method: 'get',
           url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&projection=fundamental&symbol=' + loadData(),
@@ -165,13 +191,14 @@ axios(accessTokenConfig)
               marketCap += "T";
             }
 
-            document.getElementById("market-cap").innerHTML = marketCap;
+            //document.getElementById("market-cap").innerHTML = marketCap;
             var peRatio = fundamentalsParsed.peRatio.toFixed(2);
-            document.getElementById("pe-ratio").innerHTML = peRatio;
+            //document.getElementById("pe-ratio").innerHTML = peRatio;
             var avgVolume = fundamentalsParsed.vol1DayAvg;
             avgVolume = avgVolume.toLocaleString("en-US");
             document.getElementById("avg-volume").innerHTML = avgVolume;
-            document.getElementById("div-amount").innerHTML = fundamentalsParsed.dividendAmount;
+            let dividentAmount = fundamentalsParsed.dividendAmount;
+            //document.getElementById("div-amount").innerHTML = dividentAmount.toFixed(2);
           })
 
         axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
@@ -188,8 +215,8 @@ axios(accessTokenConfig)
               if (ahChange > 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
-                ahChange = "+" + ahChange + " " + "(" + ahPercentChange + "%)";
-                document.getElementById("pos-ah-change").innerHTML = ahChange;
+                document.getElementById("pos-ah-price-change").innerHTML = ahChange;
+                document.getElementById("pos-ah-percent-change").innerHTML =  "(" + ahPercentChange + "%" + ")";
               }
               if (ahChange < 0) {
                 toString(ahChange);
@@ -316,3 +343,7 @@ function updateTime() {
 setInterval(function () {
   updateTime();
 }, 2000);
+
+window.addEventListener('load', function () {
+  document.getElementsByTagName("html")[0].style.visibility = "visible";
+});
