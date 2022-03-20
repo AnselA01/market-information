@@ -49,6 +49,7 @@ axios(accessTokenConfig)
         document.getElementById("row-1-symbol").innerHTML = response.data[10].symbol;
         document.getElementById("row-1-name").innerHTML = response.data[10].description;
         document.getElementById("row-1-last").innerHTML = response.data[10].last;
+        
         //add dollar change with the formula
         var percentChange = response.data[10].change * 100;
         percentChange = percentChange.toFixed(2);
@@ -56,5 +57,123 @@ axios(accessTokenConfig)
         var volume = response.data[10].totalVolume;
         volume = volume.toLocaleString("en-US");
         document.getElementById("row-1-volume").innerHTML = volume;
+
+        //row 2
+        document.getElementById("row-2-symbol").innerHTML = response.data[11].symbol;
+        document.getElementById("row-2-name").innerHTML = response.data[11].description;
+        document.getElementById("row-2-last").innerHTML = response.data[11].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[11].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-2-percent-change").innerHTML = percentChange;
+        var volume = response.data[11].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-2-volume").innerHTML = volume;
+
+        //row 3
+        document.getElementById("row-3-symbol").innerHTML = response.data[12].symbol;
+        document.getElementById("row-3-name").innerHTML = response.data[12].description;
+        document.getElementById("row-3-last").innerHTML = response.data[12].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[12].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-3-percent-change").innerHTML = percentChange;
+        var volume = response.data[12].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-3-volume").innerHTML = volume;
+
+        //row 4
+        document.getElementById("row-4-symbol").innerHTML = response.data[13].symbol;
+        document.getElementById("row-4-name").innerHTML = response.data[13].description;
+        document.getElementById("row-4-last").innerHTML = response.data[13].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[13].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-4-percent-change").innerHTML = percentChange;
+        var volume = response.data[13].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-4-volume").innerHTML = volume;
+
+        //row 5
+        document.getElementById("row-5-symbol").innerHTML = response.data[14].symbol;
+        document.getElementById("row-5-name").innerHTML = response.data[14].description;
+        document.getElementById("row-5-last").innerHTML = response.data[14].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[14].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-5-percent-change").innerHTML = percentChange;
+        var volume = response.data[14].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-5-volume").innerHTML = volume;
+        
+        //row 6
+        document.getElementById("row-6-symbol").innerHTML = response.data[15].symbol;
+        document.getElementById("row-6-name").innerHTML = response.data[15].description;
+        document.getElementById("row-6-last").innerHTML = response.data[15].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[15].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-6-percent-change").innerHTML = percentChange;
+        var volume = response.data[15].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-6-volume").innerHTML = volume;
+        
+        //row 7
+        document.getElementById("row-7-symbol").innerHTML = response.data[16].symbol;
+        document.getElementById("row-7-name").innerHTML = response.data[16].description;
+        document.getElementById("row-7-last").innerHTML = response.data[16].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[16].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-7-percent-change").innerHTML = percentChange;
+        var volume = response.data[16].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-7-volume").innerHTML = volume;
+
+        //row 8
+        document.getElementById("row-8-symbol").innerHTML = response.data[17].symbol;
+        document.getElementById("row-8-name").innerHTML = response.data[17].description;
+        document.getElementById("row-8-last").innerHTML = response.data[17].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[17].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-8-percent-change").innerHTML = percentChange;
+        var volume = response.data[17].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-8-volume").innerHTML = volume;
+
+        //row 9
+        document.getElementById("row-9-symbol").innerHTML = response.data[18].symbol;
+        document.getElementById("row-9-name").innerHTML = response.data[18].description;
+        document.getElementById("row-9-last").innerHTML = response.data[18].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[18].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-9-percent-change").innerHTML = percentChange;
+        var volume = response.data[18].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-9-volume").innerHTML = volume;
+
+        //row 10
+        document.getElementById("row-10-symbol").innerHTML = response.data[19].symbol;
+        document.getElementById("row-10-name").innerHTML = response.data[19].description;
+        document.getElementById("row-10-last").innerHTML = response.data[19].last;
+        
+        //add dollar change with the formula
+        var percentChange = response.data[19].change * 100;
+        percentChange = percentChange.toFixed(2);
+        document.getElementById("row-10-percent-change").innerHTML = percentChange;
+        var volume = response.data[19].totalVolume;
+        volume = volume.toLocaleString("en-US");
+        document.getElementById("row-10-volume").innerHTML = volume;
+
       })
   })
