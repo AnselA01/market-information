@@ -16,18 +16,12 @@
   <script src="scripts/stocks.js"></script>
   <header>
     <div class="header-content">
-      <div class="input-field">
         <form id="search-stock">
-          <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Search for another company... " oninput="this.value = this.value.toUpperCase()">
-          <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"text-transform:uppercase>
+          <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input"
+            placeholder="Search for another company... " oninput="this.value = this.value.toUpperCase()">
+          <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
+            text-transform:uppercase>
         </form>
-      </div>
-      <div class="header-links">
-        <span><a class=header-link href="markets.html">Markets</a></span>
-        <span><a class=header-link href="movers.html">Trending</a></span>
-        <span><a class=header-link href="#">Text</a></span>
-        <span><a class=header-link href="#">Text</a></span>
-      </div>
     </div>
   </header>
   <div class="stocks-wrapper">
@@ -38,7 +32,7 @@
 
         <!-- company name and image -->
         <div class="name-and-image">
-          <span><img id="logo" class="logo"></span>
+          <span><img id="logo" class="logo" onerror="this.style.display='none'"></span>
           <span id="company-name" class="company-name"></span>
           <span class="exchange-and-ticker">
             <span class="exchange" id="exchange"></span>
@@ -47,14 +41,20 @@
         </div>
 
         <!-- regular market price -->
-        <div class="current-price-and-change">
-          <span id="current-price" class="current-price"></span>
+        <div class="price-and-change">
+          <span id="price-and-currency" class="price-and-currency">
+            <span id="currency" class="currency"></span>
+            <span id="current-price" class="current-price"></span>
+          </span>
 
           <!-- regular market change -->
           <span class="change">
-            <span id="pos-day-price-change" class="pos-day-price-change"></span><span id="pos-day-percent-change" class="pos-day-percent-change"></span>
-            <span id="neg-day-price-change" class="neg-day-price-change"></span><span id="neg-day-percent-change" class="neg-day-percent-change"></span>
-            <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change" class="eq-day-percent-change"></span>
+            <span id="pos-day-price-change" class="pos-day-price-change"></span><span id="pos-day-percent-change"
+              class="pos-day-percent-change"></span>
+            <span id="neg-day-price-change" class="neg-day-price-change"></span><span id="neg-day-percent-change"
+              class="neg-day-percent-change"></span>
+            <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change"
+              class="eq-day-percent-change"></span>
           </span>
 
           <!-- bid and ask -->
@@ -72,9 +72,12 @@
             <span id="ah-text"></span>
             <span class="ah-price" id="ah-price"></span>
             <span class="ah-change">
-              <span id="pos-ah-change" class="pos-change"></span>
-              <span id="neg-ah-change" class="neg-change"></span>
-              <span id="eq-ah-change" class="eq-change"></span>
+              <span id="pos-ah-price-change" class="pos-ah-change"></span> <span id="pos-ah-percent-change"
+                class="pos-ah-change"></span>
+              <span id="neg-ah-price-change" class="neg-ah-change"></span> <span id="neg-ah-percent-change"
+                class="neg-ah-change"></span>
+              <span id="eq-ah-price-change" class="eq-ah-change"></span> <span id="eq-ah-percent-change"
+                class="eq-ah-change"></span>
             </span>
           </div>
         </div>
@@ -82,11 +85,9 @@
       </div>
       <div class="right-side">
         <!--right side-->
-        <div class="about-company-name" id="about-company-name"></div>
         <div class="row company-info">
           <!-- stock price info -->
           <div class="column">
-            <!--left column-->
             <div class="info-line">
               <span class="info-line-text">Previous Close</span>
               <span class="info-line-data" id="previous-close"></span>
@@ -100,6 +101,10 @@
               <span class="info-line-data" id="volume"></span>
             </div>
             <div class="info-line">
+              <span class="info-line-text">Average Volume</span>
+              <span class="info-line-data" id="avg-volume"></span>
+            </div>
+            <div class="info-line">
               <span class="info-line-text">Day Range</span>
               <span class="info-line-data" id="day-range"></span>
             </div>
@@ -108,28 +113,10 @@
               <span class="info-line-data" id="52-range"></span>
             </div>
           </div>
-          <div class="column right">
-            <!--right column-->
-            <div class="info-line">
-              <span class="info-line-text">Market Cap</span>
-              <span class="info-line-data" id="market-cap"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">P/E Ratio</span>
-              <span class="info-line-data" id="pe-ratio"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Average Volume</span>
-              <span class="info-line-data" id="avg-volume"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Dividend Amount</span>
-              <span class="info-line-data" id="div-amount"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Dividend Yield</span>
-              <span class="info-line-data" id="div-yield"></span>
-            </div>
+        </div>
+        <div class="about" id="about">
+          <div class="about-company-name" id="about-company-name"></div>
+          <div class="logo-and-symbol" id="logo-and-symbol">
           </div>
         </div>
       </div>

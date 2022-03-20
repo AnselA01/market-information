@@ -1,3 +1,6 @@
+html { 
+  visibility: hidden; 
+}
 body {
   /* overscroll-behavior: none; */
   margin: 0;
@@ -13,9 +16,7 @@ header {
   margin-left: 10%;
   margin-right: 10%;
 }
-.input-field {
-  padding-bottom: 10px;
-}
+
 .stock-symbol-search-bar {
   display: inline-block;
   margin: 0;
@@ -32,6 +33,10 @@ header {
   margin-left: 35%;
   margin-right: -5px;
   margin-bottom: 9px;
+}
+.stock-symbol-search-bar:focus {
+  outline: none;
+  box-shadow: 0px 0px 3.5px gray;
 }
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: rgb(167, 167, 167);
@@ -55,7 +60,7 @@ header {
   color: white;   
   font-size: 15px;
   margin: 0;
-  height: 32.5px;
+  height: 32px;
   border-color: transparent;
   border: none;
   border-top-right-radius: 3.5px;
@@ -66,20 +71,36 @@ header {
   cursor: pointer;
 }
 .header-links {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 225px;
+  position: relative;
+  display: inline-block;
 }
-.header-link {
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  color: white;
+.dropdown-content {
+  font-size: 13px;
+  text-align: center;
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  margin-top: 10px;
+  margin-left: -12.5px;
+  padding: 5px;
+  min-width: 125%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-bottom: solid  rgb(119, 119, 119) 1px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
-.header-link:hover {
+.header-links:hover {
+  /* padding: 5px; */
+  color: black;
+}
+.header-links:hover .dropdown-content {
+  display: block;
+}
+.header-link:hover .dropdown-content {
   background-color:white;
   color: black;
+  display: block;
 }
 .header-image {
   float: left;
@@ -91,14 +112,15 @@ header {
   width: 250px;
   border-radius: 0%;
 }
-
 .stocks-wrapper {
   margin-left: 25px;
   margin-top: 20px;
 }
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 37%;
+  grid-template-columns: 1fr 28%;
+  margin-left: 50px;
+  margin-right: 50px;
 }
 .right-side {
   padding-left: 30px;
@@ -108,14 +130,7 @@ header {
 .about-company-name {
   font-size: 20px;
   font-weight: bold;
-}
-.about-header {
-  width: 87.5%;
-  font-size: 23px;
-  color: black; 
-  font-weight: bold;  
-  margin-bottom: 17px;
-  padding-bottom: 18px;
+  margin-bottom: 20px;
 }
 .company-description {
   width:500px;
@@ -137,17 +152,25 @@ header {
   width: 100%;
   padding-bottom: 10px;
 }
+.logo {
+  width: 70px;
+  border-radius: 11%;
+  border: solid rgb(155, 155, 155) 0.5px;
+  padding: 4px;
+  vertical-align: middle;
+}
 .company-name {
+  padding-top: 50%;
   margin-left: 5px;
   font-size: 30px;
   font-weight: bold;
 }
-.logo {
-  width: 70px;
-  border-radius: 10%;
-  vertical-align: middle
+.exchange-and-ticker {
+  color: rgb(71, 71, 71);
+  margin-left: 15px;
+  font-size: 18px;
 }
-.current-price-and-change {
+.price-and-change {
   margin-top: 10px;
   padding-top: 10px;
   margin-bottom: 20px;
@@ -156,37 +179,47 @@ header {
   border-bottom: solid rgb(119, 119, 119) 1.325px;
   width: 95%;
 }
+.price-and-currency {
+  font-size: 0px;
+}
+.currency {
+  font-size: 40px;
+  font-weight: bold; 
+}
 .current-price {
   font-size: 40px;
   font-weight: bold;
 }
-.exchange-and-ticker {
-  color: rgb(71, 71, 71);
-  margin-left: 15px;
-  font-size: 18px;
-}
-.exchange {
-  color: rgb(58, 58, 58);
-}
+
 .change {
   font-size: 20px;
   font-weight: 550;
 }
 .pos-day-price-change {
   vertical-align: 25%;
-  padding: 6px;
-  border-radius: 5px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
   color: green;
-}
-.day-change-green-background {
-  background-color: rgb(220, 238, 224);
 }
 .neg-day-price-change {
   vertical-align: 25%;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
   color: rgb(226, 13, 13);
 }
 .eq-day-price-change {
   vertical-align: 25%;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
   color: rgb(58, 58, 58);
 }
 .pos-day-percent-change {
@@ -215,6 +248,33 @@ header {
 .ah-price {
   color: rgb(58, 58, 58);
   font-weight: 550;
+  margin-right: 4px;
+}
+.pos-ah-change {
+  color: green;
+}
+.neg-ah-change {
+  color:rgb(226, 13, 13);
+  padding-left: 5px;
+}
+.eq-ah-change {
+  color: rgb(58, 58, 58);
+  padding-left: 5px;
+}
+.pos-ah-percent-change {
+  vertical-align: 25%;
+  color: green;
+  margin-left: 3px;
+}
+.neg-ah-percent-change {
+  vertical-align: 25%;
+  color: rgb(226, 13, 13);
+  margin-left: 3px;
+}
+.eq-ah-percent-change {
+  vertical-align: 25%;
+  color: rgb(58, 58, 58);
+  margin-left: 3px;
 }
 .footer-link {
   text-align: left;
@@ -225,29 +285,29 @@ header {
 .company-info {
   width: 100%;
   margin-top: 40px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 .info-line {
-  height: 22px;
+  height: 25px;
   border-bottom: solid 1.25px rgb(185, 185, 185);
   margin-top: 7px;
   color: rgb(58, 58, 58);
 }
 .info-line-text {
-  font-size: 12.5px;
+  font-size: 14px;
   color: rgb(71, 71, 71);
   float: left;
   font-weight: 530;
 }
 .info-line-data {
   color: black;
-  font-size: 12.5px;
+  font-size: 14px;
   float: right;
   font-weight: bold;
 }
 .column {
   float: left;
-  width: 45%;
+  width: 100%;
   padding-bottom: 15px; 
   }
   .right {
