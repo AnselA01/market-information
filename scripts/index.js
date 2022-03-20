@@ -17,7 +17,6 @@ function getSymbol() {
   saveData(symbol);
   document.location.href = "stocks.html";
 }
-var test;
 
 
 
