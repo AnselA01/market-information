@@ -13,10 +13,10 @@ function loadData() {
   return symbol;
 }
 function getSymbol() {
-  console.log("here");
   var symbol = document.getElementById("stock-symbol-input").value;
   saveData(symbol);
-  document.location.href = "file:///C:/Users/aalld/.vscode/projects/securities-website/stocks.html";
+  document.location.href("stocks.html");
+  return false;
 }
 
 var accessTokenConfig = {
@@ -42,9 +42,7 @@ axios(accessTokenConfig)
 
     axios(moversConfig)
       .then(function (response) {
-        console.log(response);
-        console.log(response.data[10]);
-
+        //positive movers
         //row 1
         document.getElementById("row-1-symbol").innerHTML = response.data[10].symbol;
         document.getElementById("row-1-name").innerHTML = response.data[10].description;
@@ -175,6 +173,11 @@ axios(accessTokenConfig)
         volume = volume.toLocaleString("en-US");
         document.getElementById("row-10-volume").innerHTML = volume;
 
+        //negative movers
+        //row 1
       })
   })
-var test;
+  window.addEventListener('load', function () {
+    document.getElementsByTagName("html")[0].style.visibility = "visible";
+  });
+  

@@ -15,18 +15,16 @@ function getSymbol() {
   saveData(symbol);
   document.location.href = "stocks.html";
 }
+var symbol = loadData().toUpperCase();
 document.title = loadData();
 var companyNameUrl = "https://api.twelvedata.com/stocks?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&country=US&symbol=";
 companyNameUrl = companyNameUrl.concat(loadData());
 axios.get(companyNameUrl)
   .then(response => {
-    var companyName = response.data.data[0].name;
-    document.getElementById("company-name").innerHTML = companyName;
-
+    if (response.data.data[0]) {
+      document.getElementById("company-name").innerHTML = response.data.data[0].name;
+    }
   })
-  .catch(function (error) {
-    console.log(error);
-  });
 
 var accessTokenConfig = {
   method: 'post',
@@ -48,13 +46,15 @@ axios(accessTokenConfig)
         Authorization: accessToken
       },
     };
-    console.log(accessToken)
+    //console.log(accessToken)
 
     axios(quoteConfig)
       .then(function (response) {
-
-        var symbol = loadData().toUpperCase();
         var quoteResponse = response.data[symbol];
+
+        if (quoteResponse.assetType == "ETF") {
+          document.getElementById("company-name").innerHTML = quoteResponse.description;
+        }
 
         var exchange = quoteResponse.exchangeName;
         if (exchange == "NASD") exchange = "NASDAQ"
@@ -86,9 +86,9 @@ axios(accessTokenConfig)
         var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
 
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", 
-        "September", "October", "November", "December"];
-        
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August",
+          "September", "October", "November", "December"];
+
         const date = new Date();
         var month = monthNames[date.getMonth()];
         var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
@@ -98,44 +98,47 @@ axios(accessTokenConfig)
         if (dayChange > 0) {
           toString(dayChange);
           toString(percentChange);
-          document.getElementById("pos-day-price-change").innerHTML =  " + " + dayChange;
-          document.getElementById("pos-day-percent-change").innerHTML =  " (" + percentChange + "%" + ")"; 
-          var color = 'green';
+          document.getElementById("pos-day-price-change").innerHTML = "+" + dayChange;
+          document.getElementById("pos-day-percent-change").innerHTML = " (+" + percentChange + "%" + ")";
+          var color = 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')';
+          var backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
           document.getElementById("pos-day-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
-          document.getElementById("neg-dayprice-change").style.paddingLeft = ("0");
-          document.getElementById("neg-dayprice-change").style.paddingRight = ("0");
+          document.getElementById("neg-day-price-change").style.paddingLeft = ("0");
+          document.getElementById("neg-day-price-change").style.paddingRight = ("0");
           document.getElementById("eq-day-price-change").style.paddingLeft = ("0");
           document.getElementById("eq-day-price-change").style.paddingRight = ("0");
-          document.title = loadData() + " " + currency + price + " " + "+" + "(" + percentChange + "%)";
+          document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
 
         }
         else if (dayChange < 0) {
           toString(dayChange);
           toString(percentChange);
           document.getElementById("neg-day-price-change").innerHTML = dayChange;
-          document.getElementById("neg-day-percent-change").innerHTML =  " (" + percentChange + "%" + ")"; 
+          document.getElementById("neg-day-percent-change").innerHTML = " (" + percentChange + "%" + ")";
           document.getElementById("neg-day-price-change").style.backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-          var color = 'red';
+          var color = 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')';
+          var backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
           document.getElementById("pos-day-price-change").style.paddingLeft = ("0");
           document.getElementById("pos-day-price-change").style.paddingRight = ("0");
           document.getElementById("eq-day-price-change").style.paddingLeft = ("0");
           document.getElementById("eq-day-price-change").style.paddingRight = ("0");
-          document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)";
+          document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)" + " | " + quoteResponse.description;
 
         }
         else {
           toString(dayChange);
           percentChange = 0;
           toString(percentChange);
-          document.getElementById("eq-day-price-change").innerHTML =  dayChange;
-          document.getElementById("eq-day-percent-change").innerHTML =  " (" + percentChange + "%" + ")"; 
+          document.getElementById("eq-day-price-change").innerHTML = dayChange;
+          document.getElementById("eq-day-percent-change").innerHTML = " (" + percentChange + "%" + ")";
           document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-          var color = '#7e7e7e';
+          var color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+          var backgroundColor = 'rgb(' + 143 + ',' + 143 + ',' + 143 + ')'
           document.getElementById("neg-day-price-change").style.paddingLeft = ("0");
           document.getElementById("neg-day-price-change").style.paddingRight = ("0");
           document.getElementById("pos-day-price-change").style.paddingLeft = ("0");
           document.getElementById("pos-day-price-change").style.paddingRight = ("0");
-          document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)";
+          document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
 
         }
         dayChange = Number(dayChange);
@@ -148,13 +151,17 @@ axios(accessTokenConfig)
         var volume = quoteResponse.totalVolume;
         volume = volume.toLocaleString("en-US");
         document.getElementById("volume").innerHTML = volume;
-        document.getElementById("day-range").innerHTML = quoteResponse.lowPrice + " - " + quoteResponse.highPrice;
+        var lowPrice = quoteResponse.lowPrice;
+        lowPrice = lowPrice.toFixed(2);
+        var highPrice = quoteResponse.highPrice;
+        highPrice = highPrice.toFixed(2);
+        document.getElementById("day-range").innerHTML = lowPrice + " - " + highPrice;
         var fiftyTwoHigh = quoteResponse["52WkHigh"];
         fiftyTwoHigh = fiftyTwoHigh.toFixed(2);
         var fiftyTwoLow = quoteResponse["52WkLow"];
         fiftyTwoLow = fiftyTwoLow.toFixed(2);
         document.getElementById("52-range").innerHTML = fiftyTwoLow + " - " + fiftyTwoHigh;
-        //document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
+        document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
         var fundamentals = {
           method: 'get',
           url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&projection=fundamental&symbol=' + loadData(),
@@ -164,8 +171,16 @@ axios(accessTokenConfig)
         };
         axios(fundamentals)
           .then(function (response) {
+            console.log(response);
             var symbol = loadData().toUpperCase();
             var fundamentalsParsed = response.data[symbol].fundamental;
+
+            var beta = fundamentalsParsed.beta;
+            document.getElementById("beta").innerHTML = beta.toFixed(2);
+
+            var EPS = fundamentalsParsed.epsTTM;
+            document.getElementById("eps").innerHTML = EPS.toFixed(2);
+
             var marketCap = price * fundamentalsParsed.sharesOutstanding;
             marketCap = marketCap.toLocaleString("en-US");
             var numCommas = 0;
@@ -174,7 +189,6 @@ axios(accessTokenConfig)
                 numCommas++;
               }
             }
-            //find where to put the decimal
             var numsBeforeComma = (marketCap.substring(0, marketCap.indexOf(','))).length;
             if (numsBeforeComma == 1) {
               marketCap = marketCap.substring(0, 1) + "." + marketCap.substring(2, 4);
@@ -185,7 +199,7 @@ axios(accessTokenConfig)
             if (numsBeforeComma == 3) {
               marketCap = marketCap.substring(0, 3) + "." + marketCap.substring(4, 6);
             }
-            //add suffix letter
+            //add suffix
             if (numCommas == 2) {
               marketcap += "M";
             }
@@ -196,14 +210,14 @@ axios(accessTokenConfig)
               marketCap += "T";
             }
 
-            //document.getElementById("market-cap").innerHTML = marketCap;
+            document.getElementById("market-cap").innerHTML = marketCap;
             var peRatio = fundamentalsParsed.peRatio.toFixed(2);
-            //document.getElementById("pe-ratio").innerHTML = peRatio;
+            document.getElementById("pe-ratio").innerHTML = peRatio;
             var avgVolume = fundamentalsParsed.vol1DayAvg;
             avgVolume = avgVolume.toLocaleString("en-US");
             document.getElementById("avg-volume").innerHTML = avgVolume;
             let dividentAmount = fundamentalsParsed.dividendAmount;
-            //document.getElementById("div-amount").innerHTML = dividentAmount.toFixed(2);
+            document.getElementById("div-amount").innerHTML = dividentAmount.toFixed(2);
           })
 
         axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
@@ -220,8 +234,8 @@ axios(accessTokenConfig)
               if (ahChange > 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
-                document.getElementById("pos-ah-price-change").innerHTML = ahChange;
-                document.getElementById("pos-ah-percent-change").innerHTML =  "(" + ahPercentChange + "%)";
+                document.getElementById("pos-ah-price-change").innerHTML = "+" + ahChange;
+                document.getElementById("pos-ah-percent-change").innerHTML = "(+" + ahPercentChange + "%)";
               }
               if (ahChange < 0) {
                 toString(ahChange);
@@ -245,39 +259,85 @@ axios(accessTokenConfig)
               document.getElementById("market-status").innerHTML = "Open: ";
             }
           })
+        //chart
+        var chartTime = date.getTime();
+        if (date.getDay() == 6) {
+          chartTime = date.getTime() - 86400000;
+        }
+        else if (date.getDay() == 0) {
+          chartTime = date.getTime() - 172800000
+        }
+        var chartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + chartTime + '&startDate=' + chartTime + '&needExtendedHoursData=true',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(chartConfig)
+          .then(function (response) {
+            console.log(response.data);
+            let chartValues = [];
+            let numberOfCandles = (date.getHours() - 8) * 60 + date.getMinutes() + 1 - 30;
+            for (var i = 150; i < numberOfCandles+150; i++) {
+              var priceValue = response.data.candles[i].close;
+              priceValue = priceValue.toFixed(2);
+              chartValues.push(priceValue);
+            }
+            var chartOpen = response.data.candles[0].open;
+            chartOpen = chartOpen.toFixed(2);
+            chartValues.unshift(chartOpen);
+            new Chart(document.getElementById("lower-information-chart-canvas"), {
+              type: 'line',
+              data: {
+                labels: ["9:30 AM", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "4:30 PM", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "6:00 PM"],
+                datasets: [{
+                  data: chartValues,
+                  borderColor: color,
+                  borderWidth: 2,
+                  fill: false,
+                  tension: 0,
+                  spanGaps: false,
+                  tension: 0.03,
+                },]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },              
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      autoSkip: false,
+                      maxRotation: 0,
+                      minRotation: 0
+                    }
+                  }]
+                },
+              }
+            });
+          })
       })
-    
-    //chart
-    var config = {
-      method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/AAPL/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + date.getTime() + '&startDate=' + date.getTime() + '&needExtendedHoursData=false',
-      headers: { 
-        'Authorization': accessToken
-      }
-    };    
-    axios(chartConfig)
-    .then(function (response) {
-      console.log(response.data);
-      let chartPoints = [];
-      for (var i = 0; i < 390; i++) {
-        chartPoints.push(response.data.candles[i].close);
-      }
-      const date = new Date();
-      let year = date.getFullYear();
-      let month = date.getMonth();
-      let day = date.getDate();
-      const labels = Utils.time({count: 390});
-      const data = {
-        labels: labels,
-        datasets: [{
-          label: none,
-          data: chartPoints,
-          fill: true,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0
-        }]
-      };
-    })
+
+
   })
 
 //logo
@@ -288,7 +348,6 @@ axios.get(compLogoUrl)
     var logo = response.data.url;
     document.getElementById("logo").src = logo;
   })
-
 function updateTime() {
   var date = new Date();
   var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
@@ -297,7 +356,97 @@ function updateTime() {
 setInterval(function () {
   updateTime();
 }, 2000);
-
 window.addEventListener('load', function () {
   document.getElementsByTagName("html")[0].style.visibility = "visible";
 });
+function changeInfoPaneOverview() {
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #356EFF 2px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
+
+  document.getElementById("lower-information-overview").style.display = "block";
+  document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-news").style.display = "none";
+  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("lower-information-historical").style.display = "none";
+}
+function changeInfoPaneChart() {  
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
+
+  document.getElementById("lower-information-overview").style.display = "none";
+  document.getElementById("lower-information-chart").style.display = "block";
+  document.getElementById("lower-information-chart-canvas").style.display = "block";
+  document.getElementById("lower-information-news").style.display = "none";
+  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("lower-information-historical").style.display = "none";
+}
+function changeInfoPaneNews() {
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #356EFF 2px";
+  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
+
+  document.getElementById("lower-information-overview").style.display = "none";
+  document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-news").style.display = "block";
+  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("lower-information-historical").style.display = "none";
+}
+function changeInfoPaneFundamentals() {
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #356EFF 2px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
+
+  document.getElementById("lower-information-overview").style.display = "none";
+  document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-news").style.display = "none";
+  document.getElementById("lower-information-fundamentals").style.display = "block";
+  document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("lower-information-historical").style.display = "none";
+}
+function changeInfoPaneOptions() {
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #356EFF 2px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
+
+  document.getElementById("lower-information-overview").style.display = "none";
+  document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-news").style.display = "none";
+  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-options").style.display = "block";
+  document.getElementById("lower-information-historical").style.display = "none";
+}
+function changeInfoPaneHistorical() {
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #356EFF 2px";
+
+  document.getElementById("lower-information-overview").style.display = "none";
+  document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-news").style.display = "none";
+  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("lower-information-historical").style.display = "block";
+}
