@@ -13,22 +13,30 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://code.jscharting.com/latest/jscharting.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   <script src="scripts/stocks.js"></script>
   <header>
     <div class="header-content">
+      <div>
         <form id="search-stock">
           <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input"
             placeholder="Search for another company... " oninput="this.value = this.value.toUpperCase()">
           <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
             text-transform:uppercase>
         </form>
+      </div>
+      <div class="header-link" id="header-links-parent">
+        <span><a href="movers.html" class="header-link-text">Movers</a></span>
+        <span><a href="movers.html" class="header-link-text">Movers</a></span>
+        <span><a href="movers.html" class="header-link-text">Movers</a></span>
+        <span><a href="movers.html" class="header-link-text">Movers</a></span>
+      </div>
     </div>
   </header>
   <div class="stocks-wrapper">
     <div class="grid-container">
       <div class="left-side">
         <!--left side-->
-
 
         <!-- company name and image -->
         <div class="name-and-image">
@@ -81,46 +89,132 @@
             </span>
           </div>
         </div>
-        <div id="chart" class="chart"></div>
+        <div id="lower-information-selector" class="lower-information-selector">
+          <span onclick="changeInfoPaneOverview()" class="lower-information-overview-text lower-information-text"
+            id="lower-information-overview-text">Overview</span>
+          <span onclick="changeInfoPaneChart()" class="lower-information-chart-text lower-information-text"
+            id="lower-information-chart-text">Chart</span>
+          <span onclick="changeInfoPaneFundamentals()" class="lower-information-fundamentals-text lower-information-text"
+            id="lower-information-fundamentals-text">Fundamental Data</span>
+          <span onclick="changeInfoPaneNews()" class="lower-information-news-text lower-information-text"
+            id="lower-information-news-text">News</span>
+          <span onclick="changeInfoPaneOptions()" class="lower-information-options-text lower-information-text"
+            id="lower-information-options-text">Options Chain</span>
+          <span onclick="changeInfoPaneHistorical()" class="lower-information-historical-text lower-information-text"
+            id="lower-information-historical-text">Historical Data</span>
+        </div>
+        <div class="lower-information-pane">
+          <div class="lower-information-overview" id="lower-information-overview">
+            <div class="row company-info">
+              <!-- stock price info -->
+              <div class="column">
+                <div class="info-line">
+                  <span class="info-line-text">Previous Close</span>
+                  <span class="info-line-data" id="previous-close"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Open</span>
+                  <span class="info-line-data" id="open"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Volume</span>
+                  <span class="info-line-data" id="volume"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Average Volume</span>
+                  <span class="info-line-data" id="avg-volume"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Day Range</span>
+                  <span class="info-line-data" id="day-range"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">52 Week Range</span>
+                  <span class="info-line-data" id="52-range"></span>
+                </div>
+              </div>
+              <div class="column"> 
+                <div class="info-line">
+                  <span class="info-line-text">Market Cap</span>
+                  <span class="info-line-data" id="market-cap"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Beta</span>
+                  <span class="info-line-data" id="beta"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">PE Ratio</span>
+                  <span class="info-line-data" id="pe-ratio"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">EPS (TTM)</span>
+                  <span class="info-line-data" id="eps"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Div Yield</span>
+                  <span class="info-line-data" id="div-yield"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Div Amount</span>
+                  <span class="info-line-data" id="div-amount"></span>
+                </div>
+              </div>
+              <div class="column"> 
+                <div class="info-line">
+                  <span class="info-line-text">Market Cap</span>
+                  <span class="info-line-data" id="market-cap"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Beta</span>
+                  <span class="info-line-data" id="beta"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">PE Ratio</span>
+                  <span class="info-line-data" id="pe-ratio"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">EPS (TTM)</span>
+                  <span class="info-line-data" id="eps"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Div Yield</span>
+                  <span class="info-line-data" id="div-yield"></span>
+                </div>
+                <div class="info-line">
+                  <span class="info-line-text">Div Amount</span>
+                  <span class="info-line-data" id="div-amount"></span>
+                </div>
+              </div>  
+            </div>
+          </div>
+          <div class="lower-information-chart" id="lower-information-chart">
+            <canvas id="lower-information-chart-canvas" class="lower-information-chart-canvas"></canvas>
+          </div>
+          <div class="lower-information-news" id="lower-information-news">
+
+          </div>
+          <div class="lower-information-fundamentals" id="lower-information-fundamentals">
+
+          </div>
+          <div class="lower-information-options" id="lower-information-options">
+
+          </div>
+          <div class="lower-information-historical" id="lower-information-historical">
+
+          </div>
+        </div>
       </div>
       <div class="right-side">
         <!--right side-->
-        <div class="row company-info">
-          <!-- stock price info -->
-          <div class="column">
-            <div class="info-line">
-              <span class="info-line-text">Previous Close</span>
-              <span class="info-line-data" id="previous-close"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Open</span>
-              <span class="info-line-data" id="open"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Volume</span>
-              <span class="info-line-data" id="volume"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Average Volume</span>
-              <span class="info-line-data" id="avg-volume"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">Day Range</span>
-              <span class="info-line-data" id="day-range"></span>
-            </div>
-            <div class="info-line">
-              <span class="info-line-text">52 Week Range</span>
-              <span class="info-line-data" id="52-range"></span>
-            </div>
-          </div>
-        </div>
+        
         <div class="about" id="about">
-          <div class="about-company-name" id="about-company-name"></div>
-          <div class="logo-and-symbol" id="logo-and-symbol">
+          <div class="company-financials-text" id="company-financials-text">Financials</div>
+          <div class="company-financials" id="company-financials">
           </div>
         </div>
       </div>
     </div>
+  </div>
 </body>
 
 </html>

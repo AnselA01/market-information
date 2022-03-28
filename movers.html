@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,15 +16,16 @@
       <div class="input-field">
         <form id="search-stock">
           <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input"
-            placeholder="Search for another company... ">
-          <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search">
+            placeholder="Search for another company... " oninput="this.value = this.value.toUpperCase()">
+          <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
+            text-transform:uppercase>
         </form>
       </div>
       <div class="header-links">
-        <span><a class=header-link href="markets.html">Markets</a></span>
-        <span><a class=header-link href="movers.html">Trending</a></span>
-        <span><a class=header-link href="#">Text</a></span>
-        <span><a class=header-link href="#">Text</a></span>
+        <span><a href="markets.html">Markets</a></span>
+        <span><a href="movers.html">Trending</a></span>
+        <span><a href="#">Text</a></span>
+        <span><a href="#">Text</a></span>
       </div>
     </div>
   </header>
@@ -103,7 +103,34 @@
         <td id="row-7-percent-change" class="up-percent-change"></td>
         <td id="row-7-volume" class="row-volume"></td>
         <td id="row-7-average-volume" class="row-average-volume"></td>
-      </tr
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-8-symbol" class="row-symbol"></td>
+        <td id="row-8-name" class="row-name"></td>
+        <td id="row-8-last" class="row-last"></td>
+        <td id="row-8-change" class="row-change"></td>
+        <td id="row-8-percent-change" class="up-percent-change"></td>
+        <td id="row-8-volume" class="row-volume"></td>
+        <td id="row-8-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-9-symbol" class="row-symbol"></td>
+        <td id="row-9-name" class="row-name"></td>
+        <td id="row-9-last" class="row-last"></td>
+        <td id="row-9-change" class="row-change"></td>
+        <td id="row-9-percent-change" class="up-percent-change"></td>
+        <td id="row-9-volume" class="row-volume"></td>
+        <td id="row-9-average-volume" class="row-average-volume"></td>
+      </tr>
+      <tr class="up-mover-row">
+        <td id="row-10-symbol" class="row-symbol"></td>
+        <td id="row-10-name" class="row-name"></td>
+        <td id="row-10-last" class="row-last"></td>
+        <td id="row-10-change" class="row-change"></td>
+        <td id="row-10-percent-change" class="up-percent-change"></td>
+        <td id="row-10-volume" class="row-volume"></td>
+        <td id="row-10-average-volume" class="row-average-volume"></td>
+      </tr>
     </table>
   </div>
 </body>

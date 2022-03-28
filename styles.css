@@ -2,7 +2,6 @@ html {
   visibility: hidden; 
 }
 body {
-  /* overscroll-behavior: none; */
   margin: 0;
   font-size: 100%;
   font-family: Helvetica;
@@ -16,10 +15,23 @@ header {
   margin-left: 10%;
   margin-right: 10%;
 }
-
+.header-link {
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+.header-link-text:link {
+  text-decoration: none;
+}
+.header-link-text:visited {
+  color: black;
+}
+.header-link-text:hover {
+  text-decoration: underline;
+}
 .stock-symbol-search-bar {
-  display: inline-block;
-  margin: 0;
+  /* display: inline-block; */
   border-radius: 0;
   border-color: transparent;
   background-color: white;
@@ -30,7 +42,7 @@ header {
   width: 250px;
   height: 30px;
   margin-top: 10px;
-  margin-left: 35%;
+  margin-left: 35%; 
   margin-right: -5px;
   margin-bottom: 9px;
 }
@@ -70,44 +82,6 @@ header {
   background-color: rgb(35, 86, 214);
   cursor: pointer;
 }
-.header-links {
-  position: relative;
-  display: inline-block;
-}
-.dropdown-content {
-  font-size: 13px;
-  text-align: center;
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  margin-top: 10px;
-  margin-left: -12.5px;
-  padding: 5px;
-  min-width: 125%;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  border-bottom: solid  rgb(119, 119, 119) 1px;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-.header-links:hover {
-  /* padding: 5px; */
-  color: black;
-}
-.header-links:hover .dropdown-content {
-  display: block;
-}
-.header-link:hover .dropdown-content {
-  background-color:white;
-  color: black;
-  display: block;
-}
-.header-image {
-  float: left;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  width: 150px;
-}
 .symbol-input {
   width: 250px;
   border-radius: 0%;
@@ -119,15 +93,13 @@ header {
 .grid-container {
   display: grid;
   grid-template-columns: 1fr 28%;
-  margin-left: 50px;
-  margin-right: 50px;
 }
 .right-side {
   padding-left: 30px;
   height: 100%;
   border-left: solid 1.325px rgb(119, 119, 119);
 }
-.about-company-name {
+.company-financials-text {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
@@ -190,10 +162,10 @@ header {
   font-size: 40px;
   font-weight: bold;
 }
-
 .change {
   font-size: 20px;
   font-weight: 550;
+  margin-left: 7px;
 }
 .pos-day-price-change {
   vertical-align: 25%;
@@ -276,12 +248,6 @@ header {
   color: rgb(58, 58, 58);
   margin-left: 3px;
 }
-.footer-link {
-  text-align: left;
-  position: fixed;
-  bottom: 0;
-  left:0
-}
 .company-info {
   width: 100%;
   margin-top: 40px;
@@ -292,6 +258,67 @@ header {
   border-bottom: solid 1.25px rgb(185, 185, 185);
   margin-top: 7px;
   color: rgb(58, 58, 58);
+}
+.lower-information-selector {
+  width: 85%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  margin-bottom: 20px;
+}
+.lower-information-text {
+  font-size: 14.5px;
+  color: rgb(39, 108, 255);
+  padding-left: 13.75px;
+  padding-right: 13.75px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.lower-information-text:hover {
+  cursor: pointer;
+  background-color: rgb(168, 194, 252);
+}
+
+.lower-information-overview-text {
+  display: block;
+}
+.lower-information-chart {
+  width: 96%;
+  height: 450px;
+  display: none;
+}
+.lower-information-news {
+  display: none;
+}
+.lower-information-fundamentals {
+  display: none;
+}
+.lower-information-options {
+  display: none;
+}
+.lower-information-historical {
+  display: none;
+}
+.lower-information-overview-text {
+  border-bottom: solid rgb(53, 110, 255);
+}
+.lower-information-chart-text {
+  border-bottom: solid rgb(172, 172, 172) 2px;
+}
+.lower-information-news-text {
+  border-bottom: solid rgb(172, 172, 172) 2px;
+}
+.lower-information-fundamentals-text {
+  border-bottom: solid rgb(172, 172, 172) 2px;
+}
+.lower-information-options-text {
+  border-bottom: solid rgb(172, 172, 172) 2px;
+}
+.lower-information-historical-text {
+  border-bottom: solid rgb(172, 172, 172) 2px;
+}
+.lower-information-chart-canvas {
+  display: none;
 }
 .info-line-text {
   font-size: 14px;
@@ -307,8 +334,9 @@ header {
 }
 .column {
   float: left;
-  width: 100%;
+  width: 30%;
   padding-bottom: 15px; 
+  margin-right: 20px;
   }
   .right {
     margin-left: 20px;
@@ -329,12 +357,9 @@ header {
   color: rgb(71, 71, 71)
 }
 .chart {
-  margin-left: 7.5%;
-  padding-right: 28px;
-  width: 100%;
+  width: 95.75%;
   height: 275px;
 } 
-
 /* Trending */
 .movers-wrapper {
   margin-left: 25px;
