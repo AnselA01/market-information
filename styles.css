@@ -92,7 +92,7 @@ header {
 }
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 28%;
+  grid-template-columns: 1fr 21%;
 }
 .right-side {
   padding-left: 30px;
@@ -150,9 +150,6 @@ header {
   border-top: solid rgb(119, 119, 119) 1.325px;
   border-bottom: solid rgb(119, 119, 119) 1.325px;
   width: 95%;
-}
-.price-and-currency {
-  font-size: 0px;
 }
 .currency {
   font-size: 40px;
@@ -212,15 +209,14 @@ header {
 .bid-ask {
   font-size: 16px;
   color: black; 
-  font-weight: bold;
+  font-weight: 550;
 }
 .market-status {
   color: rgb(58, 58, 58);
 }
 .ah-price {
-  color: rgb(58, 58, 58);
-  font-weight: 550;
-  margin-right: 4px;
+  font-size: 16px;
+  color: black;
 }
 .pos-ah-change {
   color: green;
@@ -264,19 +260,20 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: left;
+  font-weight: 550;
   margin-bottom: 20px;
 }
 .lower-information-text {
   font-size: 14.5px;
   color: rgb(39, 108, 255);
-  padding-left: 13.75px;
+  padding-left: 13.75px;          
   padding-right: 13.75px;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 .lower-information-text:hover {
   cursor: pointer;
-  background-color: rgb(168, 194, 252);
+  background-color: rgb(196, 214, 252);
 }
 
 .lower-information-overview-text {
@@ -303,19 +300,19 @@ header {
   border-bottom: solid rgb(53, 110, 255);
 }
 .lower-information-chart-text {
-  border-bottom: solid rgb(172, 172, 172) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-news-text {
-  border-bottom: solid rgb(172, 172, 172) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-fundamentals-text {
-  border-bottom: solid rgb(172, 172, 172) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-options-text {
-  border-bottom: solid rgb(172, 172, 172) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-historical-text {
-  border-bottom: solid rgb(172, 172, 172) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-chart-canvas {
   display: none;
@@ -347,18 +344,19 @@ header {
   clear: both;
   }
 .market-status {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 13px;
   color: rgb(71, 71, 71)
 }
 .after-hours {
   margin-top: 3px;
-  font-size: 13px;
-  color: rgb(71, 71, 71)
+  font-size: 16px;
+  font-weight: 550;
+  color: black;
 }
 .chart {
   width: 95.75%;
-  height: 275px;
+  height: 50%;
 } 
 /* Trending */
 .movers-wrapper {
