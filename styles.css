@@ -281,7 +281,7 @@ header {
 }
 .lower-information-chart {
   width: 96%;
-  height: 450px;
+  height: 300px;
   display: none;
 }
 .lower-information-news {
@@ -376,4 +376,7 @@ td, th {
 }
 tr:nth-child(even) {
   background-color: #dddddd;
+  color: rgb(224, 195, 155);
+  color: rgb(100, 100, 0);
+
 }

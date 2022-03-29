@@ -47,7 +47,6 @@ axios(accessTokenConfig)
       },
     };
     //console.log(accessToken)
-
     axios(quoteConfig)
       .then(function (response) {
         var quoteResponse = response.data[symbol];
@@ -67,7 +66,12 @@ axios(accessTokenConfig)
         var ask = quoteResponse.askPrice;
 
         var price = quoteResponse.regularMarketLastPrice;
-        price = price.toFixed(2);
+        if (price > 1) {
+          price = price.toFixed(2);
+        }
+        else {
+          price = price.toFixed(4);
+        }
         price = price.toLocaleString("en-US");
 
         document.getElementById("currency").innerHTML = currency;
@@ -76,7 +80,12 @@ axios(accessTokenConfig)
         document.getElementById("ask").innerHTML = ask;
 
         var dayChange = quoteResponse.regularMarketNetChange;
-        dayChange = dayChange.toFixed(2);
+        if (dayChange < 0) {
+          dayChange = dayChange.toFixed(4);
+        }
+        else {
+          dayChange = dayChange.toFixed(2);
+        }
 
         var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
@@ -97,7 +106,6 @@ axios(accessTokenConfig)
           document.getElementById("pos-day-price-change").style.display = "inline";
           document.getElementById("pos-day-percent-change").innerHTML = " (+" + percentChange + "%" + ")";
           var color = 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')';
-          var backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
           document.getElementById("pos-day-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
           document.getElementById("neg-day-price-change").style.display = "none";
           document.getElementById("eq-day-price-change").style.display = "none";
@@ -112,7 +120,6 @@ axios(accessTokenConfig)
           document.getElementById("neg-day-price-change").style.display = "inline";
           document.getElementById("neg-day-price-change").style.backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
           var color = 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')';
-          var backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
           document.getElementById("pos-day-price-change").style.display = "none";
           document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)" + " | " + quoteResponse.description;
@@ -127,7 +134,6 @@ axios(accessTokenConfig)
           document.getElementById("eq-day-price-change").style.display = "inline";
           document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
           var color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-          var backgroundColor = 'rgb(' + 143 + ',' + 143 + ',' + 143 + ')'
           document.getElementById("neg-day-price-change").style.display = "none";
           document.getElementById("pos-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
@@ -161,7 +167,7 @@ axios(accessTokenConfig)
         else {
           document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
         }
-          var fundamentals = {
+        var fundamentals = {
           method: 'get',
           url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&projection=fundamental&symbol=' + loadData(),
           headers: {
@@ -170,9 +176,8 @@ axios(accessTokenConfig)
         };
         axios(fundamentals)
           .then(function (response) {
-            console.log(response);
             var fundamentalsParsed = response.data[symbol].fundamental;
-            
+
             var exchange = response.data[symbol].exchange;
             document.getElementById("exchange").innerHTML = exchange + ": ";
             document.getElementById("primary-exchange").innerHTML = exchange;
@@ -180,18 +185,18 @@ axios(accessTokenConfig)
             var sharesOutstanding = fundamentalsParsed.sharesOutstanding;
             sharesOutstanding = sharesOutstanding.toLocaleString("en-US");
             document.getElementById("shares-outstanding").innerHTML = sharesOutstanding;
-            
+
             document.getElementById("ticker").innerHTML = symbol;
 
             document.getElementById("cusip").innerHTML = response.data[symbol].cusip
 
             document.getElementById("asset-type").innerHTML = response.data[symbol].assetType;
-            
+
             var beta = fundamentalsParsed.beta;
             document.getElementById("beta").innerHTML = beta.toFixed(2);
 
             var EPS = fundamentalsParsed.epsTTM;
-            if(EPS == 0) {
+            if (EPS == 0) {
               document.getElementById("eps").innerHTML = "N/A";
             }
             else {
@@ -200,6 +205,8 @@ axios(accessTokenConfig)
 
             var marketCap = price * fundamentalsParsed.sharesOutstanding;
             marketCap = marketCap.toLocaleString("en-US");
+            marketCap = marketCap.substring(0, marketCap.indexOf('.'));
+
             var numCommas = 0;
             for (var i = 0; i < marketCap.length; i++) { //find number of commas in market cap
               if (marketCap[i] == ",") {
@@ -218,7 +225,7 @@ axios(accessTokenConfig)
             }
             //add suffix
             if (numCommas == 2) {
-              marketcap += "M";
+              marketCap += "M";
             }
             if (numCommas == 3) {
               marketCap += "B";
@@ -318,7 +325,6 @@ axios(accessTokenConfig)
               document.getElementById("market-status").innerHTML = "Open: ";
             }
           })
-        //chart
         var chartTime = date.getTime();
         if (date.getDay() == 6) {
           chartTime = date.getTime() - 86400000;
@@ -336,28 +342,59 @@ axios(accessTokenConfig)
         axios(chartConfig)
           .then(function (response) {
             console.log(response.data);
+            var numberOfCandles = 0;
+            while(response.data.candles[numberOfCandles++]) {}
+            console.log(numberOfCandles);
             let chartValues = [];
-            let numberOfCandles = (date.getHours() - 8) * 60 + date.getMinutes() + 1 - 30;
-            if(date.getHours() > 16) {
-              numberOfCandles = 540;
+            if (response.data.candles[0].close > 1 && response.data.candles[0].close < 1000) {
+              
+              for (var i = 150; i < numberOfCandles; i++) {
+                var priceValue = response.data.candles[i - 1].close;
+                priceValue = priceValue.toFixed(2);
+                chartValues.push(priceValue);
+              }
             }
-            for (var i = 150; i < numberOfCandles + 150; i++) {
-              var priceValue = response.data.candles[i-4].close;
-              priceValue = priceValue.toFixed(2);
-              chartValues.push(priceValue);
+            else if (response.data.candles[0].close < 1) {
+              for (var i = 1; i < numberOfCandles; i++) {
+                var priceValue = response.data.candles[i - 1].close;
+                priceValue = priceValue.toFixed(4);
+                chartValues.push(priceValue);
+              }
             }
-            var chartOpen = response.data.candles[150].open;
-            chartOpen = chartOpen.toFixed(2);
-            chartValues.unshift(chartOpen);
-            new Chart(document.getElementById("lower-information-chart-canvas"), {
+            else if (response.data.candles[0].close > 1000) {
+              for (var i = 150; i < numberOfCandles; i++) {
+                var priceValue = response.data.candles[i - 1].close;
+                priceValue = priceValue.toFixed(6);
+                chartValues.push(priceValue);
+              }
+            }
+            var ctx = document.getElementById('lower-information-chart-canvas').getContext('2d');
+            var gradient = ctx.createLinearGradient(0, 0, 0, 180);
+            if (color == 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')') {
+              console.log("here");
+              gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+              gradient.addColorStop(1, 'rgba(41, 128, 0, 0)');   
+            }
+            else if (color == 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')') {
+              gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+              gradient.addColorStop(1, 'rgba(215, 9, 8, 0)');            
+            }
+            else if (color == 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')') {
+              gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+              gradient.addColorStop(1, 'rgba(130, 130, 130, 0)');   
+            }
+            // gradient.addColorStop(0, 'rgba(224, 195, 155, 1)');
+            // gradient.addColorStop(1, 'rgba(100, 100, 0,0)');   
+
+            var chart = new Chart(ctx, {
               type: 'line',
               data: {
                 labels: ["9:30 AM", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "4:30 PM", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "6:00 PM"],
                 datasets: [{
                   data: chartValues,
                   borderColor: color,
+                  backgroundColor: gradient,
                   borderWidth: 2,
-                  fill: false,
                   tension: 0,
                   spanGaps: false,
                   tension: 0.03,
@@ -371,7 +408,7 @@ axios(accessTokenConfig)
                 hover: {
                   mode: 'index',
                   intersect: false,
-                },              
+                },
                 responsive: true,
                 maintainAspectRatio: false,
                 legend: {
@@ -402,14 +439,6 @@ axios(accessTokenConfig)
 
   })
 
-//logo
-var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol=";
-compLogoUrl = compLogoUrl.concat(loadData());
-axios.get(compLogoUrl)
-  .then(response => {
-    var logo = response.data.url;
-    document.getElementById("logo").src = logo;
-  })
 function updateTime() {
   var date = new Date();
   var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
@@ -436,7 +465,7 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
-function changeInfoPaneChart() {  
+function changeInfoPaneChart() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
@@ -512,3 +541,11 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
 }
+//logo
+var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol=";
+compLogoUrl = compLogoUrl.concat(loadData());
+axios.get(compLogoUrl)
+  .then(response => {
+    var logo = response.data.url;
+    document.getElementById("logo").src = logo;
+  })
