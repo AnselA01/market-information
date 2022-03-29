@@ -51,15 +51,10 @@ axios(accessTokenConfig)
     axios(quoteConfig)
       .then(function (response) {
         var quoteResponse = response.data[symbol];
-
+        console.log(response);
         if (quoteResponse.assetType == "ETF") {
           document.getElementById("company-name").innerHTML = quoteResponse.description;
         }
-
-        var exchange = quoteResponse.exchangeName;
-        if (exchange == "NASD") exchange = "NASDAQ"
-        document.getElementById("exchange").innerHTML = exchange + ": ";
-        document.getElementById("ticker").innerHTML = quoteResponse.symbol;
 
         var currency = "";
         var assetType = quoteResponse.assetType;
@@ -99,14 +94,13 @@ axios(accessTokenConfig)
           toString(dayChange);
           toString(percentChange);
           document.getElementById("pos-day-price-change").innerHTML = "+" + dayChange;
+          document.getElementById("pos-day-price-change").style.display = "inline";
           document.getElementById("pos-day-percent-change").innerHTML = " (+" + percentChange + "%" + ")";
           var color = 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')';
           var backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
           document.getElementById("pos-day-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
-          document.getElementById("neg-day-price-change").style.paddingLeft = ("0");
-          document.getElementById("neg-day-price-change").style.paddingRight = ("0");
-          document.getElementById("eq-day-price-change").style.paddingLeft = ("0");
-          document.getElementById("eq-day-price-change").style.paddingRight = ("0");
+          document.getElementById("neg-day-price-change").style.display = "none";
+          document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
 
         }
@@ -115,13 +109,12 @@ axios(accessTokenConfig)
           toString(percentChange);
           document.getElementById("neg-day-price-change").innerHTML = dayChange;
           document.getElementById("neg-day-percent-change").innerHTML = " (" + percentChange + "%" + ")";
+          document.getElementById("neg-day-price-change").style.display = "inline";
           document.getElementById("neg-day-price-change").style.backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
           var color = 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')';
           var backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-          document.getElementById("pos-day-price-change").style.paddingLeft = ("0");
-          document.getElementById("pos-day-price-change").style.paddingRight = ("0");
-          document.getElementById("eq-day-price-change").style.paddingLeft = ("0");
-          document.getElementById("eq-day-price-change").style.paddingRight = ("0");
+          document.getElementById("pos-day-price-change").style.display = "none";
+          document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)" + " | " + quoteResponse.description;
 
         }
@@ -131,13 +124,12 @@ axios(accessTokenConfig)
           toString(percentChange);
           document.getElementById("eq-day-price-change").innerHTML = dayChange;
           document.getElementById("eq-day-percent-change").innerHTML = " (" + percentChange + "%" + ")";
+          document.getElementById("eq-day-price-change").style.display = "inline";
           document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
           var color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
           var backgroundColor = 'rgb(' + 143 + ',' + 143 + ',' + 143 + ')'
-          document.getElementById("neg-day-price-change").style.paddingLeft = ("0");
-          document.getElementById("neg-day-price-change").style.paddingRight = ("0");
-          document.getElementById("pos-day-price-change").style.paddingLeft = ("0");
-          document.getElementById("pos-day-price-change").style.paddingRight = ("0");
+          document.getElementById("neg-day-price-change").style.display = "none";
+          document.getElementById("pos-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
 
         }
@@ -161,8 +153,15 @@ axios(accessTokenConfig)
         var fiftyTwoLow = quoteResponse["52WkLow"];
         fiftyTwoLow = fiftyTwoLow.toFixed(2);
         document.getElementById("52-range").innerHTML = fiftyTwoLow + " - " + fiftyTwoHigh;
-        document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
-        var fundamentals = {
+
+        var divYield = quoteResponse.divYield;
+        if (divYield == 0) {
+          document.getElementById("div-yield").innerHTML = "N/A";
+        }
+        else {
+          document.getElementById("div-yield").innerHTML = quoteResponse.divYield + "%";
+        }
+          var fundamentals = {
           method: 'get',
           url: 'https://api.tdameritrade.com/v1/instruments?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&projection=fundamental&symbol=' + loadData(),
           headers: {
@@ -172,14 +171,32 @@ axios(accessTokenConfig)
         axios(fundamentals)
           .then(function (response) {
             console.log(response);
-            var symbol = loadData().toUpperCase();
             var fundamentalsParsed = response.data[symbol].fundamental;
+            
+            var exchange = response.data[symbol].exchange;
+            document.getElementById("exchange").innerHTML = exchange + ": ";
+            document.getElementById("primary-exchange").innerHTML = exchange;
 
+            var sharesOutstanding = fundamentalsParsed.sharesOutstanding;
+            sharesOutstanding = sharesOutstanding.toLocaleString("en-US");
+            document.getElementById("shares-outstanding").innerHTML = sharesOutstanding;
+            
+            document.getElementById("ticker").innerHTML = symbol;
+
+            document.getElementById("cusip").innerHTML = response.data[symbol].cusip
+
+            document.getElementById("asset-type").innerHTML = response.data[symbol].assetType;
+            
             var beta = fundamentalsParsed.beta;
             document.getElementById("beta").innerHTML = beta.toFixed(2);
 
             var EPS = fundamentalsParsed.epsTTM;
-            document.getElementById("eps").innerHTML = EPS.toFixed(2);
+            if(EPS == 0) {
+              document.getElementById("eps").innerHTML = "N/A";
+            }
+            else {
+              document.getElementById("eps").innerHTML = EPS.toFixed(2);
+            }
 
             var marketCap = price * fundamentalsParsed.sharesOutstanding;
             marketCap = marketCap.toLocaleString("en-US");
@@ -212,14 +229,48 @@ axios(accessTokenConfig)
 
             document.getElementById("market-cap").innerHTML = marketCap;
             var peRatio = fundamentalsParsed.peRatio.toFixed(2);
-            document.getElementById("pe-ratio").innerHTML = peRatio;
+            if (peRatio == 0) {
+              document.getElementById("pe-ratio").innerHTML = "N/A";
+            }
+            else {
+              document.getElementById("pe-ratio").innerHTML = peRatio;
+            }
             var avgVolume = fundamentalsParsed.vol1DayAvg;
             avgVolume = avgVolume.toLocaleString("en-US");
             document.getElementById("avg-volume").innerHTML = avgVolume;
-            let dividentAmount = fundamentalsParsed.dividendAmount;
-            document.getElementById("div-amount").innerHTML = dividentAmount.toFixed(2);
+            let dividendAmount = fundamentalsParsed.dividendAmount;
+            if (dividendAmount == 0) {
+              document.getElementById("div-amount").innerHTML = "N/A";
+            }
+            else {
+              document.getElementById("div-amount").innerHTML = dividendAmount.toFixed(2);
+            }
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var exDivDate = fundamentalsParsed.dividendDate;
+            if (exDivDate == " ") {
+              document.getElementById("ex-div-date").innerHTML = "N/A";
+            }
+            else {
+              exDivDateParsed = new Date(exDivDate);
+              var exDivMonth = exDivDateParsed.getMonth();
+              var exDivDay = exDivDateParsed.getDate();
+              var exDivYear = exDivDateParsed.getFullYear();
+              exDivDate = monthNames[exDivMonth] + " " + exDivDay + ", " + exDivYear;
+              document.getElementById("ex-div-date").innerHTML = exDivDate;
+            }
+            var divDate = fundamentalsParsed.dividendPayDate;
+            if (divDate == 0) {
+              document.getElementById("div-date").innerHTML = "N/A";
+            }
+            else {
+              divDateParsed = new Date(divDate);
+              var divMonth = divDateParsed.getMonth();
+              var divDay = divDateParsed.getDate();
+              var divYear = divDateParsed.getFullYear();
+              divDate = monthNames[divMonth] + " " + divDay + ", " + divYear;
+              document.getElementById("div-date").innerHTML = divDate;
+            }
           })
-
         axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
           .then(response => {
             if (!response.data[0].is_market_open) {
@@ -236,19 +287,27 @@ axios(accessTokenConfig)
                 toString(ahPercentChange);
                 document.getElementById("pos-ah-price-change").innerHTML = "+" + ahChange;
                 document.getElementById("pos-ah-percent-change").innerHTML = "(+" + ahPercentChange + "%)";
+                document.getElementById("pos-ah-price-change").style.display = "inline";
+                document.getElementById("neg-ah-price-change").style.display = "none";
+                document.getElementById("eq-ah-price-change").style.display = "none";
               }
               if (ahChange < 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
                 document.getElementById("neg-ah-price-change").innerHTML = ahChange;
                 document.getElementById("neg-ah-percent-change").innerHTML = "(" + ahPercentChange + "%)";
-
+                document.getElementById("neg-ah-price-change").style.display = "inline";
+                document.getElementById("pos-ah-price-change").style.display = "none";
+                document.getElementById("eq-ah-price-change").style.display = "none";
               }
               if (ahChange == 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
                 document.getElementById("eq-ah-price-change").innerHTML = ahChange;
                 document.getElementById("eq-ah-percent-change").innerHTML = "(" + ahPercentChange + "%)";
+                document.getElementById("eq-ah-price-change").style.display = "inline";
+                document.getElementById("pos-ah-price-change").style.display = "none";
+                document.getElementById("neg-ah-price-change").style.display = "none";
 
               }
             }
@@ -279,12 +338,15 @@ axios(accessTokenConfig)
             console.log(response.data);
             let chartValues = [];
             let numberOfCandles = (date.getHours() - 8) * 60 + date.getMinutes() + 1 - 30;
-            for (var i = 150; i < numberOfCandles+150; i++) {
-              var priceValue = response.data.candles[i].close;
+            if(date.getHours() > 16) {
+              numberOfCandles = 540;
+            }
+            for (var i = 150; i < numberOfCandles + 150; i++) {
+              var priceValue = response.data.candles[i-4].close;
               priceValue = priceValue.toFixed(2);
               chartValues.push(priceValue);
             }
-            var chartOpen = response.data.candles[0].open;
+            var chartOpen = response.data.candles[150].open;
             chartOpen = chartOpen.toFixed(2);
             chartValues.unshift(chartOpen);
             new Chart(document.getElementById("lower-information-chart-canvas"), {
