@@ -143,7 +143,12 @@ axios(accessTokenConfig)
         percentChange = Number(percentChange);
 
         var previousClose = price - dayChange;
-        previousClose = previousClose.toFixed(2);
+        if (previousClose < 1) {
+          previousClose = previousClose.toFixed(4);
+        }
+        else {
+          previousClose = previousClose.toFixed(2);
+        }
         document.getElementById("previous-close").innerHTML = previousClose;
         document.getElementById("open").innerHTML = quoteResponse.openPrice;
         var volume = quoteResponse.totalVolume;
@@ -205,10 +210,11 @@ axios(accessTokenConfig)
 
             var marketCap = price * fundamentalsParsed.sharesOutstanding;
             marketCap = marketCap.toLocaleString("en-US");
-            marketCap = marketCap.substring(0, marketCap.indexOf('.'));
-
+            if (marketCap.includes('.')) {
+              marketCap = marketCap.substring(0, marketCap.indexOf('.'));
+            }
             var numCommas = 0;
-            for (var i = 0; i < marketCap.length; i++) { //find number of commas in market cap
+            for (var i = 0; i < marketCap.length; i++) {
               if (marketCap[i] == ",") {
                 numCommas++;
               }
@@ -233,7 +239,6 @@ axios(accessTokenConfig)
             if (numCommas == 4) {
               marketCap += "T";
             }
-
             document.getElementById("market-cap").innerHTML = marketCap;
             var peRatio = fundamentalsParsed.peRatio.toFixed(2);
             if (peRatio == 0) {
@@ -280,6 +285,7 @@ axios(accessTokenConfig)
           })
         axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
           .then(response => {
+            console.log(response);
             if (!response.data[0].is_market_open) {
               document.getElementById("ah-text").innerHTML = "After Hours: "
               document.getElementById("market-status").innerHTML = "Closed: ";
@@ -343,11 +349,25 @@ axios(accessTokenConfig)
           .then(function (response) {
             console.log(response.data);
             var numberOfCandles = 0;
-            while(response.data.candles[numberOfCandles++]) {}
-            console.log(numberOfCandles);
+            while (response.data.candles[numberOfCandles++]) { }
+            var interval = 1;
+            var times = [];
+            var tt = 570;
+            var ap = ['AM', 'PM'];
+
+            for (var i = 0; tt < 24 * 60; i++) {
+              var hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
+              var mm = (tt % 60); // getting minutes of the hour in 0-55 format
+              times[i] = ("0" + (hh % 12)).slice(-2) + ':' + ("0" + mm).slice(-2) + " " + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
+              tt = tt + interval;
+            }
+            var timesLabel = [];
+            for (var i = 0; i < 512; i++) {
+              timesLabel.push(times[i]);
+            }
             let chartValues = [];
             if (response.data.candles[0].close > 1 && response.data.candles[0].close < 1000) {
-              
+
               for (var i = 150; i < numberOfCandles; i++) {
                 var priceValue = response.data.candles[i - 1].close;
                 priceValue = priceValue.toFixed(2);
@@ -371,39 +391,38 @@ axios(accessTokenConfig)
             var ctx = document.getElementById('lower-information-chart-canvas').getContext('2d');
             var gradient = ctx.createLinearGradient(0, 0, 0, 180);
             if (color == 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')') {
-              console.log("here");
               gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-              gradient.addColorStop(1, 'rgba(41, 128, 0, 0)');   
+              gradient.addColorStop(1, 'rgba(41, 128, 0, 0)');
             }
             else if (color == 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')') {
               gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-              gradient.addColorStop(1, 'rgba(215, 9, 8, 0)');            
+              gradient.addColorStop(1, 'rgba(215, 9, 8, 0)');
             }
             else if (color == 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')') {
               gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-              gradient.addColorStop(1, 'rgba(130, 130, 130, 0)');   
+              gradient.addColorStop(1, 'rgba(130, 130, 130, 0)');
             }
-            // gradient.addColorStop(0, 'rgba(224, 195, 155, 1)');
-            // gradient.addColorStop(1, 'rgba(100, 100, 0,0)');   
-
             var chart = new Chart(ctx, {
               type: 'line',
               data: {
-                labels: ["9:30 AM", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "4:30 PM", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "6:00 PM"],
+                labels: timesLabel,
                 datasets: [{
                   data: chartValues,
+                  label: symbol,
                   borderColor: color,
                   backgroundColor: gradient,
+                  pointBackgroundColor: color,
                   borderWidth: 2,
                   tension: 0,
                   spanGaps: false,
-                  tension: 0.03,
+                  tension: 0.1,
                 },]
               },
               options: {
                 tooltips: {
                   mode: 'index',
-                  intersect: false
+                  intersect: false,
+                  displayColors: false,
                 },
                 hover: {
                   mode: 'index',
@@ -412,7 +431,7 @@ axios(accessTokenConfig)
                 responsive: true,
                 maintainAspectRatio: false,
                 legend: {
-                  display: false
+                  display: false,
                 },
                 elements: {
                   point: {
@@ -425,9 +444,7 @@ axios(accessTokenConfig)
                       display: false
                     },
                     ticks: {
-                      autoSkip: false,
-                      maxRotation: 0,
-                      minRotation: 0
+                      display: false,
                     }
                   }]
                 },
