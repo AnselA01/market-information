@@ -213,36 +213,72 @@ header {
 }
 .market-status {
   color: rgb(58, 58, 58);
+  font-size: 13px;
+}
+.after-hours {
+  padding-top: 10px;
+}
+.ah-currency {
+  font-size: 20px;
 }
 .ah-price {
-  font-size: 16px;
+  font-size: 20px;
   color: black;
+  margin-right: 6px;
 }
 .pos-ah-change {
   color: green;
+  font-size: 20px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
 }
 .neg-ah-change {
   color:rgb(226, 13, 13);
-  padding-left: 5px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
+  font-size: 20px;
 }
 .eq-ah-change {
   color: rgb(58, 58, 58);
-  padding-left: 5px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
+  font-size: 20px;
 }
 .pos-ah-percent-change {
   vertical-align: 25%;
   color: green;
   margin-left: 3px;
+  font-size: 20px;
 }
 .neg-ah-percent-change {
   vertical-align: 25%;
   color: rgb(226, 13, 13);
   margin-left: 3px;
+  font-size: 20px;
 }
 .eq-ah-percent-change {
   vertical-align: 25%;
   color: rgb(58, 58, 58);
   margin-left: 3px;
+  font-size: 20px;
+}
+.ah-market-status {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgb(71, 71, 71)
+}
+.ah-time {
+  font-size: 12.5px;
+  color: rgb(71, 71, 71)
 }
 .company-info {
   width: 100%;
@@ -280,7 +316,7 @@ header {
   display: block;
 }
 .lower-information-chart {
-  width: 96%;
+  width: 95%;
   height: 300px;
   display: none;
 }
@@ -315,6 +351,7 @@ header {
   border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-chart-canvas {
+  width: 100%;
   display: none;
 }
 .info-line-text {
@@ -350,14 +387,10 @@ header {
 }
 .after-hours {
   margin-top: 3px;
-  font-size: 16px;
+  font-size: 0px;
   font-weight: 550;
   color: black;
 }
-.chart {
-  width: 95.75%;
-  height: 50%;
-} 
 /* Trending */
 .movers-wrapper {
   margin-left: 25px;
