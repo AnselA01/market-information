@@ -49,7 +49,8 @@
         </div>
 
         <!-- regular market price -->
-        <div class="price-and-change">
+        <div class="price-currency-and-change">
+          <div class="price-and-change" id="price-and-change">
           <span id="price-and-currency" class="price-and-currency">
             <span id="currency" class="currency"></span>
             <span id="current-price" class="current-price"></span>
@@ -64,17 +65,17 @@
             <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change"
               class="eq-day-percent-change"></span>
           </span>
-          <span class="bid-ask">
+          <!-- <span class="bid-ask">
             <span id="bid"></span>
             <span id="ask"></span>
-          </span>
+          </span> -->
+        </div>
           <div class="market-status" id="market-status">
             <span class="market-close-status-text" id="market-close-status-text"></span>
             <span class="market-open-status-text" id="market-open-status-text"></span>
             <span class="market-close-time" id="market-close-time"></span>
             <span class="market-open-time" id="market-open-time"></span>
           </div>
-          <!-- bid and ask -->
           <!-- after hours price and change-->
           <div class="after-hours">
             <span class="ah-currency" id="ah-currency"></span>
@@ -99,14 +100,14 @@
             id="lower-information-overview-text">Overview</span>
           <span onclick="changeInfoPaneChart()" class="lower-information-chart-text lower-information-text"
             id="lower-information-chart-text">Chart</span>
-          <span onclick="changeInfoPaneFundamentals()" class="lower-information-fundamentals-text lower-information-text"
-            id="lower-information-fundamentals-text">Fundamental Data</span>
-          <span onclick="changeInfoPaneNews()" class="lower-information-news-text lower-information-text"
+            <span onclick="changeInfoPaneNews()" class="lower-information-news-text lower-information-text"
             id="lower-information-news-text">News</span>
           <span onclick="changeInfoPaneOptions()" class="lower-information-options-text lower-information-text"
             id="lower-information-options-text">Options Chain</span>
           <span onclick="changeInfoPaneHistorical()" class="lower-information-historical-text lower-information-text"
             id="lower-information-historical-text">Historical Data</span>
+            <span onclick="changeInfoPaneForum()" class="lower-information-forum-text lower-information-text"
+            id="lower-information-forum-text">Forum</span>
         </div>
         <div class="lower-information-pane">
           <div class="lower-information-overview" id="lower-information-overview">
@@ -195,16 +196,19 @@
           <div class="lower-information-chart" id="lower-information-chart">
             <canvas id="lower-information-chart-canvas" class="lower-information-chart-canvas"></canvas>
           </div>
-          <div class="lower-information-news" id="lower-information-news">
-
+          <div class="lower-information-volume" id="lower-information-volume">
+            <canvas id="lower-information-volume-canvas" class="lower-information-volume-canvas"></canvas>
           </div>
-          <div class="lower-information-fundamentals" id="lower-information-fundamentals">
+          <div class="lower-information-news" id="lower-information-news">
 
           </div>
           <div class="lower-information-options" id="lower-information-options">
 
           </div>
           <div class="lower-information-historical" id="lower-information-historical">
+
+          </div>
+          <div class="lower-information-forum" id="lower-information-forum">
 
           </div>
         </div>

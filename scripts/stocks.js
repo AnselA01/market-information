@@ -50,7 +50,6 @@ axios(accessTokenConfig)
     axios(quoteConfig)
       .then(function (response) {
         var quoteResponse = response.data[symbol];
-        console.log(response);
         if (quoteResponse.assetType == "ETF") {
           document.getElementById("company-name").innerHTML = quoteResponse.description;
         }
@@ -75,13 +74,12 @@ axios(accessTokenConfig)
         }
         price = price.toLocaleString("en-US");
         document.getElementById("currency").innerHTML = currency;
-        document.getElementById("ah-currency").innerHTML = currency;
         document.getElementById("current-price").innerHTML = price;
-        document.getElementById("bid").innerHTML = bid + " / "
-        document.getElementById("ask").innerHTML = ask;
+        // document.getElementById("bid").innerHTML = bid + " / "
+        // document.getElementById("ask").innerHTML = ask;
 
         var dayChange = quoteResponse.regularMarketNetChange;
-        if (dayChange < 0) {
+        if (price < 0) {
           dayChange = dayChange.toFixed(4);
         }
         else {
@@ -93,7 +91,6 @@ axios(accessTokenConfig)
 
         const date = new Date();
         var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        document.getElementById("ah-time").innerHTML = time;
 
         if (dayChange > 0) {
           toString(dayChange);
@@ -283,13 +280,15 @@ axios(accessTokenConfig)
           .then(response => {
             console.log(response);
             if (!response.data[0].is_market_open) {
+              document.getElementById("ah-currency").innerHTML = currency;
+              document.getElementById("ah-time").innerHTML = time;
               document.getElementById("market-close-status-text").innerHTML = "At close: ";
               document.getElementById("market-close-time").innerHTML = "4:00PM ET"
               document.getElementById("ah-status-text").innerHTML = "After hours: ";
               var date = new Date();
               console.log(date.getHours());
               if (date.getHours() > 19) {
-                document.getElementById("ah-time").innerHTML = "7:59PM ET";
+                document.getElementById("ah-time").innerHTML = "8:00PM ET";
               }
               else {
                 var minutes = date.getMinutes();
@@ -299,7 +298,6 @@ axios(accessTokenConfig)
                   Number(minutes);
                 }
                 var time = date.getHours() + 1 + ":" + minutes + "PM ET";
-                console.log(time);
                 document.getElementById("ah-time").innerHTML = time;
               }
 
@@ -344,18 +342,26 @@ axios(accessTokenConfig)
                 document.getElementById("neg-ah-price-change").style.display = "none";
                 document.getElementById("pos-ah-percent-change").style.display = "none";
                 document.getElementById("neg-ah-percent-change").style.display = "none";
-
-
               }
             }
             else {
-              const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              document.getElementById("ah-currency").style.display = "none";
+              document.getElementById("ah-time").style.display = "none";
               var date = new Date();
-              var month = monthNames[date.getMonth()];
-              document.getElementById("market-status-text").innerHTML = "Market Open: ";
-              //document.getElementById("time").innerHTML = date.getHours() + ":" + date.getMinutes();
-              console.log(date.getHours);
-              console.log(date.getMinutes());
+              document.getElementById("market-open-status-text").innerHTML = "Market open: ";
+              var timeSuffixes = ["AM", "PM"];
+              var minutes = date.getMinutes();
+              if (minutes < 10) {
+                String(minutes);
+                minutes = "0" + minutes;
+                Number(minutes);
+              }
+              if (date.getHours() < 12) {
+                timeSuffix = timeSuffixes[0];
+              }
+              else timeSuffix = timeSuffixes[1];
+              var time = date.getHours() + 1 + ":" + minutes + timeSuffix;
+              document.getElementById("market-open-time").innerHTML = date.getHours() + 1 + ":" + date.getMinutes() + timeSuffix + " ET";
             }
           })
         var chartTime = date.getTime();
@@ -379,44 +385,56 @@ axios(accessTokenConfig)
             while (response.data.candles[numberOfCandles++]) { }
             var interval = 1;
             var times = [];
-            var tt = 570;
-            var ap = ['AM', 'PM'];
+            var startingTime = 570;
+            var suffix = ['AM', 'PM'];
 
-            for (var i = 0; tt < 24 * 60; i++) {
-              var hh = Math.floor(tt / 60); // getting hours of day in 0-24 format
-              var mm = (tt % 60); // getting minutes of the hour in 0-55 format
-              times[i] = ("0" + (hh % 12)).slice(-2) + ':' + ("0" + mm).slice(-2) + " " + ap[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
-              tt = tt + interval;
+            for (var i = 0; startingTime < 24 * 60; i++) {
+              var hh = Math.floor(startingTime / 60); // gestartingTiming hours of day in 0-24 format
+              var mm = (startingTime % 60); // gestartingTiming minutes of the hour in 0-55 format
+              times[i] = ("0" + (hh % 12)).slice(-2) + ':' + ("0" + mm).slice(-2) + " " + suffix[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
+              startingTime = startingTime + interval;
+              if (times[i].substring(0, 2) == "00") {
+                times[i] = times[i].replace("00", "12");
+              }
             }
             var timesLabel = [];
             for (var i = 0; i < 512; i++) {
               timesLabel.push(times[i]);
             }
             let chartValues = [];
+            let volumeValues = [];
+            var date = new Date();
+            var timeSinceOpen = (((date.getHours() + 1) - 9) * 60 + (date.getMinutes() + 30)) - 60;
             if (response.data.candles[0].close > 1 && response.data.candles[0].close < 1000) {
-
-              for (var i = 150; i < numberOfCandles; i++) {
+              for (var i = numberOfCandles - timeSinceOpen - 1; i < numberOfCandles; i++) {
                 var priceValue = response.data.candles[i - 1].close;
+                var volume = response.data.candles[i - 1].volume;
                 priceValue = priceValue.toFixed(2);
                 chartValues.push(priceValue);
+                volumeValues.push(volume);
               }
             }
             else if (response.data.candles[0].close < 1) {
               for (var i = 1; i < numberOfCandles; i++) {
                 var priceValue = response.data.candles[i - 1].close;
+                var volume = response.data.candles[i - 1].volume;
                 priceValue = priceValue.toFixed(4);
                 chartValues.push(priceValue);
+                volumeValues.push(volume);
               }
             }
             else if (response.data.candles[0].close > 1000) {
-              for (var i = 150; i < numberOfCandles; i++) {
+              for (var i = numberOfCandles - timeSinceOpen - 1; i < numberOfCandles; i++) {
                 var priceValue = response.data.candles[i - 1].close;
+                var volume = response.data.candles[i - 1].volume;
                 priceValue = priceValue.toFixed(6);
                 chartValues.push(priceValue);
+                volumeValues.push(volume);
+
               }
             }
-            var ctx = document.getElementById('lower-information-chart-canvas').getContext('2d');
-            var gradient = ctx.createLinearGradient(0, 0, 0, 180);
+            var priceCtx = document.getElementById('lower-information-chart-canvas').getContext('2d');
+            var gradient = priceCtx.createLinearGradient(0, 0, 0, 100);
             if (color == 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')') {
               gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
               gradient.addColorStop(1, 'rgba(41, 128, 0, 0)');
@@ -429,7 +447,7 @@ axios(accessTokenConfig)
               gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
               gradient.addColorStop(1, 'rgba(130, 130, 130, 0)');
             }
-            var chart = new Chart(ctx, {
+            var priceChart = new Chart(priceCtx, {
               type: 'line',
               data: {
                 labels: timesLabel,
@@ -443,7 +461,8 @@ axios(accessTokenConfig)
                   tension: 0,
                   spanGaps: false,
                   tension: 0.1,
-                },]
+                },
+                ]
               },
               options: {
                 tooltips: {
@@ -477,6 +496,59 @@ axios(accessTokenConfig)
                 },
               }
             });
+            var volumeCtx = document.getElementById('lower-information-volume-canvas').getContext('2d');
+            var volumeChart = new Chart(volumeCtx, { 
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: volumeValues,
+                  label: "Volume",
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+
+
+                },]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    // ticks: {
+                    //   display: false,
+                    // }
+                  }]
+                },
+              }
+            });          
           })
       })
 
@@ -490,14 +562,15 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #356EFF 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
-  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
 
   document.getElementById("lower-information-overview").style.display = "block";
   document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
@@ -505,15 +578,15 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
-  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "block";
-  document.getElementById("lower-information-chart-canvas").style.display = "block";
+  document.getElementById("lower-information-volume").style.display = "block";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
@@ -521,29 +594,30 @@ function changeInfoPaneNews() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #356EFF 2px";
-  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "block";
-  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
-function changeInfoPaneFundamentals() {
+function changeInfoPaneForum() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
-  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #356EFF 2px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #356EFF 2px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-fundamentals").style.display = "block";
+  document.getElementById("lower-information-forum").style.display = "block";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
@@ -551,14 +625,15 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
-  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #356EFF 2px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "block";
   document.getElementById("lower-information-historical").style.display = "none";
 }
@@ -566,14 +641,15 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
-  document.getElementById("lower-information-fundamentals-text").style.borderBottom = "solid #ACACAC 2px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #356EFF 2px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-fundamentals").style.display = "none";
+  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
 }

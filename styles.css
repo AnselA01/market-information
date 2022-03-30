@@ -142,7 +142,7 @@ header {
   margin-left: 15px;
   font-size: 18px;
 }
-.price-and-change {
+.price-currency-and-change {
   margin-top: 10px;
   padding-top: 10px;
   margin-bottom: 20px;
@@ -150,6 +150,9 @@ header {
   border-top: solid rgb(119, 119, 119) 1.325px;
   border-bottom: solid rgb(119, 119, 119) 1.325px;
   width: 95%;
+}
+.price-and-change {
+
 }
 .currency {
   font-size: 40px;
@@ -214,6 +217,7 @@ header {
 .market-status {
   color: rgb(58, 58, 58);
   font-size: 13px;
+  padding-top: 0px;
 }
 .after-hours {
   padding-top: 10px;
@@ -272,7 +276,7 @@ header {
   font-size: 20px;
 }
 .ah-market-status {
-  margin-top: 6px;
+  margin-top: 3px;
   font-size: 13px;
   color: rgb(71, 71, 71)
 }
@@ -311,19 +315,24 @@ header {
   cursor: pointer;
   background-color: rgb(196, 214, 252);
 }
-
 .lower-information-overview-text {
   display: block;
 }
 .lower-information-chart {
+  display: none;
   width: 95%;
   height: 300px;
+  margin-left: 10px;
+}
+.lower-information-volume {
   display: none;
+  width: 96%;
+  height: 150px;
 }
 .lower-information-news {
   display: none;
 }
-.lower-information-fundamentals {
+.lower-information-forum {
   display: none;
 }
 .lower-information-options {
@@ -341,7 +350,7 @@ header {
 .lower-information-news-text {
   border-bottom: solid rgb(190, 190, 190) 2px;
 }
-.lower-information-fundamentals-text {
+.lower-information-forum-text {
   border-bottom: solid rgb(190, 190, 190) 2px;
 }
 .lower-information-options-text {
@@ -368,7 +377,7 @@ header {
 }
 .column {
   float: left;
-  width: 30%;
+  width: 30.4%;
   padding-bottom: 15px; 
   margin-right: 20px;
   }
@@ -381,7 +390,6 @@ header {
   clear: both;
   }
 .market-status {
-  margin-top: 4px;
   font-size: 13px;
   color: rgb(71, 71, 71)
 }
@@ -411,5 +419,4 @@ tr:nth-child(even) {
   background-color: #dddddd;
   color: rgb(224, 195, 155);
   color: rgb(100, 100, 0);
-
 }
