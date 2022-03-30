@@ -64,14 +64,20 @@
             <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change"
               class="eq-day-percent-change"></span>
           </span>
-          <!-- bid and ask -->
-          <div class="bid-ask">
+          <span class="bid-ask">
             <span id="bid"></span>
             <span id="ask"></span>
+          </span>
+          <div class="market-status" id="market-status">
+            <span class="market-close-status-text" id="market-close-status-text"></span>
+            <span class="market-open-status-text" id="market-open-status-text"></span>
+            <span class="market-close-time" id="market-close-time"></span>
+            <span class="market-open-time" id="market-open-time"></span>
           </div>
+          <!-- bid and ask -->
           <!-- after hours price and change-->
           <div class="after-hours">
-            <span id="ah-text"></span>
+            <span class="ah-currency" id="ah-currency"></span>
             <span class="ah-price" id="ah-price"></span>
             <span class="ah-change">
               <span id="pos-ah-price-change" class="pos-ah-change"></span> <span id="pos-ah-percent-change"
@@ -80,13 +86,12 @@
                 class="neg-ah-change"></span>
               <span id="eq-ah-price-change" class="eq-ah-change"></span> <span id="eq-ah-percent-change"
                 class="eq-ah-change"></span>
-            </span>
-          </div>
-          <!-- status and time -->
-          <div class="market-status">
-            <span id="market-status"></span>
-            <span id="month-and-day"></span>
-            <span id="time"></span>
+            </div>
+          </span>
+          <!-- After hours status -->
+          <div class="ah-market-status">
+            <span id="ah-status-text" class="ah-status-text"></span>
+            <span id="ah-time" class="ah-time"></span>
           </div>
         </div>
         <div id="lower-information-selector" class="lower-information-selector">

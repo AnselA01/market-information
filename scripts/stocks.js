@@ -58,6 +58,7 @@ axios(accessTokenConfig)
         var currency = "";
         var assetType = quoteResponse.assetType;
         if (assetType == "EQUITY") {
+          assetType = "Equity";
           currency = "$"
         }
 
@@ -73,8 +74,8 @@ axios(accessTokenConfig)
           price = price.toFixed(4);
         }
         price = price.toLocaleString("en-US");
-
         document.getElementById("currency").innerHTML = currency;
+        document.getElementById("ah-currency").innerHTML = currency;
         document.getElementById("current-price").innerHTML = price;
         document.getElementById("bid").innerHTML = bid + " / "
         document.getElementById("ask").innerHTML = ask;
@@ -90,14 +91,9 @@ axios(accessTokenConfig)
         var percentChange = quoteResponse.netPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
 
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August",
-          "September", "October", "November", "December"];
-
         const date = new Date();
-        var month = monthNames[date.getMonth()];
         var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-        document.getElementById("month-and-day").innerHTML = month + " " + date.getDate() + " ";
-        document.getElementById("time").innerHTML = time;
+        document.getElementById("ah-time").innerHTML = time;
 
         if (dayChange > 0) {
           toString(dayChange);
@@ -195,7 +191,7 @@ axios(accessTokenConfig)
 
             document.getElementById("cusip").innerHTML = response.data[symbol].cusip
 
-            document.getElementById("asset-type").innerHTML = response.data[symbol].assetType;
+            document.getElementById("asset-type").innerHTML = assetType;
 
             var beta = fundamentalsParsed.beta;
             document.getElementById("beta").innerHTML = beta.toFixed(2);
@@ -287,8 +283,26 @@ axios(accessTokenConfig)
           .then(response => {
             console.log(response);
             if (!response.data[0].is_market_open) {
-              document.getElementById("ah-text").innerHTML = "After Hours: "
-              document.getElementById("market-status").innerHTML = "Closed: ";
+              document.getElementById("market-close-status-text").innerHTML = "At close: ";
+              document.getElementById("market-close-time").innerHTML = "4:00PM ET"
+              document.getElementById("ah-status-text").innerHTML = "After hours: ";
+              var date = new Date();
+              console.log(date.getHours());
+              if (date.getHours() > 19) {
+                document.getElementById("ah-time").innerHTML = "7:59PM ET";
+              }
+              else {
+                var minutes = date.getMinutes();
+                if (minutes < 10) {
+                  String(minutes);
+                  minutes = "0" + minutes;
+                  Number(minutes);
+                }
+                var time = date.getHours() + 1 + ":" + minutes + "PM ET";
+                console.log(time);
+                document.getElementById("ah-time").innerHTML = time;
+              }
+
               var ahChange = quoteResponse.lastPrice - quoteResponse.regularMarketLastPrice;
               ahChange = ahChange.toFixed(2);
               var ahPercentChange = (ahChange / quoteResponse.regularMarketLastPrice) * 100;
@@ -300,27 +314,37 @@ axios(accessTokenConfig)
                 toString(ahPercentChange);
                 document.getElementById("pos-ah-price-change").innerHTML = "+" + ahChange;
                 document.getElementById("pos-ah-percent-change").innerHTML = "(+" + ahPercentChange + "%)";
+                document.getElementById("pos-ah-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
                 document.getElementById("pos-ah-price-change").style.display = "inline";
                 document.getElementById("neg-ah-price-change").style.display = "none";
                 document.getElementById("eq-ah-price-change").style.display = "none";
+                document.getElementById("neg-ah-percent-change").style.display = "none";
+                document.getElementById("eq-ah-percent-change").style.display = "none";
               }
-              if (ahChange < 0) {
+              else if (ahChange < 0) {
                 toString(ahChange);
                 toString(ahPercentChange);
                 document.getElementById("neg-ah-price-change").innerHTML = ahChange;
                 document.getElementById("neg-ah-percent-change").innerHTML = "(" + ahPercentChange + "%)";
+                document.getElementById("neg-ah-price-change").style.backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
                 document.getElementById("neg-ah-price-change").style.display = "inline";
                 document.getElementById("pos-ah-price-change").style.display = "none";
                 document.getElementById("eq-ah-price-change").style.display = "none";
+                document.getElementById("pos-ah-percent-change").style.display = "none";
+                document.getElementById("eq-ah-percent-change").style.display = "none";
               }
-              if (ahChange == 0) {
+              else {
                 toString(ahChange);
                 toString(ahPercentChange);
                 document.getElementById("eq-ah-price-change").innerHTML = ahChange;
                 document.getElementById("eq-ah-percent-change").innerHTML = "(" + ahPercentChange + "%)";
+                document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
                 document.getElementById("eq-ah-price-change").style.display = "inline";
                 document.getElementById("pos-ah-price-change").style.display = "none";
                 document.getElementById("neg-ah-price-change").style.display = "none";
+                document.getElementById("pos-ah-percent-change").style.display = "none";
+                document.getElementById("neg-ah-percent-change").style.display = "none";
+
 
               }
             }
@@ -328,7 +352,10 @@ axios(accessTokenConfig)
               const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
               var date = new Date();
               var month = monthNames[date.getMonth()];
-              document.getElementById("market-status").innerHTML = "Open: ";
+              document.getElementById("market-status-text").innerHTML = "Market Open: ";
+              //document.getElementById("time").innerHTML = date.getHours() + ":" + date.getMinutes();
+              console.log(date.getHours);
+              console.log(date.getMinutes());
             }
           })
         var chartTime = date.getTime();
@@ -456,14 +483,6 @@ axios(accessTokenConfig)
 
   })
 
-function updateTime() {
-  var date = new Date();
-  var time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-  document.getElementById("time").innerHTML = time;
-}
-setInterval(function () {
-  updateTime();
-}, 2000);
 window.addEventListener('load', function () {
   document.getElementsByTagName("html")[0].style.visibility = "visible";
 });
