@@ -200,7 +200,6 @@ header {
 .change {
   font-size: 20px;
   font-weight: 550;
-  margin-left: 7px;
 }
 
 .pos-day-price-change {
@@ -390,6 +389,7 @@ header {
   display: none;
   width: 93.75%;
   height: 300px;
+  padding-top: 20px;
   margin-left: 13.5px;
 }
 
@@ -401,6 +401,7 @@ header {
 }
 
 .lower-information-news {
+  padding-top: 25px;
   display: none;
 }
 
@@ -487,32 +488,58 @@ header {
   font-weight: 550;
   color: black;
 }
+
+.article-wrapper {
+  margin-bottom: 75px;
+}
+
 .news-column-left {
   float: left;
   width: 20%;
   margin-right: 20px;
 }
+
 .news-column-right {
-  width: 80%;
+  margin-left: 220px;
+  width: 74.1%;
 }
+
 .article-image-src {
   width: 200px;
+  max-height: 150px;
   margin-right: 15px;
 }
+
+.article-publisher {
+  padding-bottom: 7px;
+  font-size: 12px;
+  color: gray;
+}
+
 .article-title {
   display: block;
   font-size: 17px;
-  height: 20px;
-  width: 100%;
-  /* margin-top: 10px; */                     /* do I want margin above the title? */
-  font-weight: bold;
+  width: 74.1%;
+  font-weight: 800;
 }
+
+.article-title-link {
+  color: black;
+  text-decoration: none;
+}
+
+.article-title-link:hover {
+  color: rgb(53, 110, 255);
+}
+
 .article-summary {
-  color: gray;
-  font-size: 13px;
+  color: rgb(101, 101, 101);
+  font-size: 13.5px;
   font-weight: 500;
-  margin-top: 25px;
+  margin-top: 5px;
+  width: 74.1%;
 }
+
 /* Trending */
 .movers-wrapper {
   margin-left: 25px;

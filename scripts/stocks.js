@@ -85,8 +85,7 @@ axios(accessTokenConfig)
         else {
           dayChange = dayChange.toFixed(2);
         }
-
-        var percentChange = quoteResponse.netPercentChangeInDouble;
+        var percentChange = quoteResponse.regularMarketPercentChangeInDouble;
         percentChange = percentChange.toFixed(2);
 
         const date = new Date();
@@ -409,6 +408,7 @@ axios(accessTokenConfig)
             for (var i = 0; i < numberOfCandles - 1; i++) {
               timesLabel.push(times[i]);
             }
+            timesLabel.push("");
             let chartValues = [];
             let volumeValues = [];
             var date = new Date();
@@ -433,9 +433,8 @@ axios(accessTokenConfig)
                   backgroundColor: backgroundColor,
                   pointBackgroundColor: color,
                   borderWidth: 2,
-                  tension: 0,
                   spanGaps: false,
-                  tension: 0.1,
+                  tension: 0.05,
                 },
                 ]
               },
@@ -578,6 +577,130 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneNews() {
+  const newsOptions = {
+    method: 'GET',
+    url: 'https://free-news.p.rapidapi.com/v1/search',
+    params: { 
+      q: loadData(),
+      lang: 'en',
+    },
+    headers: {
+      'X-RapidAPI-Host': 'free-news.p.rapidapi.com',
+      'X-RapidAPI-Key': '90b777a670mshb854beab1255afcp1f2467jsnf1932c24c2ef'
+    }
+  };
+  
+  axios.request(newsOptions).then(function (response) {
+    console.log(response);
+    var articleNumber = [];
+    for (var i = 0; i < 25; i++) {
+      if (response.data.articles[i].clean_url != "reddit.com" && response.data.articles[i].clean_url != "youtube.com" && response.data.articles[i].clean_url != "thesun.co.uk" && response.data.articles[i].clean_url != "ign.com" && response.data.articles[i].clean_url != "digitaltrends.com" && response.data.articles[i].clean_url != "metro.co.uk" && response.data.articles[i].clean_url != "sky.com" && response.data.articles[i].clean_url != "mdpi.com" && response.data.articles[i].topic != "entertainment") {
+        articleNumber.push(i);
+      }
+    }
+    if (articleNumber.length > 0) {
+      var articleOne = response.data.articles[articleNumber[0]];
+      document.getElementById("article-1-image-src").src = articleOne.media;
+      document.getElementById("article-1-publisher").innerHTML = articleOne.clean_url;
+      document.getElementById("article-1-title-link").innerHTML = articleOne.title;
+      document.getElementById("article-1-title-link").href = articleOne.link;
+      var articleOneSummary = articleOne.summary;
+      articleOneSummary = articleOneSummary.substring(0, 250) + "...";
+      document.getElementById("article-1-summary").innerHTML = articleOneSummary;
+    }
+    if (articleNumber.length > 1) {
+      var articleTwo = response.data.articles[articleNumber[1]];
+      document.getElementById("article-2-image-src").src = articleTwo.media;
+      document.getElementById("article-2-publisher").innerHTML = articleTwo.clean_url;
+      document.getElementById("article-2-title-link").innerHTML = articleTwo.title;
+      document.getElementById("article-2-title-link").href = articleTwo.link;
+      var articleTwoSummary = articleTwo.summary;
+      articleTwoSummary = articleTwoSummary.substring(0, 250) + "...";
+      document.getElementById("article-2-summary").innerHTML = articleTwoSummary;
+    }
+    if (articleNumber.length > 2) {
+      var articleThree = response.data.articles[articleNumber[2]];
+      document.getElementById("article-3-image-src").src = articleThree.media;
+      document.getElementById("article-3-publisher").innerHTML = articleThree.clean_url;
+      document.getElementById("article-3-title-link").innerHTML = articleThree.title;
+      document.getElementById("article-3-title-link").href = articleThree.link;
+      var articleThreeSummary = articleThree.summary;
+      articleThreeSummary = articleThreeSummary.substring(0, 250) + "...";
+      document.getElementById("article-3-summary").innerHTML = articleThreeSummary;
+    }
+    if (articleNumber.length > 3) {
+      var articleFour = response.data.articles[articleNumber[3]];
+      document.getElementById("article-4-image-src").src = articleFour.media;
+      document.getElementById("article-4-publisher").innerHTML = articleFour.clean_url;
+      document.getElementById("article-4-title-link").innerHTML = articleFour.title;
+      document.getElementById("article-4-title-link").href = articleFour.link;
+      var articleFourSummary = articleFour.summary;
+      articleFourSummary = articleFourSummary.substring(0, 250) + "...";
+      document.getElementById("article-4-summary").innerHTML = articleFourSummary;
+    }
+    if (articleNumber.length > 4) {
+      var articleFive = response.data.articles[articleNumber[4]];
+      document.getElementById("article-5-image-src").src = articleFive.media;
+      document.getElementById("article-5-publisher").innerHTML = articleFive.clean_url;
+      document.getElementById("article-5-title-link").innerHTML = articleFive.title;
+      document.getElementById("article-5-title-link").href = articleFive.link;
+      var articleFiveSummary = articleFive.summary;
+      articleFiveSummary = articleFiveSummary.substring(0, 250) + "...";
+      document.getElementById("article-5-summary").innerHTML = articleFiveSummary;
+    }
+    if (articleNumber.length > 5) {
+      var articleSix = response.data.articles[articleNumber[5]];
+      document.getElementById("article-6-image-src").src = articleSix.media;
+      document.getElementById("article-6-publisher").innerHTML = articleSix.clean_url;
+      document.getElementById("article-6-title-link").innerHTML = articleSix.title;
+      document.getElementById("article-6-title-link").href = articleSix.link;
+      var articleSixSummary = articleSix.summary;
+      articleSixSummary = articleSixSummary.substring(0, 250) + "...";
+      document.getElementById("article-6-summary").innerHTML = articleSixSummary;
+    }
+    if (articleNumber.length > 6) {
+      var articleSeven = response.data.articles[articleNumber[6]];
+      document.getElementById("article-7-image-src").src = articleSeven.media;
+      document.getElementById("article-7-publisher").innerHTML = articleSeven.clean_url;
+      document.getElementById("article-7-title-link").innerHTML = articleSeven.title;
+      document.getElementById("article-7-title-link").href = articleSeven.link;
+      var articleSevenSummary = articleSeven.summary;
+      articleSevenSummary = articleSevenSummary.substring(0, 250) + "...";
+      document.getElementById("article-7-summary").innerHTML = articleSevenSummary;
+    }
+    if (articleNumber.length > 7) {
+      var articleEight = response.data.articles[articleNumber[7]];
+      document.getElementById("article-8-image-src").src = articleEight.media;
+      document.getElementById("article-8-publisher").innerHTML = articleEight.clean_url;
+      document.getElementById("article-8-title-link").innerHTML = articleEight.title;
+      document.getElementById("article-8-title-link").href = articleEight.link;
+      var articleEightSummary = articleEight.summary;
+      articleEightSummary = articleEightSummary.substring(0, 250) + "...";
+      document.getElementById("article-8-summary").innerHTML = articleEightSummary;
+    }
+    if (articleNumber.length > 8) {
+      var articleNine = response.data.articles[articleNumber[8]];
+      document.getElementById("article-9-image-src").src = articleNine.media;
+      document.getElementById("article-9-publisher").innerHTML = articleNine.clean_url;
+      document.getElementById("article-9-title-link").innerHTML = articleNine.title;
+      document.getElementById("article-9-title-link").href = articleNine.link;
+      var articleNineSummary = articleNine.summary;
+      articleNineSummary = articleNineSummary.substring(0, 250) + "...";
+      document.getElementById("article-9-summary").innerHTML = articleNineSummary;
+    }
+    if (articleNumber.length > 9) {
+      var articleTen = response.data.articles[articleNumber[9]];
+      document.getElementById("article-10-image-src").src = articleTen.media;
+      document.getElementById("article-10-publisher").innerHTML = articleTen.clean_url;
+      document.getElementById("article-10-title-link").innerHTML = articleTen.title;
+      document.getElementById("article-10-title-link").href = articleTen.link;
+      var articleTenSummary = articleTen.summary;
+      articleTenSummary = articleTenSummary.substring(0, 250) + "...";
+      document.getElementById("article-10-summary").innerHTML = articleTenSummary;
+    }
+
+  })
+  
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #356EFF 2px";
@@ -641,28 +764,6 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
 }
-const newsOptions = {
-  method: 'GET',
-  url: 'https://free-news.p.rapidapi.com/v1/search',
-  params: { 
-    q: loadData(),
-    lang: 'en',
-  },
-  headers: {
-    'X-RapidAPI-Host': 'free-news.p.rapidapi.com',
-    'X-RapidAPI-Key': '90b777a670mshb854beab1255afcp1f2467jsnf1932c24c2ef'
-  }
-};
-
-axios.request(newsOptions).then(function (response) {
-  console.log(response);
-  var articleOne = response.data.articles[2];
-  document.getElementById("article-1-image-src").src = articleOne.media;
-  document.getElementById("article-1-title").innerHTML = articleOne.title;
-  // var articleOneSummary = articleOne.summary;
-  // articleOneSummary = articleOneSummary.substring(0, 200) + "...";
-  // document.getElementById("article-1-summary").innerHTML = articleOneSummary;
-})
 
 //logo
 var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol=";
