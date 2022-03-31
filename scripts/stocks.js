@@ -98,8 +98,9 @@ axios(accessTokenConfig)
           document.getElementById("pos-day-price-change").innerHTML = "+" + dayChange;
           document.getElementById("pos-day-price-change").style.display = "inline";
           document.getElementById("pos-day-percent-change").innerHTML = " (+" + percentChange + "%" + ")";
-          var color = 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')';
-          document.getElementById("pos-day-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
+          var color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+          var backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("pos-day-price-change").style.backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
           document.getElementById("neg-day-price-change").style.display = "none";
           document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
@@ -112,7 +113,8 @@ axios(accessTokenConfig)
           document.getElementById("neg-day-percent-change").innerHTML = " (" + percentChange + "%" + ")";
           document.getElementById("neg-day-price-change").style.display = "inline";
           document.getElementById("neg-day-price-change").style.backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-          var color = 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')';
+          var color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          var backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
           document.getElementById("pos-day-price-change").style.display = "none";
           document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)" + " | " + quoteResponse.description;
@@ -127,6 +129,7 @@ axios(accessTokenConfig)
           document.getElementById("eq-day-price-change").style.display = "inline";
           document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
           var color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+          var backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
           document.getElementById("neg-day-price-change").style.display = "none";
           document.getElementById("pos-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
@@ -278,7 +281,6 @@ axios(accessTokenConfig)
           })
         axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
           .then(response => {
-            console.log(response);
             if (!response.data[0].is_market_open) {
               document.getElementById("ah-currency").innerHTML = currency;
               document.getElementById("ah-time").innerHTML = time;
@@ -286,7 +288,10 @@ axios(accessTokenConfig)
               document.getElementById("market-close-time").innerHTML = "4:00PM ET"
               document.getElementById("ah-status-text").innerHTML = "After hours: ";
               var date = new Date();
-              console.log(date.getHours());
+              var hours = date.getHours() + 1;
+              if (hours > 12) {
+                hours -= 12;
+              }
               if (date.getHours() > 19) {
                 document.getElementById("ah-time").innerHTML = "8:00PM ET";
               }
@@ -297,7 +302,7 @@ axios(accessTokenConfig)
                   minutes = "0" + minutes;
                   Number(minutes);
                 }
-                var time = date.getHours() + 1 + ":" + minutes + "PM ET";
+                var time = hours + ":" + minutes + "PM ET";
                 document.getElementById("ah-time").innerHTML = time;
               }
 
@@ -351,17 +356,21 @@ axios(accessTokenConfig)
               document.getElementById("market-open-status-text").innerHTML = "Market open: ";
               var timeSuffixes = ["AM", "PM"];
               var minutes = date.getMinutes();
+              var hours = date.getHours() + 1;
+              if (hours > 12) {
+                hours = hours - 12;
+              }
               if (minutes < 10) {
                 String(minutes);
                 minutes = "0" + minutes;
                 Number(minutes);
               }
-              if (date.getHours() < 12) {
-                timeSuffix = timeSuffixes[0];
+              else {
+                timeSuffix = timeSuffixes[1];
               }
-              else timeSuffix = timeSuffixes[1];
-              var time = date.getHours() + 1 + ":" + minutes + timeSuffix;
-              document.getElementById("market-open-time").innerHTML = date.getHours() + 1 + ":" + date.getMinutes() + timeSuffix + " ET";
+
+              var time = hours + 1 + ":" + minutes + timeSuffix;
+              document.getElementById("market-open-time").innerHTML = hours + 1 + ":" + date.getMinutes() + timeSuffix + " ET";
             }
           })
         var chartTime = date.getTime();
@@ -373,14 +382,13 @@ axios(accessTokenConfig)
         }
         var chartConfig = {
           method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + chartTime + '&startDate=' + chartTime + '&needExtendedHoursData=true',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + chartTime + '&startDate=' + chartTime + '&needExtendedHoursData=false',
           headers: {
             'Authorization': accessToken
           }
         };
         axios(chartConfig)
           .then(function (response) {
-            console.log(response.data);
             var numberOfCandles = 0;
             while (response.data.candles[numberOfCandles++]) { }
             var interval = 1;
@@ -398,55 +406,22 @@ axios(accessTokenConfig)
               }
             }
             var timesLabel = [];
-            for (var i = 0; i < 512; i++) {
+            for (var i = 0; i < numberOfCandles - 1; i++) {
               timesLabel.push(times[i]);
             }
             let chartValues = [];
             let volumeValues = [];
             var date = new Date();
             var timeSinceOpen = (((date.getHours() + 1) - 9) * 60 + (date.getMinutes() + 30)) - 60;
-            if (response.data.candles[0].close > 1 && response.data.candles[0].close < 1000) {
-              for (var i = numberOfCandles - timeSinceOpen - 1; i < numberOfCandles; i++) {
-                var priceValue = response.data.candles[i - 1].close;
-                var volume = response.data.candles[i - 1].volume;
-                priceValue = priceValue.toFixed(2);
-                chartValues.push(priceValue);
-                volumeValues.push(volume);
-              }
+            for (var i = 1; i < numberOfCandles - 1; i++) {
+              var priceValue = response.data.candles[i].close;
+              var volume = response.data.candles[i].volume;
+              priceValue = priceValue.toFixed(2);
+              chartValues.push(priceValue);
+              volumeValues.push(volume);
             }
-            else if (response.data.candles[0].close < 1) {
-              for (var i = 1; i < numberOfCandles; i++) {
-                var priceValue = response.data.candles[i - 1].close;
-                var volume = response.data.candles[i - 1].volume;
-                priceValue = priceValue.toFixed(4);
-                chartValues.push(priceValue);
-                volumeValues.push(volume);
-              }
-            }
-            else if (response.data.candles[0].close > 1000) {
-              for (var i = numberOfCandles - timeSinceOpen - 1; i < numberOfCandles; i++) {
-                var priceValue = response.data.candles[i - 1].close;
-                var volume = response.data.candles[i - 1].volume;
-                priceValue = priceValue.toFixed(6);
-                chartValues.push(priceValue);
-                volumeValues.push(volume);
-
-              }
-            }
+            chartValues.unshift(response.data.candles[0].open);
             var priceCtx = document.getElementById('lower-information-chart-canvas').getContext('2d');
-            var gradient = priceCtx.createLinearGradient(0, 0, 0, 100);
-            if (color == 'rgb(' + 41 + ',' + 128 + ',' + 0 + ')') {
-              gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-              gradient.addColorStop(1, 'rgba(41, 128, 0, 0)');
-            }
-            else if (color == 'rgb(' + 215 + ',' + 9 + ',' + 8 + ')') {
-              gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-              gradient.addColorStop(1, 'rgba(215, 9, 8, 0)');
-            }
-            else if (color == 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')') {
-              gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-              gradient.addColorStop(1, 'rgba(130, 130, 130, 0)');
-            }
             var priceChart = new Chart(priceCtx, {
               type: 'line',
               data: {
@@ -455,7 +430,7 @@ axios(accessTokenConfig)
                   data: chartValues,
                   label: symbol,
                   borderColor: color,
-                  backgroundColor: gradient,
+                  backgroundColor: backgroundColor,
                   pointBackgroundColor: color,
                   borderWidth: 2,
                   tension: 0,
@@ -497,20 +472,28 @@ axios(accessTokenConfig)
               }
             });
             var volumeCtx = document.getElementById('lower-information-volume-canvas').getContext('2d');
-            var volumeChart = new Chart(volumeCtx, { 
+            var volumeChart = new Chart(volumeCtx, {
               type: 'bar',
               data: {
                 labels: timesLabel,
                 datasets: [{
                   data: volumeValues,
-                  label: "Volume",
                   backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-
-
                 },]
               },
               options: {
                 tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
                   mode: 'index',
                   intersect: false,
                   displayColors: false,
@@ -542,23 +525,27 @@ axios(accessTokenConfig)
                     gridLine: {
                       display: false,
                     },
-                    // ticks: {
-                    //   display: false,
-                    // }
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
                   }]
                 },
               }
-            });          
+            });
           })
       })
-
-
   })
 
-window.addEventListener('load', function () {
-  document.getElementsByTagName("html")[0].style.visibility = "visible";
-});
+var currentText = document.getElementById("lower-information-overview-text");
+var pastText;
+
 function changeInfoPaneOverview() {
+  pastText = currentText;
+  currentText = pastText;
+
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #356EFF 2px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2px";
@@ -616,6 +603,7 @@ function changeInfoPaneForum() {
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "block";
   document.getElementById("lower-information-options").style.display = "none";
@@ -653,6 +641,29 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
 }
+const newsOptions = {
+  method: 'GET',
+  url: 'https://free-news.p.rapidapi.com/v1/search',
+  params: { 
+    q: loadData(),
+    lang: 'en',
+  },
+  headers: {
+    'X-RapidAPI-Host': 'free-news.p.rapidapi.com',
+    'X-RapidAPI-Key': '90b777a670mshb854beab1255afcp1f2467jsnf1932c24c2ef'
+  }
+};
+
+axios.request(newsOptions).then(function (response) {
+  console.log(response);
+  var articleOne = response.data.articles[2];
+  document.getElementById("article-1-image-src").src = articleOne.media;
+  document.getElementById("article-1-title").innerHTML = articleOne.title;
+  // var articleOneSummary = articleOne.summary;
+  // articleOneSummary = articleOneSummary.substring(0, 200) + "...";
+  // document.getElementById("article-1-summary").innerHTML = articleOneSummary;
+})
+
 //logo
 var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol=";
 compLogoUrl = compLogoUrl.concat(loadData());
@@ -661,3 +672,6 @@ axios.get(compLogoUrl)
     var logo = response.data.url;
     document.getElementById("logo").src = logo;
   })
+window.addEventListener('load', function () {
+  document.getElementsByTagName("html")[0].style.visibility = "visible";
+});
