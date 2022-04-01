@@ -194,10 +194,31 @@
             </div>
           </div>
           <div class="lower-information-chart" id="lower-information-chart">
-            <canvas id="lower-information-chart-canvas" class="lower-information-chart-canvas"></canvas>
+            <div class="chart-timescale-selector" id="chart-timescale-selector">
+              <span class="chart-timescale-1d" id="chart-timescale-1d" onclick="changeChartTimescale1d()">1D</span>
+              <span class="chart-timescale-5d" id="chart-timescale-5d" onclick="changeChartTimescale5d()">5D</span>
+              <span class="chart-timescale-1m" id="chart-timescale-1m" onclick="changeChartTimescale1m()">1M</span>
+              <span class="chart-timescale-6m" id="chart-timescale-6m" onclick="changeChartTimescale6m()">6M</span>
+              <span class="chart-timescale-ytd" id="chart-timescale-ytd" onclick="changeChartTimescaleYtd()">YTD</span>
+              <span class="chart-timescale-1y" id="chart-timescale-1y" onclick="changeChartTimescale1y()">1Y</span>
+              <span class="chart-timescale-5y" id="chart-timescale-5y" onclick="changeChartTimescale5y()">5Y</span>
+            </div>
+            <canvas id="lower-information-chart-canvas-1d" class="lower-information-chart-canvas"></canvas>
+            <canvas id="lower-information-chart-canvas-5d" class="lower-information-chart-canvas"></canvas>
+            <canvas id="lower-information-chart-canvas-1m" class="lower-information-chart-canvas"></canvas>
+            <canvas id="lower-information-chart-canvas-6m" class="lower-information-chart-canvas"></canvas>
+            <canvas id="lower-information-chart-canvas-ytd" class="lower-information-chart-canvas"></canvas>
+            <canvas id="lower-information-chart-canvas-1y" class="lower-information-chart-canvas"></canvas>
+            <canvas id="lower-information-chart-canvas-5y" class="lower-information-chart-canvas"></canvas>
           </div>
           <div class="lower-information-volume" id="lower-information-volume">
-            <canvas id="lower-information-volume-canvas" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-1d" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-5d" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-1m" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-6m" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-ytd" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-1y" class="lower-information-volume-canvas"></canvas>
+            <canvas id="lower-information-volume-canvas-5y" class="lower-information-volume-canvas"></canvas>
           </div>
           <div class="lower-information-news" id="lower-information-news">
             <div class="article-wrapper" id="article-1">
@@ -206,7 +227,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-1-info">
-                  <div class="article-publisher" id="article-1-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-1-publisher"></span>
+                    <span class="article-dot" id="article-1-dot"></span>
+                    <span class="article-date" id="article-1-date"></span>
+                  </div>
                   <div class="article-title" id="article-1-title"><a id="article-1-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-1-summary"></div>
                 </div>
@@ -218,7 +243,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-2-info">
-                  <div class="article-publisher" id="article-2-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-2-publisher"></span>
+                    <span class="article-dot" id="article-2-dot"></span>
+                    <span class="article-date" id="article-2-date"></span>
+                  </div>
                   <div class="article-title" id="article-2-title"><a id="article-2-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-2-summary"></div>
                 </div>
@@ -230,7 +259,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-3-info">
-                  <div class="article-publisher" id="article-3-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-3-publisher"></span>
+                    <span class="article-dot" id="article-3-dot"></span>
+                    <span class="article-date" id="article-3-date"></span>
+                  </div>
                   <div class="article-title" id="article-3-title"><a id="article-3-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-3-summary"></div>
                 </div>
@@ -242,7 +275,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-4-info">
-                  <div class="article-publisher" id="article-4-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-4-publisher"></span>
+                    <span class="article-dot" id="article-4-dot"></span>
+                    <span class="article-date" id="article-4-date"></span>
+                  </div>
                   <div class="article-title" id="article-4-title"><a id="article-4-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-4-summary"></div>
                 </div>
@@ -254,7 +291,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-5-info">
-                  <div class="article-publisher" id="article-5-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-5-publisher"></span>
+                    <span class="article-dot" id="article-5-dot"></span>
+                    <span class="article-date" id="article-5-date"></span>
+                  </div>
                   <div class="article-title" id="article-5-title"><a id="article-5-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-5-summary"></div>
                 </div>
@@ -266,7 +307,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-6-info">
-                  <div class="article-publisher" id="article-6-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-6-publisher"></span>
+                    <span class="article-dot" id="article-6-dot"></span>
+                    <span class="article-date" id="article-6-date"></span>
+                  </div>
                   <div class="article-title" id="article-6-title"><a id="article-6-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-6-summary"></div>
                 </div>
@@ -278,7 +323,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-7-info">
-                  <div class="article-publisher" id="article-7-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-7-publisher"></span>
+                    <span class="article-dot" id="article-7-dot"></span>
+                    <span class="article-date" id="article-7-date"></span>
+                  </div>
                   <div class="article-title" id="article-7-title"><a id="article-7-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-7-summary"></div>
                 </div>
@@ -290,19 +339,27 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-8-info">
-                  <div class="article-publisher" id="article-8-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-8-publisher"></span>
+                    <span class="article-dot" id="article-8-dot"></span>
+                    <span class="article-date" id="article-8-date"></span>
+                  </div>
                   <div class="article-title" id="article-8-title"><a id="article-8-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-8-summary"></div>
                 </div>
               </div>
             </div>
-            <div class="article-wrapper" id="article-9">
+            <div class="article-wrapper" id="article-8">
               <div class="news-column-left">
                 <span class="article-image" id="article-9-image"><img id=article-9-image-src class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-9-info">
-                  <div class="article-publisher" id="article-9-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-9-publisher"></span>
+                    <span class="article-dot" id="article-9-dot"></span>
+                    <span class="article-date" id="article-9-date"></span>
+                  </div>
                   <div class="article-title" id="article-9-title"><a id="article-9-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-9-summary"></div>
                 </div>
@@ -314,7 +371,11 @@
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-10-info">
-                  <div class="article-publisher" id="article-10-publisher"></div>
+                  <div class="publisher-and-date">
+                    <span class="article-publisher" id="article-10-publisher"></span>
+                    <span class="article-dot" id="article-10-dot"></span>
+                    <span class="article-date" id="article-10-date"></span>
+                  </div>
                   <div class="article-title" id="article-10-title"><a id="article-10-title-link" class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-10-summary"></div>
                 </div>
@@ -332,7 +393,9 @@
         </div>
       </div>
     </div>
-    <div class="right-side"></div>
+    <div class="right-side">
+
+    </div>
   </div>
 </body>
 </html>

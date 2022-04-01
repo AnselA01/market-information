@@ -385,12 +385,121 @@ header {
   display: block;
 }
 
+.chart-timescale-selector {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 45%;
+  margin-left: 0;
+  padding-bottom: 10px;
+}
+
+.chart-timescale-1d {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+}
+
+.chart-timescale-5d {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+}
+
+.chart-timescale-1m {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+
+}
+
+.chart-timescale-6m {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+}
+
+.chart-timescale-ytd {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+}
+
+.chart-timescale-1y {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+
+}
+
+.chart-timescale-5y {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+
+}
+
+.chart-timescale-1d:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+}
+
+.chart-timescale-5d:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+
+}
+
+.chart-timescale-1m:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+
+}
+
+.chart-timescale-6m:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+
+}
+
+.chart-timescale-ytd:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+
+}
+
+.chart-timescale-1y:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+
+}
+
+.chart-timescale-5y:hover {
+  background-color: rgb(196, 214, 252);
+  cursor: pointer;
+
+}
 .lower-information-chart {
   display: none;
   width: 93.75%;
   height: 300px;
-  padding-top: 20px;
+  margin-top: 20;
   margin-left: 13.5px;
+  margin-bottom: 30px;
 }
 
 .lower-information-volume {
@@ -398,7 +507,25 @@ header {
   width: 96.15%;
   height: 150px;
   margin-left: -10px;
+  padding-top: 20px;
 }
+
+.lower-information-volume-canvas-1d {}
+
+.lower-information-volume-canvas-5d {}
+
+.lower-information-volume-canvas-1m {}
+
+.lower-information-volume-canvas-6m {}
+
+.lower-information-volume-canvas-1y {}
+
+.lower-information-volume-canvas-5y {}
+
+
+
+
+
 
 .lower-information-news {
   padding-top: 25px;
@@ -418,31 +545,57 @@ header {
 }
 
 .lower-information-overview-text {
-  border-bottom: solid rgb(53, 110, 255);
+  border-bottom: solid rgb(53, 110, 255) 2.5px;
 }
 
 .lower-information-chart-text {
-  border-bottom: solid rgb(190, 190, 190) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2.5px;
 }
 
 .lower-information-news-text {
-  border-bottom: solid rgb(190, 190, 190) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2.5px;
 }
 
 .lower-information-forum-text {
-  border-bottom: solid rgb(190, 190, 190) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2.5px;
 }
 
 .lower-information-options-text {
-  border-bottom: solid rgb(190, 190, 190) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2.5px;
 }
 
 .lower-information-historical-text {
-  border-bottom: solid rgb(190, 190, 190) 2px;
+  border-bottom: solid rgb(190, 190, 190) 2.5px;
 }
 
-.lower-information-chart-canvas {
+.lower-information-chart-canvas-1d {
+  margin-top: 20px;
   width: 100%;
+  display: block;
+}
+
+.lower-information-chart-canvas-5d {
+  margin-top: 20px;
+  display: none;
+}
+
+.lower-information-chart-canvas-1m {
+  margin-top: 20px;
+  display: none;
+}
+
+.lower-information-chart-canvas-6m {
+  margin-top: 20px;
+  display: none;
+}
+
+.lower-information-chart-canvas-1y {
+  margin-top: 20px;
+  display: none;
+}
+
+.lower-information-chart-canvas-5y {
+  margin-top: 20px;
   display: none;
 }
 
@@ -513,7 +666,17 @@ header {
 .article-publisher {
   padding-bottom: 7px;
   font-size: 12px;
-  color: gray;
+  color: rgb(101, 101, 101);
+}
+
+.article-dot {
+  color: rgb(101, 101, 101);
+  font-size: 13px;
+}
+
+.article-date {
+  font-size: 12px;
+  color: rgb(101, 101, 101);
 }
 
 .article-title {
