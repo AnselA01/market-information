@@ -15,7 +15,8 @@ function getSymbol() {
   saveData(symbol);
   document.location.href = "stocks.html";
 }
-var symbol = loadData().toUpperCase();
+var symbol = loadData();
+symbol = symbol.toUpperCase();
 document.title = loadData();
 var companyNameUrl = "https://api.twelvedata.com/stocks?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&country=US&symbol=";
 companyNameUrl = companyNameUrl.concat(loadData());
