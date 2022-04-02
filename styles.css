@@ -1,17 +1,22 @@
 html {
   visibility: hidden;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   font-size: 100%;
   font-family: Helvetica;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 header {
   height: 100px;
-  background-color: rgb(60, 60, 60);
+  background-color: rgb(77, 77, 77);
   margin-bottom: 30px;
+  box-shadow: 0px 7px 30px -7px rgba(0, 0, 0, 0.75);
 }
 
 .header-content {
@@ -151,7 +156,6 @@ header {
 
 .name-and-image {
   width: 100%;
-  padding-bottom: 10px;
 }
 
 .logo {
@@ -176,16 +180,12 @@ header {
 }
 
 .price-currency-and-change {
-  margin-top: 10px;
-  padding-top: 10px;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-top: solid rgb(119, 119, 119) 1.325px;
-  border-bottom: solid rgb(119, 119, 119) 1.325px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  /* border-top: solid rgb(119, 119, 119) 1.325px;
+  border-bottom: solid rgb(119, 119, 119) 1.325px; */
   width: 95%;
 }
-
-.price-and-change {}
 
 .currency {
   font-size: 40px;
@@ -198,12 +198,12 @@ header {
 }
 
 .change {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 550;
 }
 
 .pos-day-price-change {
-  vertical-align: 25%;
+  vertical-align: 20%;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 7px;
@@ -213,7 +213,7 @@ header {
 }
 
 .neg-day-price-change {
-  vertical-align: 25%;
+  vertical-align: 20%;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 7px;
@@ -223,7 +223,7 @@ header {
 }
 
 .eq-day-price-change {
-  vertical-align: 25%;
+  vertical-align: 20%;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 7px;
@@ -233,19 +233,19 @@ header {
 }
 
 .pos-day-percent-change {
-  vertical-align: 25%;
+  vertical-align: 20%;
   color: rgb(42, 115, 49);
   margin-left: 3px;
 }
 
 .neg-day-percent-change {
-  vertical-align: 25%;
+  vertical-align: 20%;
   color: rgb(157, 12, 12);
   margin-left: 3px;
 }
 
 .eq-day-percent-change {
-  vertical-align: 25%;
+  vertical-align: 20%;
   color: rgb(58, 58, 58);
   margin-left: 3px;
 }
@@ -267,18 +267,19 @@ header {
 }
 
 .ah-currency {
-  font-size: 20px;
+  font-size: 25px;
 }
 
 .ah-price {
-  font-size: 20px;
+  font-size: 25px;
   color: black;
   margin-right: 6px;
   font-weight: bold;
 }
 
 .pos-ah-change {
-  font-size: 20px;
+  vertical-align: 5%;
+  font-size: 23px;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 7px;
@@ -289,26 +290,31 @@ header {
 }
 
 .neg-ah-change {
+  vertical-align: 5%;
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 7px;
   padding-bottom: 7px;
   border-radius: 10px;
   color: rgb(157, 12, 12);
-  font-size: 20px;
+  font-size: 23px;
   font-weight: bold;
 }
 
 .eq-ah-change {
+  vertical-align: 5%;
   color: rgb(58, 58, 58);
-  padding: 7px;
-  border-radius: 20px;
-  font-size: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  border-radius: 10px;
+  font-size: 23px;
   font-weight: bold;
 }
 
 .pos-ah-percent-change {
-  vertical-align: 25%;
+  vertical-align: 10%;
   color: green;
   margin-left: 3px;
   font-size: 20px;
@@ -316,7 +322,7 @@ header {
 }
 
 .neg-ah-percent-change {
-  vertical-align: 25%;
+  vertical-align: 10%;
   color: rgb(157, 12, 12);
   margin-left: 3px;
   font-size: 20px;
@@ -335,9 +341,9 @@ header {
 }
 
 .ah-market-status {
-  margin-top: 12px;
+  margin-top: 7px;
   font-size: 13px;
-  color: rgb(71, 71, 71)
+  color: rgb(58, 58, 58)
 }
 
 .ah-time {
@@ -359,16 +365,19 @@ header {
 }
 
 .lower-information-selector {
-  width: 85%;
+  width: 97.15%;
   display: flex;
   flex-direction: row;
   justify-content: left;
   font-weight: 550;
   margin-bottom: 20px;
 }
-
+.lower-information-blank {
+  width: 40.1%;
+  border-bottom: solid rgb(190, 190, 190) 2.5px;
+}
 .lower-information-text {
-  font-size: 14.5px;
+  font-size: 15px;
   color: rgb(39, 108, 255);
   padding-left: 13.75px;
   padding-right: 13.75px;
@@ -600,7 +609,7 @@ header {
 }
 
 .info-line-text {
-  font-size: 14px;
+  font-size: 15px;
   color: rgb(71, 71, 71);
   float: left;
   font-weight: 530;
@@ -608,7 +617,7 @@ header {
 
 .info-line-data {
   color: black;
-  font-size: 14px;
+  font-size: 15px;
   float: right;
   font-weight: bold;
 }
@@ -665,7 +674,7 @@ header {
 
 .article-publisher {
   padding-bottom: 7px;
-  font-size: 12px;
+  font-size: 13px;
   color: rgb(101, 101, 101);
 }
 
@@ -675,13 +684,13 @@ header {
 }
 
 .article-date {
-  font-size: 12px;
+  font-size: 13px;
   color: rgb(101, 101, 101);
 }
 
 .article-title {
   display: block;
-  font-size: 17px;
+  font-size: 18px;
   width: 74.1%;
   font-weight: 800;
 }
@@ -697,10 +706,26 @@ header {
 
 .article-summary {
   color: rgb(101, 101, 101);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
   margin-top: 5px;
   width: 74.1%;
+  line-height: 19px;
+}
+.markets-text {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 20%;
+  margin-top: 11%;
+  margin-bottom: 30px;
+  width: 50%;
+}
+.right-market-status {
+  
+}
+.index-chart {
+  margin-left: 7px;
+  width: 80%;
 }
 
 /* Trending */

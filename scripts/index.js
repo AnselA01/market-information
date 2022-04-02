@@ -361,7 +361,7 @@ axios(accessTokenConfig)
               else {
                 timeSuffix = timeSuffixes[1];
               }
-              
+
 
               var time = hours + 1 + ":" + minutes + timeSuffix;
               document.getElementById("market-open-time").innerHTML = hours + 1 + ":" + date.getMinutes() + timeSuffix + " ET";
@@ -411,7 +411,7 @@ axios(accessTokenConfig)
               volumeValues.push(response.data.candles[i].volume);
             }
             chartValues.unshift(response.data.candles[0].open);
-            volumeValues.push(response.data.candles[numberOfCandles-1].volume);
+            volumeValues.push(response.data.candles[numberOfCandles - 1].volume);
             var priceCtx = document.getElementById('lower-information-chart-canvas-1d').getContext('2d');
             var priceChart = new Chart(priceCtx, {
               type: 'line',
@@ -525,933 +525,1192 @@ axios(accessTokenConfig)
                 },
               }
             });
-          })                   
-          //5 day chart
-          var chartTime = date.getTime();
-          var chartEndDate = date.getTime() - 432000000;
-          var FiveDaychartConfig = {
+          })
+        //5 day chart
+        var chartTime = date.getTime();
+        var chartEndDate = date.getTime() - 432000000;
+        var FiveDaychartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=5&endDate=' + chartTime + '&startDate=' + chartEndDate + '&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(FiveDaychartConfig)
+          .then(function (response) {
+            var numberOfCandles = response.data.candles.length;
+            var timesLabel = [];
+            var date = new Date();
+            var month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day;
+            var hour;
+            var minute;
+            var timeZone;
+            for (var i = 0; i < numberOfCandles; i++) {
+              date = new Date(response.data.candles[i].datetime);
+              month = monthNames[date.getMonth()];
+              day = date.getDate();
+              hour = date.getHours();
+              minute = date.getMinutes();
+              timeZone = date.getTimezoneOffset() / 60;
+              if (hour > 12) {
+                hour -= 12;
+                suffix = "PM";
+              }
+              else if (hour == 12) {
+                suffix = "PM";
+              }
+              else suffix = "AM";
+              if (minute < 10) {
+                minute = "0" + minute;
+              }
+              fullTime = month + " " + day + ", " + hour + ":" + minute + " " + suffix + " " + "GMT-" + timeZone;
+              timesLabel.push(fullTime);
+            }
+            timesLabel.push("");
+
+            let fiveDayChartValues = [];
+            let fiveDayVolumeValues = [];
+            for (var i = 0; i < numberOfCandles - 1; i++) {
+              fiveDayChartValues.push(response.data.candles[i].close.toFixed(2));
+              fiveDayVolumeValues.push(response.data.candles[i].volume);
+            }
+            fiveDayChartValues.unshift(response.data.candles[0].open);
+            fiveDayVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceCtx = document.getElementById('lower-information-chart-canvas-5d').getContext('2d');
+            var priceChart = new Chart(priceCtx, {
+              type: 'line',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: fiveDayChartValues,
+                  label: symbol,
+                  borderColor: color,
+                  backgroundColor: backgroundColor,
+                  pointBackgroundColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  tension: 0.05,
+                },
+                ]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }]
+                },
+              }
+            });
+            var fiveDayVolumeCtx = document.getElementById('lower-information-volume-canvas-5d').getContext('2d');
+            var volumeChart = new Chart(fiveDayVolumeCtx, {
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: fiveDayVolumeValues,
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+                },]
+              },
+              options: {
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
+                  }]
+                },
+              }
+            });
+          })
+        //1 month chart
+        var chartEndDate = date.getTime();
+        var oneMonthChartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(oneMonthChartConfig)
+          .then(function (response) {
+            var numberOfCandles = response.data.candles.length;
+            var timesLabel = [];
+            var date = new Date();
+            var year;
+            var month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day;
+            for (var i = 0; i < numberOfCandles; i++) {
+              date = new Date(response.data.candles[i].datetime);
+              month = monthNames[date.getMonth()];
+              day = date.getDate();
+              year = date.getFullYear();
+              fullTime = month + " " + day + ", " + year;
+              timesLabel.push(fullTime);
+            }
+            timesLabel.push("");
+
+            let oneMonthChartValues = [];
+            let oneMonthVolumeValues = [];
+            for (var i = 0; i < numberOfCandles - 1; i++) {
+              oneMonthChartValues.push(response.data.candles[i].close.toFixed(2));
+              oneMonthVolumeValues.push(response.data.candles[i].volume);
+            }
+            oneMonthChartValues.unshift(response.data.candles[0].open);
+            oneMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceCtx = document.getElementById('lower-information-chart-canvas-1m').getContext('2d');
+            var priceChart = new Chart(priceCtx, {
+              type: 'line',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: oneMonthChartValues,
+                  label: symbol,
+                  borderColor: color,
+                  backgroundColor: backgroundColor,
+                  pointBackgroundColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  tension: 0.05,
+                },
+                ]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }]
+                },
+              }
+            });
+            var oneMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-1m').getContext('2d');
+            var oneMonthVOlumeChart = new Chart(oneMonthVolumeCtx, {
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: oneMonthVolumeValues,
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+                },]
+              },
+              options: {
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
+                  }]
+                },
+              }
+            });
+          })
+        //6 month chart
+        var chartEndDate = date.getTime();
+        var sixMonthChartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=6&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(sixMonthChartConfig)
+          .then(function (response) {
+            var numberOfCandles = response.data.candles.length;
+            var timesLabel = [];
+            var date = new Date();
+            var year;
+            var month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day;
+            for (var i = 0; i < numberOfCandles; i++) {
+              date = new Date(response.data.candles[i].datetime);
+              month = monthNames[date.getMonth()];
+              day = date.getDate();
+              year = date.getFullYear();
+              fullTime = month + " " + day + ", " + year;
+              timesLabel.push(fullTime);
+            }
+            timesLabel.push("");
+
+            let sixMonthChartValues = [];
+            let sixMonthVolumeValues = [];
+            for (var i = 0; i < numberOfCandles - 1; i++) {
+              sixMonthChartValues.push(response.data.candles[i].close.toFixed(2));
+              sixMonthVolumeValues.push(response.data.candles[i].volume);
+            }
+            sixMonthChartValues.unshift(response.data.candles[0].open);
+            sixMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var sixMonthPriceCtx = document.getElementById('lower-information-chart-canvas-6m').getContext('2d');
+            var priceChart = new Chart(sixMonthPriceCtx, {
+              type: 'line',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: sixMonthChartValues,
+                  label: symbol,
+                  borderColor: color,
+                  backgroundColor: backgroundColor,
+                  pointBackgroundColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  tension: 0.05,
+                },
+                ]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }]
+                },
+              }
+            });
+            var sixMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-6m').getContext('2d');
+            var sixMonthVOlumeChart = new Chart(sixMonthVolumeCtx, {
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: sixMonthVolumeValues,
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+                },]
+              },
+              options: {
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
+                  }]
+                },
+              }
+            });
+          })
+        //year to date chart
+        var chartEndDate = date.getTime();
+        var ytdChartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=ytd&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(ytdChartConfig)
+          .then(function (response) {
+            var numberOfCandles = response.data.candles.length;
+            var timesLabel = [];
+            var date = new Date();
+            var year;
+            var month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day;
+            for (var i = 0; i < numberOfCandles; i++) {
+              date = new Date(response.data.candles[i].datetime);
+              month = monthNames[date.getMonth()];
+              day = date.getDate();
+              year = date.getFullYear();
+              fullTime = month + " " + day + ", " + year;
+              timesLabel.push(fullTime);
+            }
+            timesLabel.push("");
+
+            let ytdChartValues = [];
+            let ytdVolumeValues = [];
+            for (var i = 0; i < numberOfCandles - 1; i++) {
+              ytdChartValues.push(response.data.candles[i].close.toFixed(2));
+              ytdVolumeValues.push(response.data.candles[i].volume);
+            }
+            ytdChartValues.unshift(response.data.candles[0].open);
+            ytdVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var ytdPriceCtx = document.getElementById('lower-information-chart-canvas-ytd').getContext('2d');
+            var priceChart = new Chart(ytdPriceCtx, {
+              type: 'line',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: ytdChartValues,
+                  label: symbol,
+                  borderColor: color,
+                  backgroundColor: backgroundColor,
+                  pointBackgroundColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  tension: 0.05,
+                },
+                ]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }]
+                },
+              }
+            });
+            var ytdVolumeCtx = document.getElementById('lower-information-volume-canvas-ytd').getContext('2d');
+            var ytdVOlumeChart = new Chart(ytdVolumeCtx, {
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: ytdVolumeValues,
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+                },]
+              },
+              options: {
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
+                  }]
+                },
+              }
+            });
+          })
+        //1 year chart
+        var chartEndDate = date.getTime();
+        var oneYearChartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(oneYearChartConfig)
+          .then(function (response) {
+            var numberOfCandles = response.data.candles.length;
+            var timesLabel = [];
+            var date = new Date();
+            var year;
+            var month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day;
+            for (var i = 0; i < numberOfCandles; i++) {
+              date = new Date(response.data.candles[i].datetime);
+              month = monthNames[date.getMonth()];
+              day = date.getDate();
+              year = date.getFullYear();
+              fullTime = month + " " + day + ", " + year;
+              timesLabel.push(fullTime);
+            }
+            timesLabel.push("");
+
+            let oneYearChartValues = [];
+            let oneYearVolumeValues = [];
+            for (var i = 0; i < numberOfCandles - 1; i++) {
+              oneYearChartValues.push(response.data.candles[i].close.toFixed(2));
+              oneYearVolumeValues.push(response.data.candles[i].volume);
+            }
+            oneYearChartValues.unshift(response.data.candles[0].open);
+            oneYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var oneYearPriceCtx = document.getElementById('lower-information-chart-canvas-1y').getContext('2d');
+            var priceChart = new Chart(oneYearPriceCtx, {
+              type: 'line',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: oneYearChartValues,
+                  borderColor: color,
+                  backgroundColor: backgroundColor,
+                  pointBackgroundColor: color,
+                  label: symbol,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  tension: 0.05,
+                },
+                ]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }]
+                },
+                label: {
+                  display: false,
+                },
+              }
+            });
+            var oneYearVolumeCtx = document.getElementById('lower-information-volume-canvas-1y').getContext('2d');
+            var oneYearVOlumeChart = new Chart(oneYearVolumeCtx, {
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: oneYearVolumeValues,
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+                },]
+              },
+              options: {
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
+                  }]
+                },
+              }
+            });
+          })
+        //5 year chart
+        var chartEndDate = date.getTime();
+        var fiveYearChartConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=5&frequencyType=weekly&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken
+          }
+        };
+        axios(fiveYearChartConfig)
+          .then(function (response) {
+            var numberOfCandles = response.data.candles.length;
+            var timesLabel = [];
+            var date = new Date();
+            var year;
+            var month;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            var day;
+            for (var i = 0; i < numberOfCandles; i++) {
+              date = new Date(response.data.candles[i].datetime);
+              month = monthNames[date.getMonth()];
+              day = date.getDate();
+              year = date.getFullYear();
+              fullTime = month + " " + day + ", " + year;
+              timesLabel.push(fullTime);
+            }
+            timesLabel.push("");
+
+            let fiveYearChartValues = [];
+            let fiveYearVolumeValues = [];
+            for (var i = 0; i < numberOfCandles - 1; i++) {
+              fiveYearChartValues.push(response.data.candles[i].close.toFixed(2));
+              fiveYearVolumeValues.push(response.data.candles[i].volume);
+            }
+            fiveYearChartValues.unshift(response.data.candles[0].open);
+            fiveYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var fiveYearPriceCtx = document.getElementById('lower-information-chart-canvas-5y').getContext('2d');
+            var priceChart = new Chart(fiveYearPriceCtx, {
+              type: 'line',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: fiveYearChartValues,
+                  label: symbol,
+                  borderColor: color,
+                  backgroundColor: backgroundColor,
+                  pointBackgroundColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  tension: 0.05,
+                },
+                ]
+              },
+              options: {
+                tooltips: {
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }]
+                },
+              }
+            });
+            var fiveYearVolumeCtx = document.getElementById('lower-information-volume-canvas-5y').getContext('2d');
+            var fiveYearVolumeChart = new Chart(fiveYearVolumeCtx, {
+              type: 'bar',
+              data: {
+                labels: timesLabel,
+                datasets: [{
+                  data: fiveYearVolumeValues,
+                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+                },]
+              },
+              options: {
+                tooltips: {
+                  callbacks: {
+                    label: function (tooltipItem, data) {
+                      var value = data.datasets[0].data[tooltipItem.index];
+                      if (parseInt(value) >= 1000) {
+                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                      }
+                      else {
+                        return "Volume: " + value;
+                      }
+                    }
+                  },
+                  mode: 'index',
+                  intersect: false,
+                  displayColors: false,
+                },
+                hover: {
+                  mode: 'index',
+                  intersect: false,
+                },
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                  display: false,
+                },
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLine: {
+                      display: false,
+                    },
+                    ticks: {
+                      beginAtZero: true,
+                      userCallback: function (value, index, values) {
+                        return value.toLocaleString();
+                      }
+                    }
+                  }]
+                },
+              }
+            });
+          })
+      })
+    var quoteConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=%24SPX.X%2C%24NDX.X%2C%24DJI',
+      headers: {
+        'Authorization': accessToken,
+      }
+    };
+    axios(quoteConfig)
+      .then(function (quoteResponse) {
+        var sp500Config = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/$SPX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needEntendedHoursData=false',
+          headers: {
+            'Authorization': accessToken,
+          }
+        };
+        axios(sp500Config)
+          .then(function (response) {
+            console.log(quoteResponse.data);
+            var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
+            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");            
+            document.getElementById("sp500-price").innerHTML = price;
+            var priceData = [];
+            var change = quoteResponse.data["$SPX.X"].lastPrice - quoteResponse.data["$SPX.X"].closePrice;
+            change = change.toFixed(2);
+            if (change > 0) {
+              color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+              document.getElementById("sp500-price-change").innerHTML = "+" + change;
+            }
+            else if (change < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+            }
+            else {
+              color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+              document.getElementById("sp500-price-change").innerHTML = change;
+            }
+            // var percentChange = quoteResponse.data["SPX.X"].
+            var spxLabels = [];
+            for (var i = 0; i < response.data.candles.length; i++) {
+              spxLabels.push(" ");
+            }
+            for (var i = 1; i < response.data.candles.length - 1; i++) {
+              priceData.push(response.data.candles[i].close.toFixed(2));
+            }
+            priceData.unshift(response.data.candles[0].open);
+            var sp500Chart = document.getElementById('sp500-chart-canvas').getContext('2d');
+            var priceChart = new Chart(sp500Chart, {
+              type: 'line',
+              data: {
+                labels: spxLabels,
+                datasets: [{
+                  data: priceData,
+                  borderColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  fill: false,
+                  tension: 0,
+                },
+                ]
+              },
+              options: {
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                legend: {
+                  display: false,
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      drawBorder: false,
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLines: {
+                      drawBorder: false,
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                },
+              }
+            });
+          })
+          var nasdaqConfig = {
             method: 'get',
-            url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=5&endDate=' + chartTime + '&startDate=' + chartEndDate + '&needExtendedHoursData=false',
+            url: 'https://api.tdameritrade.com/v1/marketdata/$NDX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needEntendedHoursData=false',
             headers: {
-              'Authorization': accessToken
+              'Authorization': accessToken,
             }
           };
-          axios(FiveDaychartConfig)
-            .then(function (response) {
-              var numberOfCandles = response.data.candles.length;
-              var timesLabel = [];
-              var date = new Date();
-              var month;
-              const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-              var day;
-              var hour;
-              var minute;
-              var timeZone;
-              for (var i = 0; i < numberOfCandles; i++) {
-                date = new Date(response.data.candles[i].datetime);
-                month = monthNames[date.getMonth()];
-                day = date.getDate();
-                hour = date.getHours();
-                minute = date.getMinutes();
-                timeZone = date.getTimezoneOffset() / 60;
-                if (hour > 12) {
-                  hour-=12;
-                  suffix = "PM";
-                }
-                else if (hour == 12) {
-                  suffix = "PM";
-                }
-                else suffix = "AM";
-                if (minute < 10) {
-                  minute = "0" + minute;
-                }
-                fullTime = month + " " + day + ", " + hour + ":" + minute + " " +  suffix + " " + "GMT-" + timeZone;
-                timesLabel.push(fullTime);
-              }
-              timesLabel.push("");
-
-              let fiveDayChartValues = [];
-              let fiveDayVolumeValues = [];
-              for (var i = 0; i < numberOfCandles - 1; i++) {
-                fiveDayChartValues.push(response.data.candles[i].close.toFixed(2));
-                fiveDayVolumeValues.push(response.data.candles[i].volume);
-              }
-              fiveDayChartValues.unshift(response.data.candles[0].open);
-              fiveDayVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-              var priceCtx = document.getElementById('lower-information-chart-canvas-5d').getContext('2d');
-              var priceChart = new Chart(priceCtx, {
-                type: 'line',
-                data: {
-                  labels: timesLabel,
-                  datasets: [{
-                    data: fiveDayChartValues,
-                    label: symbol,
-                    borderColor: color,
-                    backgroundColor: backgroundColor,
-                    pointBackgroundColor: color,
-                    borderWidth: 2,
-                    spanGaps: false,
-                    tension: 0.05,
-                  },
-                  ]
+          axios(nasdaqConfig)
+          .then(function (response) {
+            var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
+            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");            
+            document.getElementById("nasdaq-price").innerHTML = price;
+            var priceData = [];
+            var change = quoteResponse.data["$NDX.X"].lastPrice - quoteResponse.data["$NDX.X"].closePrice;
+            if (change > 0) {
+              color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+              document.getElementById("nasdaq-price-change").innerHTML = "+" + change;
+            }
+            else if (change < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              document.getElementById("nasdaq-price-change").innerHTML = change;
+            }
+            else { 
+              color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+              document.getElementById("nasdaq-price-change").innerHTML = change;
+            }
+            var spxLabels = [];
+            for (var i = 0; i < response.data.candles.length - 1; i++) {
+              spxLabels.push(" ");
+            }
+            for (var i = 1; i < response.data.candles.length - 1; i++) {
+              priceData.push(response.data.candles[i].close.toFixed(2));
+            }
+            priceData.unshift(response.data.candles[0].open);
+            var nasdaqChart = document.getElementById('nasdaq-chart-canvas').getContext('2d');
+            var priceChart = new Chart(nasdaqChart, {
+              type: 'line',
+              data: {
+                labels: spxLabels,
+                datasets: [{
+                  data: priceData,
+                  borderColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  fill: false,
+                  tension: 0,
                 },
-                options: {
-                  tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                    displayColors: false,
-                  },
-                  hover: {
-                    mode: 'index',
-                    intersect: false,
-                  },
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  legend: {
-                    display: false,
-                  },
-                  elements: {
-                    point: {
-                      radius: 0
-                    }
-                  },
-                  scales: {
-                    xAxes: [{
-                      gridLines: {
-                        display: false
-                      },
-                      ticks: {
-                        display: false,
-                      }
-                    }]
-                  },
-                }
-              });
-              var fiveDayVolumeCtx = document.getElementById('lower-information-volume-canvas-5d').getContext('2d');
-              var volumeChart = new Chart(fiveDayVolumeCtx, {
-                type: 'bar',
-                data: {
-                  labels: timesLabel,
-                  datasets: [{
-                    data: fiveDayVolumeValues,
-                    backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                  },]
+                ]
+              },
+              options: {
+                elements: {
+                  point: {
+                    radius: 0
+                  }
                 },
-                options: {
-                  tooltips: {
-                    callbacks: {
-                      label: function (tooltipItem, data) {
-                        var value = data.datasets[0].data[tooltipItem.index];
-                        if (parseInt(value) >= 1000) {
-                          return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        }
-                        else {
-                          return "Volume: " + value;
-                        }
-                      }
+                legend: {
+                  display: false,
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      drawBorder: false,
+                      display: false
                     },
-                    mode: 'index',
-                    intersect: false,
-                    displayColors: false,
-                  },
-                  hover: {
-                    mode: 'index',
-                    intersect: false,
-                  },
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  legend: {
-                    display: false,
-                  },
-                  elements: {
-                    point: {
-                      radius: 0
+                    ticks: {
+                      display: false,
                     }
-                  },
-                  scales: {
-                    xAxes: [{
-                      gridLines: {
-                        display: false
-                      },
-                      ticks: {
-                        display: false,
-                      }
-                    }],
-                    yAxes: [{
-                      gridLine: {
-                        display: false,
-                      },
-                      ticks: {
-                        beginAtZero: true,
-                        userCallback: function (value, index, values) {
-                          return value.toLocaleString();
-                        }
-                      }
-                    }]
-                  },
-                }
-              });
-            })
-            //1 month chart
-            var chartEndDate = date.getTime();
-            var oneMonthChartConfig = {
-              method: 'get',
-              url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-              headers: {
-                'Authorization': accessToken
+                  }],
+                  yAxes: [{
+                    gridLines: {
+                      drawBorder: false,
+                      display: false
+                    },
+                    ticks: {
+                      display: false,
+                    }
+                  }],
+                },
               }
-            };
-            axios(oneMonthChartConfig)
-              .then(function (response) {
-                var numberOfCandles = response.data.candles.length;
-                var timesLabel = [];
-                var date = new Date();
-                var year;
-                var month;
-                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                var day;
-                for (var i = 0; i < numberOfCandles; i++) {
-                  date = new Date(response.data.candles[i].datetime);
-                  month = monthNames[date.getMonth()];
-                  day = date.getDate();
-                  year = date.getFullYear();
-                  fullTime = month + " " + day + ", " + year;
-                  timesLabel.push(fullTime);
-                }
-                timesLabel.push("");
-  
-                let oneMonthChartValues = [];
-                let oneMonthVolumeValues = [];
-                for (var i = 0; i < numberOfCandles - 1; i++) {
-                  oneMonthChartValues.push(response.data.candles[i].close.toFixed(2));
-                  oneMonthVolumeValues.push(response.data.candles[i].volume);
-                }
-                oneMonthChartValues.unshift(response.data.candles[0].open);
-                oneMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-                var priceCtx = document.getElementById('lower-information-chart-canvas-1m').getContext('2d');
-                var priceChart = new Chart(priceCtx, {
-                  type: 'line',
-                  data: {
-                    labels: timesLabel,
-                    datasets: [{
-                      data: oneMonthChartValues,
-                      label: symbol,
-                      borderColor: color,
-                      backgroundColor: backgroundColor,
-                      pointBackgroundColor: color,
-                      borderWidth: 2,
-                      spanGaps: false,
-                      tension: 0.05,
+            });
+          })
+          var dowConfig = {
+            method: 'get',
+            url: 'https://api.tdameritrade.com/v1/marketdata/$DJI/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needExtendedHoursData=false',
+            headers: {
+              'Authorization': accessToken,
+            }
+          };
+          axios(dowConfig)
+          .then(function (response) {
+            console.log(quoteResponse);
+            var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
+            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");            
+            document.getElementById("dow-price").innerHTML = price;
+            var priceData = [];
+            var change = quoteResponse.data["$DJI"].lastPrice - quoteResponse.data["$DJI"].closePrice;
+            console.log(change);
+            if (change > 0) {
+              color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+              document.getElementById("dow-price-change").innerHTML = "+" + change;
+            }
+            else if (change < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+            }
+            else {
+              color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+              document.getElementById("dow-price-change").innerHTML = 0;
+            }
+            var spxLabels = [];
+            for (var i = 0; i < response.data.candles.length; i++) {
+              spxLabels.push(" ");
+            }
+            for (var i = 1; i < response.data.candles.length - 1; i++) {
+              priceData.push(response.data.candles[i].close.toFixed(2));
+            }
+            priceData.unshift(response.data.candles[0].open);
+            var dowChart = document.getElementById('dow-chart-canvas').getContext('2d');
+            var priceChart = new Chart(dowChart, {
+              type: 'line',
+              data: {
+                labels: spxLabels,
+                datasets: [{
+                  data: priceData,
+                  borderColor: color,
+                  borderWidth: 2,
+                  spanGaps: false,
+                  fill: false,
+                  tension: 0,
+                },
+                ]
+              },
+              options: {
+                elements: {
+                  point: {
+                    radius: 0
+                  }
+                },
+                legend: {
+                  display: false,
+                },
+                scales: {
+                  xAxes: [{
+                    gridLines: {
+                      drawBorder: false,
+                      display: false
                     },
-                    ]
-                  },
-                  options: {
-                    tooltips: {
-                      mode: 'index',
-                      intersect: false,
-                      displayColors: false,
-                    },
-                    hover: {
-                      mode: 'index',
-                      intersect: false,
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: {
+                    ticks: {
                       display: false,
+                    }
+                  }],
+                  yAxes: [{
+                    gridLines: {
+                      drawBorder: false,
+                      display: false
                     },
-                    elements: {
-                      point: {
-                        radius: 0
-                      }
-                    },
-                    scales: {
-                      xAxes: [{
-                        gridLines: {
-                          display: false
-                        },
-                        ticks: {
-                          display: false,
-                        }
-                      }]
-                    },
-                  }
-                });
-                var oneMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-1m').getContext('2d');
-                var oneMonthVOlumeChart = new Chart(oneMonthVolumeCtx, {
-                  type: 'bar',
-                  data: {
-                    labels: timesLabel,
-                    datasets: [{
-                      data: oneMonthVolumeValues,
-                      backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                    },]
-                  },
-                  options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function (tooltipItem, data) {
-                          var value = data.datasets[0].data[tooltipItem.index];
-                          if (parseInt(value) >= 1000) {
-                            return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                          }
-                          else {
-                            return "Volume: " + value;
-                          }
-                        }
-                      },
-                      mode: 'index',
-                      intersect: false,
-                      displayColors: false,
-                    },
-                    hover: {
-                      mode: 'index',
-                      intersect: false,
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: {
+                    ticks: {
                       display: false,
-                    },
-                    elements: {
-                      point: {
-                        radius: 0
-                      }
-                    },
-                    scales: {
-                      xAxes: [{
-                        gridLines: {
-                          display: false
-                        },
-                        ticks: {
-                          display: false,
-                        }
-                      }],
-                      yAxes: [{
-                        gridLine: {
-                          display: false,
-                        },
-                        ticks: {
-                          beginAtZero: true,
-                          userCallback: function (value, index, values) {
-                            return value.toLocaleString();
-                          }
-                        }
-                      }]
-                    },
-                  }
-                });
-              })
-              //6 month chart
-              var chartEndDate = date.getTime();
-              var sixMonthChartConfig = {
-                method: 'get',
-                url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=6&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-                headers: {
-                  'Authorization': accessToken
-                }
-              };
-              axios(sixMonthChartConfig)
-                .then(function (response) {
-                  var numberOfCandles = response.data.candles.length;
-                  var timesLabel = [];
-                  var date = new Date();
-                  var year;
-                  var month;
-                  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                  var day;
-                  for (var i = 0; i < numberOfCandles; i++) {
-                    date = new Date(response.data.candles[i].datetime);
-                    month = monthNames[date.getMonth()];
-                    day = date.getDate();
-                    year = date.getFullYear();
-                    fullTime = month + " " + day + ", " + year;
-                    timesLabel.push(fullTime);
-                  }
-                  timesLabel.push("");
-    
-                  let sixMonthChartValues = [];
-                  let sixMonthVolumeValues = [];
-                  for (var i = 0; i < numberOfCandles - 1; i++) {
-                    sixMonthChartValues.push(response.data.candles[i].close.toFixed(2));
-                    sixMonthVolumeValues.push(response.data.candles[i].volume);
-                  }
-                  sixMonthChartValues.unshift(response.data.candles[0].open);
-                  sixMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-                  var sixMonthPriceCtx = document.getElementById('lower-information-chart-canvas-6m').getContext('2d');
-                  var priceChart = new Chart(sixMonthPriceCtx, {
-                    type: 'line',
-                    data: {
-                      labels: timesLabel,
-                      datasets: [{
-                        data: sixMonthChartValues,
-                        label: symbol,
-                        borderColor: color,
-                        backgroundColor: backgroundColor,
-                        pointBackgroundColor: color,
-                        borderWidth: 2,
-                        spanGaps: false,
-                        tension: 0.05,
-                      },
-                      ]
-                    },
-                    options: {
-                      tooltips: {
-                        mode: 'index',
-                        intersect: false,
-                        displayColors: false,
-                      },
-                      hover: {
-                        mode: 'index',
-                        intersect: false,
-                      },
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      legend: {
-                        display: false,
-                      },
-                      elements: {
-                        point: {
-                          radius: 0
-                        }
-                      },
-                      scales: {
-                        xAxes: [{
-                          gridLines: {
-                            display: false
-                          },
-                          ticks: {
-                            display: false,
-                          }
-                        }]
-                      },
                     }
-                  });
-                  var sixMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-6m').getContext('2d');
-                  var sixMonthVOlumeChart = new Chart(sixMonthVolumeCtx, {
-                    type: 'bar',
-                    data: {
-                      labels: timesLabel,
-                      datasets: [{
-                        data: sixMonthVolumeValues,
-                        backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                      },]
-                    },
-                    options: {
-                      tooltips: {
-                        callbacks: {
-                          label: function (tooltipItem, data) {
-                            var value = data.datasets[0].data[tooltipItem.index];
-                            if (parseInt(value) >= 1000) {
-                              return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                            }
-                            else {
-                              return "Volume: " + value;
-                            }
-                          }
-                        },
-                        mode: 'index',
-                        intersect: false,
-                        displayColors: false,
-                      },
-                      hover: {
-                        mode: 'index',
-                        intersect: false,
-                      },
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      legend: {
-                        display: false,
-                      },
-                      elements: {
-                        point: {
-                          radius: 0
-                        }
-                      },
-                      scales: {
-                        xAxes: [{
-                          gridLines: {
-                            display: false
-                          },
-                          ticks: {
-                            display: false,
-                          }
-                        }],
-                        yAxes: [{
-                          gridLine: {
-                            display: false,
-                          },
-                          ticks: {
-                            beginAtZero: true,
-                            userCallback: function (value, index, values) {
-                              return value.toLocaleString();
-                            }
-                          }
-                        }]
-                      },
-                    }
-                  });
-                })
-                //year to date chart
-                var chartEndDate = date.getTime();
-                var ytdChartConfig = {
-                  method: 'get',
-                  url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=ytd&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-                  headers: {
-                    'Authorization': accessToken
-                  }
-                };
-                axios(ytdChartConfig)
-                  .then(function (response) {
-                    var numberOfCandles = response.data.candles.length;
-                    var timesLabel = [];
-                    var date = new Date();
-                    var year;
-                    var month;
-                    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    var day;
-                    for (var i = 0; i < numberOfCandles; i++) {
-                      date = new Date(response.data.candles[i].datetime);
-                      month = monthNames[date.getMonth()];
-                      day = date.getDate();
-                      year = date.getFullYear();
-                      fullTime = month + " " + day + ", " + year;
-                      timesLabel.push(fullTime);
-                    }
-                    timesLabel.push("");
-      
-                    let ytdChartValues = [];
-                    let ytdVolumeValues = [];
-                    for (var i = 0; i < numberOfCandles - 1; i++) {
-                      ytdChartValues.push(response.data.candles[i].close.toFixed(2));
-                      ytdVolumeValues.push(response.data.candles[i].volume);
-                    }
-                    ytdChartValues.unshift(response.data.candles[0].open);
-                    ytdVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-                    var ytdPriceCtx = document.getElementById('lower-information-chart-canvas-ytd').getContext('2d');
-                    var priceChart = new Chart(ytdPriceCtx, {
-                      type: 'line',
-                      data: {
-                        labels: timesLabel,
-                        datasets: [{
-                          data: ytdChartValues,
-                          label: symbol,
-                          borderColor: color,
-                          backgroundColor: backgroundColor,
-                          pointBackgroundColor: color,
-                          borderWidth: 2,
-                          spanGaps: false,
-                          tension: 0.05,
-                        },
-                        ]
-                      },
-                      options: {
-                        tooltips: {
-                          mode: 'index',
-                          intersect: false,
-                          displayColors: false,
-                        },
-                        hover: {
-                          mode: 'index',
-                          intersect: false,
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        legend: {
-                          display: false,
-                        },
-                        elements: {
-                          point: {
-                            radius: 0
-                          }
-                        },
-                        scales: {
-                          xAxes: [{
-                            gridLines: {
-                              display: false
-                            },
-                            ticks: {
-                              display: false,
-                            }
-                          }]
-                        },
-                      }
-                    });
-                    var ytdVolumeCtx = document.getElementById('lower-information-volume-canvas-ytd').getContext('2d');
-                    var ytdVOlumeChart = new Chart(ytdVolumeCtx, {
-                      type: 'bar',
-                      data: {
-                        labels: timesLabel,
-                        datasets: [{
-                          data: ytdVolumeValues,
-                          backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                        },]
-                      },
-                      options: {
-                        tooltips: {
-                          callbacks: {
-                            label: function (tooltipItem, data) {
-                              var value = data.datasets[0].data[tooltipItem.index];
-                              if (parseInt(value) >= 1000) {
-                                return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                              }
-                              else {
-                                return "Volume: " + value;
-                              }
-                            }
-                          },
-                          mode: 'index',
-                          intersect: false,
-                          displayColors: false,
-                        },
-                        hover: {
-                          mode: 'index',
-                          intersect: false,
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        legend: {
-                          display: false,
-                        },
-                        elements: {
-                          point: {
-                            radius: 0
-                          }
-                        },
-                        scales: {
-                          xAxes: [{
-                            gridLines: {
-                              display: false
-                            },
-                            ticks: {
-                              display: false,
-                            }
-                          }],
-                          yAxes: [{
-                            gridLine: {
-                              display: false,
-                            },
-                            ticks: {
-                              beginAtZero: true,
-                              userCallback: function (value, index, values) {
-                                return value.toLocaleString();
-                              }
-                            }
-                          }]
-                        },
-                      }
-                    });
-                  })
-                //1 year chart
-                var chartEndDate = date.getTime();
-                var oneYearChartConfig = {
-                  method: 'get',
-                  url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-                  headers: {
-                    'Authorization': accessToken
-                  }
-                };
-                axios(oneYearChartConfig)
-                  .then(function (response) {
-                    var numberOfCandles = response.data.candles.length;
-                    var timesLabel = [];
-                    var date = new Date();
-                    var year;
-                    var month;
-                    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                    var day;
-                    for (var i = 0; i < numberOfCandles; i++) {
-                      date = new Date(response.data.candles[i].datetime);
-                      month = monthNames[date.getMonth()];
-                      day = date.getDate();
-                      year = date.getFullYear();
-                      fullTime = month + " " + day + ", " + year;
-                      timesLabel.push(fullTime);
-                    }
-                    timesLabel.push("");
-      
-                    let oneYearChartValues = [];
-                    let oneYearVolumeValues = [];
-                    for (var i = 0; i < numberOfCandles - 1; i++) {
-                      oneYearChartValues.push(response.data.candles[i].close.toFixed(2));
-                      oneYearVolumeValues.push(response.data.candles[i].volume);
-                    }
-                    oneYearChartValues.unshift(response.data.candles[0].open);
-                    oneYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-                    var oneYearPriceCtx = document.getElementById('lower-information-chart-canvas-1y').getContext('2d');
-                    var priceChart = new Chart(oneYearPriceCtx, {
-                      type: 'line',
-                      data: {
-                        labels: timesLabel,
-                        datasets: [{
-                          data: oneYearChartValues,
-                          label: symbol,
-                          borderColor: color,
-                          backgroundColor: backgroundColor,
-                          pointBackgroundColor: color,
-                          borderWidth: 2,
-                          spanGaps: false,
-                          tension: 0.05,
-                        },
-                        ]
-                      },
-                      options: {
-                        tooltips: {
-                          mode: 'index',
-                          intersect: false,
-                          displayColors: false,
-                        },
-                        hover: {
-                          mode: 'index',
-                          intersect: false,
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        legend: {
-                          display: false,
-                        },
-                        elements: {
-                          point: {
-                            radius: 0
-                          }
-                        },
-                        scales: {
-                          xAxes: [{
-                            gridLines: {
-                              display: false
-                            },
-                            ticks: {
-                              display: false,
-                            }
-                          }]
-                        },
-                      }
-                    });
-                    var oneYearVolumeCtx = document.getElementById('lower-information-volume-canvas-1y').getContext('2d');
-                    var oneYearVOlumeChart = new Chart(oneYearVolumeCtx, {
-                      type: 'bar',
-                      data: {
-                        labels: timesLabel,
-                        datasets: [{
-                          data: oneYearVolumeValues,
-                          backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                        },]
-                      },
-                      options: {
-                        tooltips: {
-                          callbacks: {
-                            label: function (tooltipItem, data) {
-                              var value = data.datasets[0].data[tooltipItem.index];
-                              if (parseInt(value) >= 1000) {
-                                return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                              }
-                              else {
-                                return "Volume: " + value;
-                              }
-                            }
-                          },
-                          mode: 'index',
-                          intersect: false,
-                          displayColors: false,
-                        },
-                        hover: {
-                          mode: 'index',
-                          intersect: false,
-                        },
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        legend: {
-                          display: false,
-                        },
-                        elements: {
-                          point: {
-                            radius: 0
-                          }
-                        },
-                        scales: {
-                          xAxes: [{
-                            gridLines: {
-                              display: false
-                            },
-                            ticks: {
-                              display: false,
-                            }
-                          }],
-                          yAxes: [{
-                            gridLine: {
-                              display: false,
-                            },
-                            ticks: {
-                              beginAtZero: true,
-                              userCallback: function (value, index, values) {
-                                return value.toLocaleString();
-                              }
-                            }
-                          }]
-                        },
-                      }
-                    });
-                  })
-                  //5 year chart
-                  var chartEndDate = date.getTime();
-                  var fiveYearChartConfig = {
-                    method: 'get',
-                    url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=5&frequencyType=weekly&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-                    headers: {
-                      'Authorization': accessToken
-                    }
-                  };
-                  axios(fiveYearChartConfig)
-                    .then(function (response) {
-                      var numberOfCandles = response.data.candles.length;
-                      var timesLabel = [];
-                      var date = new Date();
-                      var year;
-                      var month;
-                      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-                      var day;
-                      for (var i = 0; i < numberOfCandles; i++) {
-                        date = new Date(response.data.candles[i].datetime);
-                        month = monthNames[date.getMonth()];
-                        day = date.getDate();
-                        year = date.getFullYear();
-                        fullTime = month + " " + day + ", " + year;
-                        timesLabel.push(fullTime);
-                      }
-                      timesLabel.push("");
-        
-                      let fiveYearChartValues = [];
-                      let fiveYearVolumeValues = [];
-                      for (var i = 0; i < numberOfCandles - 1; i++) {
-                        fiveYearChartValues.push(response.data.candles[i].close.toFixed(2));
-                        fiveYearVolumeValues.push(response.data.candles[i].volume);
-                      }
-                      fiveYearChartValues.unshift(response.data.candles[0].open);
-                      fiveYearVolumeVales.push(response.data.candles[numberOfCandles - 1].volume);
-                      var fiveYearPriceCtx = document.getElementById('lower-information-chart-canvas-5y').getContext('2d');
-                      var priceChart = new Chart(fiveYearPriceCtx, {
-                        type: 'line',
-                        data: {
-                          labels: timesLabel,
-                          datasets: [{
-                            data: fiveYearChartValues,
-                            label: symbol,
-                            borderColor: color,
-                            backgroundColor: backgroundColor,
-                            pointBackgroundColor: color,
-                            borderWidth: 2,
-                            spanGaps: false,
-                            tension: 0.05,
-                          },
-                          ]
-                        },
-                        options: {
-                          tooltips: {
-                            mode: 'index',
-                            intersect: false,
-                            displayColors: false,
-                          },
-                          hover: {
-                            mode: 'index',
-                            intersect: false,
-                          },
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          legend: {
-                            display: false,
-                          },
-                          elements: {
-                            point: {
-                              radius: 0
-                            }
-                          },
-                          scales: {
-                            xAxes: [{
-                              gridLines: {
-                                display: false
-                              },
-                              ticks: {
-                                display: false,
-                              }
-                            }]
-                          },
-                        }
-                      });
-                      var fiveYearVolumeCtx = document.getElementById('lower-information-volume-canvas-5y').getContext('2d');
-                      var fiveYearVolumeChart = new Chart(fiveYearVolumeCtx, {
-                        type: 'bar',
-                        data: {
-                          labels: timesLabel,
-                          datasets: [{
-                            data: fiveYearVolumeValues,
-                            backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                          },]
-                        },
-                        options: {
-                          tooltips: {
-                            callbacks: {
-                              label: function (tooltipItem, data) {
-                                var value = data.datasets[0].data[tooltipItem.index];
-                                if (parseInt(value) >= 1000) {
-                                  return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                }
-                                else {
-                                  return "Volume: " + value;
-                                }
-                              }
-                            },
-                            mode: 'index',
-                            intersect: false,
-                            displayColors: false,
-                          },
-                          hover: {
-                            mode: 'index',
-                            intersect: false,
-                          },
-                          responsive: true,
-                          maintainAspectRatio: false,
-                          legend: {
-                            display: false,
-                          },
-                          elements: {
-                            point: {
-                              radius: 0
-                            }
-                          },
-                          scales: {
-                            xAxes: [{
-                              gridLines: {
-                                display: false
-                              },
-                              ticks: {
-                                display: false,
-                              }
-                            }],
-                            yAxes: [{
-                              gridLine: {
-                                display: false,
-                              },
-                              ticks: {
-                                beginAtZero: true,
-                                userCallback: function (value, index, values) {
-                                  return value.toLocaleString();
-                                }
-                              }
-                            }]
-                          },
-                        }
-                      });
-                    })
+                  }],
+                },
+              }
+            });
+          })
       })
   })
 
 function changeInfoPaneOverview() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
   document.getElementById("lower-information-overview").style.display = "block";
   document.getElementById("lower-information-chart").style.display = "none";
@@ -1462,13 +1721,13 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneChart() {
-  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2.5px";
   document.getElementById("lower-information-chart-text").style.borderRadius = "90";
-  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "block";
@@ -1658,7 +1917,7 @@ function changeInfoPaneNews() {
   const newsOptions = {
     method: 'GET',
     url: 'https://free-news.p.rapidapi.com/v1/search',
-    params: { 
+    params: {
       q: loadData(),
       lang: 'en',
     },
@@ -1667,7 +1926,7 @@ function changeInfoPaneNews() {
       'X-RapidAPI-Key': '90b777a670mshb854beab1255afcp1f2467jsnf1932c24c2ef'
     }
   };
-  
+
   axios.request(newsOptions).then(function (response) {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var articleNumber = [];
@@ -1792,8 +2051,8 @@ function changeInfoPaneNews() {
       document.getElementById("article-8-title-link").href = articleEight.link;
       var articleEightSummary = articleEight.summary;
       if (articleEightSummary) {
-          articleEightSummary = articleEightSummary.substring(0, 250) + "...";
-          document.getElementById("article-8-summary").innerHTML = articleEightSummary;
+        articleEightSummary = articleEightSummary.substring(0, 250) + "...";
+        document.getElementById("article-8-summary").innerHTML = articleEightSummary;
       }
       document.getElementById("article-8-dot").innerHTML = "•";
     }
@@ -1829,13 +2088,13 @@ function changeInfoPaneNews() {
     }
 
   })
-  
-  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2.5px";
+
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
@@ -1846,12 +2105,12 @@ function changeInfoPaneNews() {
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneForum() {
-  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-forum-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
@@ -1862,12 +2121,12 @@ function changeInfoPaneForum() {
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneOptions() {
-  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "none";
@@ -1878,11 +2137,11 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneHistorical() {
-  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-news-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #ACACAC 2.5px";
-  document.getElementById("lower-information-options-text").style.borderBottom = "solid #ACACAC 2.5px";
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #356EFF 2.5px";
 
   document.getElementById("lower-information-overview").style.display = "none";

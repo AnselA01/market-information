@@ -14,7 +14,7 @@
   <script src="https://code.jscharting.com/latest/jscharting.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-  <script src="docs/index.js"></script>
+  <script src="scripts/index.js"></script>
   <header>
     <div class="header-content">
       <div>
@@ -24,12 +24,6 @@
           <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
             text-transform:uppercase>
         </form>
-      </div>
-      <div class="header-link" id="header-links-parent">
-        <span><a href="movers.html" class="header-link-text">Movers</a></span>
-        <span><a href="movers.html" class="header-link-text">Movers</a></span>
-        <span><a href="movers.html" class="header-link-text">Movers</a></span>
-        <span><a href="movers.html" class="header-link-text">Movers</a></span>
       </div>
     </div>
   </header>
@@ -51,25 +45,25 @@
         <!-- regular market price -->
         <div class="price-currency-and-change">
           <div class="price-and-change" id="price-and-change">
-          <span id="price-and-currency" class="price-and-currency">
-            <span id="currency" class="currency"></span>
-            <span id="current-price" class="current-price"></span>
-          </span>
+            <span id="price-and-currency" class="price-and-currency">
+              <span id="currency" class="currency"></span>
+              <span id="current-price" class="current-price"></span>
+            </span>
 
-          <!-- regular market change -->
-          <span class="change">
-            <span id="pos-day-price-change" class="pos-day-price-change"></span><span id="pos-day-percent-change"
-              class="pos-day-percent-change"></span>
-            <span id="neg-day-price-change" class="neg-day-price-change"></span><span id="neg-day-percent-change"
-              class="neg-day-percent-change"></span>
-            <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change"
-              class="eq-day-percent-change"></span>
-          </span>
-          <!-- <span class="bid-ask">
+            <!-- regular market change -->
+            <span class="change">
+              <span id="pos-day-price-change" class="pos-day-price-change"></span><span id="pos-day-percent-change"
+                class="pos-day-percent-change"></span>
+              <span id="neg-day-price-change" class="neg-day-price-change"></span><span id="neg-day-percent-change"
+                class="neg-day-percent-change"></span>
+              <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change"
+                class="eq-day-percent-change"></span>
+            </span>
+            <!-- <span class="bid-ask">
             <span id="bid"></span>
             <span id="ask"></span>
           </span> -->
-        </div>
+          </div>
           <div class="market-status" id="market-status">
             <span class="market-close-status-text" id="market-close-status-text"></span>
             <span class="market-open-status-text" id="market-open-status-text"></span>
@@ -87,7 +81,7 @@
                 class="neg-ah-change"></span>
               <span id="eq-ah-price-change" class="eq-ah-change"></span> <span id="eq-ah-percent-change"
                 class="eq-ah-change"></span>
-            </div>
+          </div>
           </span>
           <!-- After hours status -->
           <div class="ah-market-status">
@@ -100,14 +94,15 @@
             id="lower-information-overview-text">Overview</span>
           <span onclick="changeInfoPaneChart()" class="lower-information-chart-text lower-information-text"
             id="lower-information-chart-text">Chart</span>
-            <span onclick="changeInfoPaneNews()" class="lower-information-news-text lower-information-text"
+          <span onclick="changeInfoPaneNews()" class="lower-information-news-text lower-information-text"
             id="lower-information-news-text">News</span>
           <span onclick="changeInfoPaneOptions()" class="lower-information-options-text lower-information-text"
             id="lower-information-options-text">Options Chain</span>
           <span onclick="changeInfoPaneHistorical()" class="lower-information-historical-text lower-information-text"
             id="lower-information-historical-text">Historical Data</span>
-            <span onclick="changeInfoPaneForum()" class="lower-information-forum-text lower-information-text"
+          <span onclick="changeInfoPaneForum()" class="lower-information-forum-text lower-information-text"
             id="lower-information-forum-text">Forum</span>
+          <span class="lower-information-blank"></span>
         </div>
         <div class="lower-information-pane">
           <div class="lower-information-overview" id="lower-information-overview">
@@ -139,7 +134,7 @@
                   <span class="info-line-data" id="52-range"></span>
                 </div>
               </div>
-              <div class="column"> 
+              <div class="column">
                 <div class="info-line">
                   <span class="info-line-text">Market Cap</span>
                   <span class="info-line-data" id="market-cap"></span>
@@ -165,7 +160,7 @@
                   <span class="info-line-data" id="div-amount"></span>
                 </div>
               </div>
-              <div class="column"> 
+              <div class="column">
                 <div class="info-line">
                   <span class="info-line-text">Asset Type</span>
                   <span class="info-line-data" id="asset-type"></span>
@@ -190,7 +185,7 @@
                   <span class="info-line-text">Ex-Dividend Date</span>
                   <span class="info-line-data" id="ex-div-date"></span>
                 </div>
-              </div>  
+              </div>
             </div>
           </div>
           <div class="lower-information-chart" id="lower-information-chart">
@@ -223,7 +218,8 @@
           <div class="lower-information-news" id="lower-information-news">
             <div class="article-wrapper" id="article-1">
               <div class="news-column-left">
-                <span class="article-image" id="article-1-image"><img id=article-1-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-1-image"><img id=article-1-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-1-info">
@@ -232,14 +228,16 @@
                     <span class="article-dot" id="article-1-dot"></span>
                     <span class="article-date" id="article-1-date"></span>
                   </div>
-                  <div class="article-title" id="article-1-title"><a id="article-1-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-1-title"><a id="article-1-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-1-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-2">
               <div class="news-column-left">
-                <span class="article-image" id="article-2-image"><img id=article-2-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-2-image"><img id=article-2-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-2-info">
@@ -248,14 +246,16 @@
                     <span class="article-dot" id="article-2-dot"></span>
                     <span class="article-date" id="article-2-date"></span>
                   </div>
-                  <div class="article-title" id="article-2-title"><a id="article-2-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-2-title"><a id="article-2-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-2-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-3">
               <div class="news-column-left">
-                <span class="article-image" id="article-3-image"><img id=article-3-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-3-image"><img id=article-3-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-3-info">
@@ -264,14 +264,16 @@
                     <span class="article-dot" id="article-3-dot"></span>
                     <span class="article-date" id="article-3-date"></span>
                   </div>
-                  <div class="article-title" id="article-3-title"><a id="article-3-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-3-title"><a id="article-3-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-3-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-4">
               <div class="news-column-left">
-                <span class="article-image" id="article-4-image"><img id=article-4-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-4-image"><img id=article-4-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-4-info">
@@ -280,14 +282,16 @@
                     <span class="article-dot" id="article-4-dot"></span>
                     <span class="article-date" id="article-4-date"></span>
                   </div>
-                  <div class="article-title" id="article-4-title"><a id="article-4-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-4-title"><a id="article-4-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-4-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-5">
               <div class="news-column-left">
-                <span class="article-image" id="article-5-image"><img id=article-5-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-5-image"><img id=article-5-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-5-info">
@@ -296,14 +300,16 @@
                     <span class="article-dot" id="article-5-dot"></span>
                     <span class="article-date" id="article-5-date"></span>
                   </div>
-                  <div class="article-title" id="article-5-title"><a id="article-5-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-5-title"><a id="article-5-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-5-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-6">
               <div class="news-column-left">
-                <span class="article-image" id="article-6-image"><img id=article-6-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-6-image"><img id=article-6-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-6-info">
@@ -312,14 +318,16 @@
                     <span class="article-dot" id="article-6-dot"></span>
                     <span class="article-date" id="article-6-date"></span>
                   </div>
-                  <div class="article-title" id="article-6-title"><a id="article-6-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-6-title"><a id="article-6-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-6-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-7">
               <div class="news-column-left">
-                <span class="article-image" id="article-7-image"><img id=article-7-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-7-image"><img id=article-7-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-7-info">
@@ -328,14 +336,16 @@
                     <span class="article-dot" id="article-7-dot"></span>
                     <span class="article-date" id="article-7-date"></span>
                   </div>
-                  <div class="article-title" id="article-7-title"><a id="article-7-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-7-title"><a id="article-7-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-7-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-8">
               <div class="news-column-left">
-                <span class="article-image" id="article-8-image"><img id=article-8-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-8-image"><img id=article-8-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-8-info">
@@ -344,14 +354,16 @@
                     <span class="article-dot" id="article-8-dot"></span>
                     <span class="article-date" id="article-8-date"></span>
                   </div>
-                  <div class="article-title" id="article-8-title"><a id="article-8-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-8-title"><a id="article-8-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-8-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-8">
               <div class="news-column-left">
-                <span class="article-image" id="article-9-image"><img id=article-9-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-9-image"><img id=article-9-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-9-info">
@@ -360,14 +372,16 @@
                     <span class="article-dot" id="article-9-dot"></span>
                     <span class="article-date" id="article-9-date"></span>
                   </div>
-                  <div class="article-title" id="article-9-title"><a id="article-9-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-9-title"><a id="article-9-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-9-summary"></div>
                 </div>
               </div>
             </div>
             <div class="article-wrapper" id="article-10">
               <div class="news-column-left">
-                <span class="article-image" id="article-10-image"><img id=article-10-image-src class="article-image-src"></span>
+                <span class="article-image" id="article-10-image"><img id=article-10-image-src
+                    class="article-image-src"></span>
               </div>
               <div class="news-column-right">
                 <div class="article-info" id="article-10-info">
@@ -376,26 +390,65 @@
                     <span class="article-dot" id="article-10-dot"></span>
                     <span class="article-date" id="article-10-date"></span>
                   </div>
-                  <div class="article-title" id="article-10-title"><a id="article-10-title-link" class="article-title-link" target="_blank"></a></div>
+                  <div class="article-title" id="article-10-title"><a id="article-10-title-link"
+                      class="article-title-link" target="_blank"></a></div>
                   <div class="article-summary" id="article-10-summary"></div>
                 </div>
               </div>
             </div>
-          <div class="lower-information-options" id="lower-information-options">
+            <div class="lower-information-options" id="lower-information-options">
 
+            </div>
+            <div class="lower-information-historical" id="lower-information-historical">
+
+            </div>
+            <div class="lower-information-forum" id="lower-information-forum">
+
+            </div>
           </div>
-          <div class="lower-information-historical" id="lower-information-historical">
-
+        </div>
+      </div>
+      <div class="right-side">
+        <div class="markets-text" id="markets-text">US Markets</div>
+        <div class="right-market-status" id="right-market-status">
+          <div class="sp500-name-price" id="sp500-name-price">
+            <span class="sp500-name" id="sp500-name"><a class="sp500-name-link" id="sp500-name-link">S&P 500</a></span>
+            <span class="sp500-price" id="sp500-price"></span>
+            <div class="sp500-change" id="sp500-change">
+              <span class="sp500-percent-change" id="sp500-price-change">price change</span>
+              <span class="sp500-price-change" id="sp500-price-change">percent change</span>
+              <div class="index-chart" id="sp500-chart">
+                <canvas class="sp500-chart-canvas" id="sp500-chart-canvas"></canvas>
+              </div>
+            </div>
           </div>
-          <div class="lower-information-forum" id="lower-information-forum">
-
+          <div class="nasdaq-name-price" id="nasdaq-name-price">
+            <span class="nasdaq-name" id="nasdaq-name"><a class="nasdaq-name-link" id="nasdaq-name-link">Nasdaq
+                100</a></span>
+            <span class="nasdaq-price" id="nasdaq-price">price</span>
+            <div class="nasdaq-change" id="nasdaq-change">
+              <span class="nasdaq-percent-change" id="nasdaq-price-change">price change</span>
+              <span class="nasdaq-price-change" id="nasdaq-price-change">percent change</span>
+              <div class="index-chart" id="nasdaq-chart">
+                <canvas class="nasdaq-chart-canvas" id="nasdaq-chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="dow-name-price" id="dow-name-price">
+            <span class="dow-name" id="dow-name"><a class="dow-name-link" id="dow-name-link">Dow</a></span>
+            <span class="dow-price" id="dow-price">price</span>
+            <div class="dow-change" id="dow-change">
+              <span class="dow-percent-change" id="dow-price-change">price change</span>
+              <span class="dow-price-change" id="dow-price-change">percent change</span>
+              <div class="index-chart" id="dow-chart">
+                <canvas class="dow-chart-canvas" id="dow-chart-canvas"></canvas>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="right-side">
-
-    </div>
   </div>
 </body>
+
 </html>
