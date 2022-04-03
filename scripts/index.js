@@ -58,13 +58,14 @@ axios(accessTokenConfig)
         var assetType = quoteResponse.assetType;
         if (assetType == "EQUITY") {
           assetType = "Equity";
-          currency = "$"
+          currency = "$";
         }
-
-        var bid = quoteResponse.bidPrice;
-
-        var ask = quoteResponse.askPrice;
-
+        if (assetType == "ETF") {
+          currency = "$";
+        }
+        document.getElementById("currency").innerHTML = currency;
+        // document.getElementById("bid").innerHTML = quoteResponse.bidPrice;
+        // document.getElementById("ask").innerHTML = quoteResponse.askPrice;
         var price = quoteResponse.regularMarketLastPrice;
         if (price > 1) {
           price = price.toFixed(2);
@@ -72,11 +73,9 @@ axios(accessTokenConfig)
         else {
           price = price.toFixed(4);
         }
-        price = price.toLocaleString("en-US");
-        document.getElementById("currency").innerHTML = currency;
+        
+        price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.getElementById("current-price").innerHTML = price;
-        // document.getElementById("bid").innerHTML = bid + " / "
-        // document.getElementById("ask").innerHTML = ask;
 
         var dayChange = quoteResponse.regularMarketNetChange;
         if (price < 0) {
@@ -301,8 +300,10 @@ axios(accessTokenConfig)
               ahChange = ahChange.toFixed(2);
               var ahPercentChange = (ahChange / quoteResponse.regularMarketLastPrice) * 100;
               ahPercentChange = ahPercentChange.toFixed(2);
-
-              document.getElementById("ah-price").innerHTML = quoteResponse.lastPrice.toFixed(2);
+              let ahPrice = quoteResponse.lastPrice;
+              ahPrice = ahPrice.toFixed(2);
+              ahPrice = ahPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+              document.getElementById("ah-price").innerHTML = ahPrice;
 
               if (ahChange > 0) {
                 toString(ahChange);
@@ -400,7 +401,7 @@ axios(accessTokenConfig)
               }
             }
             var timesLabel = [];
-            for (var i = 0; i < numberOfCandles + 1; i++) {
+            for (var i = 0; i < numberOfCandles; i++) {
               timesLabel.push(times[i]);
             }
             timesLabel.push("");
@@ -569,7 +570,10 @@ axios(accessTokenConfig)
               timesLabel.push(fullTime);
             }
             timesLabel.push("");
-
+            let change = response.data.candles[numberOfCandles - 1].close - response.data.candles[0].open;
+            // document.getElementById("five-day-price-change").innerHTML = change;
+            // document.getElementById("five-day-percent-change").innerHTML = percentChange;
+            console.log(change);
             let fiveDayChartValues = [];
             let fiveDayVolumeValues = [];
             for (var i = 0; i < numberOfCandles - 1; i++) {
@@ -710,7 +714,7 @@ axios(accessTokenConfig)
             var month;
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var day;
-            for (var i = 0; i < numberOfCandles; i++) {
+            for (var i = 0; i < numberOfCandles - 1; i++) {
               date = new Date(response.data.candles[i].datetime);
               month = monthNames[date.getMonth()];
               day = date.getDate();
@@ -860,7 +864,7 @@ axios(accessTokenConfig)
             var month;
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var day;
-            for (var i = 0; i < numberOfCandles; i++) {
+            for (var i = 0; i < numberOfCandles - 1; i++) {
               date = new Date(response.data.candles[i].datetime);
               month = monthNames[date.getMonth()];
               day = date.getDate();
@@ -1010,7 +1014,7 @@ axios(accessTokenConfig)
             var month;
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var day;
-            for (var i = 0; i < numberOfCandles; i++) {
+            for (var i = 0; i < numberOfCandles - 1; i++) {
               date = new Date(response.data.candles[i].datetime);
               month = monthNames[date.getMonth()];
               day = date.getDate();
@@ -1134,7 +1138,7 @@ axios(accessTokenConfig)
                     ticks: {
                       beginAtZero: true,
                       userCallback: function (value, index, values) {
-                        return value.toLocaleString();
+                        return value.toLocaleString("en-US");
                       }
                     }
                   }]
@@ -1160,7 +1164,7 @@ axios(accessTokenConfig)
             var month;
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var day;
-            for (var i = 0; i < numberOfCandles; i++) {
+            for (var i = 0; i < numberOfCandles - 1; i++) {
               date = new Date(response.data.candles[i].datetime);
               month = monthNames[date.getMonth()];
               day = date.getDate();
@@ -1313,7 +1317,7 @@ axios(accessTokenConfig)
             var month;
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             var day;
-            for (var i = 0; i < numberOfCandles; i++) {
+            for (var i = 0; i < numberOfCandles - 1; i++) {
               date = new Date(response.data.candles[i].datetime);
               month = monthNames[date.getMonth()];
               day = date.getDate();
@@ -1466,11 +1470,10 @@ axios(accessTokenConfig)
           .then(function (response) {
             console.log(quoteResponse.data);
             var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
-            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");            
+            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("sp500-price").innerHTML = price;
             var priceData = [];
-            var change = quoteResponse.data["$SPX.X"].lastPrice - quoteResponse.data["$SPX.X"].closePrice;
-            change = change.toFixed(2);
+            var change = quoteResponse.data["$SPX.X"].lastPrice.toFixed(2) - quoteResponse.data["$SPX.X"].closePrice.toFixed(2);
             if (change > 0) {
               color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
               document.getElementById("sp500-price-change").innerHTML = "+" + change;
@@ -1479,17 +1482,26 @@ axios(accessTokenConfig)
               color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
             }
             else {
-              color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+              color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
               document.getElementById("sp500-price-change").innerHTML = change;
             }
             // var percentChange = quoteResponse.data["SPX.X"].
             var spxLabels = [];
-            for (var i = 0; i < response.data.candles.length; i++) {
+            var numberOfCandles = response.data.candles.length;
+            if (numberOfCandles == 84) {
+              numberOfCandles-=5;
+            }
+            for (var i = 0; i < numberOfCandles; i++) {
               spxLabels.push(" ");
             }
-            for (var i = 1; i < response.data.candles.length - 1; i++) {
+            for (var i = 1; i < numberOfCandles; i++) {
               priceData.push(response.data.candles[i].close.toFixed(2));
             }
+            var percentChange = change / quoteResponse.data["$SPX.X"].closePrice * 100;
+            if (percentChange > 0) {
+              document.getElementById("sp500-percent-change").innerHTML = "(+" + percentChange + "%)";
+            }
+            else document.getElementById("sp500-percent-change").innerHTML = "(" + percentChange + "%)";
             priceData.unshift(response.data.candles[0].open);
             var sp500Chart = document.getElementById('sp500-chart-canvas').getContext('2d');
             var priceChart = new Chart(sp500Chart, {
@@ -1538,20 +1550,20 @@ axios(accessTokenConfig)
               }
             });
           })
-          var nasdaqConfig = {
-            method: 'get',
-            url: 'https://api.tdameritrade.com/v1/marketdata/$NDX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needEntendedHoursData=false',
-            headers: {
-              'Authorization': accessToken,
-            }
-          };
-          axios(nasdaqConfig)
+        var nasdaqConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/$NDX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needEntendedHoursData=false',
+          headers: {
+            'Authorization': accessToken,
+          }
+        };
+        axios(nasdaqConfig)
           .then(function (response) {
             var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
-            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");            
+            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("nasdaq-price").innerHTML = price;
             var priceData = [];
-            var change = quoteResponse.data["$NDX.X"].lastPrice - quoteResponse.data["$NDX.X"].closePrice;
+            var change = quoteResponse.data["$NDX.X"].lastPrice.toFixed(2) - quoteResponse.data["$NDX.X"].closePrice.toFixed(2);
             if (change > 0) {
               color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
               document.getElementById("nasdaq-price-change").innerHTML = "+" + change;
@@ -1560,17 +1572,27 @@ axios(accessTokenConfig)
               color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
               document.getElementById("nasdaq-price-change").innerHTML = change;
             }
-            else { 
-              color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+            else {
+              color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
               document.getElementById("nasdaq-price-change").innerHTML = change;
             }
+            var numberOfCandles = response.data.candles.length;
+            if (numberOfCandles == 94) {
+              numberOfCandles-=15;
+            }
             var spxLabels = [];
-            for (var i = 0; i < response.data.candles.length - 1; i++) {
+            for (var i = 0; i < numberOfCandles; i++) {
               spxLabels.push(" ");
             }
-            for (var i = 1; i < response.data.candles.length - 1; i++) {
+            for (var i = 1; i < numberOfCandles; i++) {
               priceData.push(response.data.candles[i].close.toFixed(2));
             }
+            var percentChange = change / quoteResponse.data["$NDX.X"].closePrice * 100;
+            if (percentChange > 0) {
+              document.getElementById("nasdaq-percent-change").innerHTML = "(+" + percentChange + "%)";
+            }
+            else document.getElementById("nasdaq-percent-change").innerHTML = "(" + percentChange + "%)";
+
             priceData.unshift(response.data.candles[0].open);
             var nasdaqChart = document.getElementById('nasdaq-chart-canvas').getContext('2d');
             var priceChart = new Chart(nasdaqChart, {
@@ -1619,32 +1641,32 @@ axios(accessTokenConfig)
               }
             });
           })
-          var dowConfig = {
-            method: 'get',
-            url: 'https://api.tdameritrade.com/v1/marketdata/$DJI/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needExtendedHoursData=false',
-            headers: {
-              'Authorization': accessToken,
-            }
-          };
-          axios(dowConfig)
+        var dowConfig = {
+          method: 'get',
+          url: 'https://api.tdameritrade.com/v1/marketdata/$DJI/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needExtendedHoursData=false',
+          headers: {
+            'Authorization': accessToken,
+          }
+        };
+        axios(dowConfig)
           .then(function (response) {
-            console.log(quoteResponse);
             var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
-            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");            
+            price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("dow-price").innerHTML = price;
             var priceData = [];
-            var change = quoteResponse.data["$DJI"].lastPrice - quoteResponse.data["$DJI"].closePrice;
-            console.log(change);
+            var change = quoteResponse.data["$DJI"].lastPrice.toFixed(2) - quoteResponse.data["$DJI"].closePrice.toFixed(2);
+            let color;
             if (change > 0) {
               color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
               document.getElementById("dow-price-change").innerHTML = "+" + change;
             }
             else if (change < 0) {
               color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              document.getElementById("dow-price-change").innerHTML = change;
             }
             else {
-              color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-              document.getElementById("dow-price-change").innerHTML = 0;
+              color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
+              document.getElementById("dow-price-change").innerHTML = change;
             }
             var spxLabels = [];
             for (var i = 0; i < response.data.candles.length; i++) {
@@ -1653,6 +1675,11 @@ axios(accessTokenConfig)
             for (var i = 1; i < response.data.candles.length - 1; i++) {
               priceData.push(response.data.candles[i].close.toFixed(2));
             }
+            var percentChange = change / quoteResponse.data["$DJI"].closePrice * 100;
+            if (percentChange > 0) {
+              document.getElementById("dow-percent-change").innerHTML = "(+" + percentChange + "%)";
+            }
+            else document.getElementById("dow-percent-change").innerHTML = "(" + percentChange + "%)";
             priceData.unshift(response.data.candles[0].open);
             var dowChart = document.getElementById('dow-chart-canvas').getContext('2d');
             var priceChart = new Chart(dowChart, {
@@ -2161,6 +2188,3 @@ axios.get(compLogoUrl)
     var logo = response.data.url;
     document.getElementById("logo").src = logo;
   })
-window.addEventListener('load', function () {
-  document.getElementsByTagName("html")[0].style.visibility = "visible";
-});
