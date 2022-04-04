@@ -311,16 +311,20 @@ header {
   font-size: 23px;
   font-weight: bold;
 }
+
 .pos-ah-price-change {
   background-color: rgb(231, 244, 234);
 }
+
 .neg-ah-price-change {
   background-color: rgb(250, 232, 230);
 }
+
 .eq-ah-price-change {
   background-color: rgb(232, 234, 237);
 
 }
+
 .pos-ah-percent-change {
   vertical-align: 10%;
   color: green;
@@ -380,10 +384,12 @@ header {
   font-weight: 550;
   margin-bottom: 20px;
 }
+
 .lower-information-blank {
   width: 38.75%;
   border-bottom: solid rgb(190, 190, 190) 2.5px;
 }
+
 .lower-information-text {
   font-size: 15px;
   color: rgb(39, 108, 255);
@@ -510,6 +516,7 @@ header {
   cursor: pointer;
 
 }
+
 .lower-information-chart {
   display: none;
   width: 93.75%;
@@ -720,6 +727,7 @@ header {
   width: 74.1%;
   line-height: 19px;
 }
+
 .markets-text {
   font-size: 20px;
   font-weight: bold;
@@ -728,35 +736,42 @@ header {
   margin-bottom: 30px;
   width: 50%;
 }
-.right-market-status {
 
-}
+.right-market-status {}
+
 .index-name-price {
   margin-bottom: 10px;
 }
+
 .index-name-link {
-  color:rgb(53, 110, 255);
+  color: rgb(53, 110, 255);
   font-weight: bold;
   margin-right: 2px;
 }
+
 .index-name-link:hover {
   text-decoration: underline;
   cursor: pointer;
 }
+
 .index-price {
   font-weight: bold;
 }
+
 .index-change {
   font-weight: bold;
   margin-bottom: 10px;
 }
+
 .index-percent-change {
   font-weight: bold;
 }
+
 .index-chart {
   margin-left: 7px;
   width: 80%;
 }
+
 .watchlist-text {
   font-size: 20px;
   font-weight: bold;
@@ -765,10 +780,11 @@ header {
   margin-bottom: 30px;
   width: 50%;
 }
+
 .watchlist-add-button {
   margin-left: 10px;
   font-size: 14px;
-  color:rgb(77, 77, 77);
+  color: rgb(77, 77, 77);
   border: solid rgb(53, 110, 255) 1px;
   padding-top: 1.5px;
   padding-bottom: 1.5px;
@@ -776,17 +792,19 @@ header {
   padding-right: 5.5px;
   border-radius: 90px;
 }
+
 .watchlist-add-button:hover {
   cursor: pointer;
   color: white;
   background-color: rgb(53, 110, 255);
 }
+
 ul {
   list-style-type: none;
 }
-.watchlist-item {
 
-}
+.watchlist-item {}
+
 /* Trending */
 .movers-wrapper {
   margin-left: 25px;

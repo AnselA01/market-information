@@ -1462,9 +1462,11 @@ axios(accessTokenConfig)
     };
     axios(quoteConfig)
       .then(function (quoteResponse) {
+        var date = new Date();
+        var currentTime = date.getTime();
         var sp500Config = {
           method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/$SPX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needEntendedHoursData=false',
+          url: 'https://api.tdameritrade.com/v1/marketdata/$SPX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + currentTime + '&startDate=' + currentTime + '&needExtendedHoursData=false',
           headers: {
             'Authorization': accessToken,
           }
@@ -1475,7 +1477,8 @@ axios(accessTokenConfig)
             price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("sp500-price").innerHTML = price;
             var priceData = [];
-            var change = quoteResponse.data["$SPX.X"].lastPrice.toFixed(2) - quoteResponse.data["$SPX.X"].closePrice.toFixed(2);
+            var change = quoteResponse.data["$SPX.X"].lastPrice - quoteResponse.data["$SPX.X"].closePrice;
+            change = change.toFixed(2);
             if (change > 0) {
               color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
               document.getElementById("sp500-price-change").innerHTML = "+" + change;
@@ -1487,7 +1490,6 @@ axios(accessTokenConfig)
               color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
               document.getElementById("sp500-price-change").innerHTML = change;
             }
-            // var percentChange = quoteResponse.data["SPX.X"].
             var spxLabels = [];
             var numberOfCandles = response.data.candles.length;
             if (numberOfCandles == 84) {
@@ -1500,6 +1502,7 @@ axios(accessTokenConfig)
               priceData.push(response.data.candles[i].close.toFixed(2));
             }
             var percentChange = change / quoteResponse.data["$SPX.X"].closePrice * 100;
+            percentChange = percentChange.toFixed(2);
             if (percentChange > 0) {
               document.getElementById("sp500-percent-change").innerHTML = "(+" + percentChange + "%)";
             }
@@ -1554,7 +1557,7 @@ axios(accessTokenConfig)
           })
         var nasdaqConfig = {
           method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/$NDX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needEntendedHoursData=false',
+          url: 'https://api.tdameritrade.com/v1/marketdata/$NDX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + currentTime + '&startDate=' + currentTime + '&needExtendedHoursData=false',
           headers: {
             'Authorization': accessToken,
           }
@@ -1565,7 +1568,8 @@ axios(accessTokenConfig)
             price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("nasdaq-price").innerHTML = price;
             var priceData = [];
-            var change = quoteResponse.data["$NDX.X"].lastPrice.toFixed(2) - quoteResponse.data["$NDX.X"].closePrice.toFixed(2);
+            var change = quoteResponse.data["$NDX.X"].lastPrice - quoteResponse.data["$NDX.X"].closePrice;
+            change = change.toFixed(2);
             if (change > 0) {
               color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
               document.getElementById("nasdaq-price-change").innerHTML = "+" + change;
@@ -1590,6 +1594,7 @@ axios(accessTokenConfig)
               priceData.push(response.data.candles[i].close.toFixed(2));
             }
             var percentChange = change / quoteResponse.data["$NDX.X"].closePrice * 100;
+            percentChange = percentChange.toFixed(2);
             if (percentChange > 0) {
               document.getElementById("nasdaq-percent-change").innerHTML = "(+" + percentChange + "%)";
             }
@@ -1608,8 +1613,7 @@ axios(accessTokenConfig)
                   spanGaps: false,
                   fill: false,
                   tension: 0,
-                },
-                ]
+                }],
               },
               options: {
                 elements: {
@@ -1645,18 +1649,19 @@ axios(accessTokenConfig)
           })
         var dowConfig = {
           method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/$DJI/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&period=1&frequencyType=minute&frequency=5&needExtendedHoursData=false',
+          url: 'https://api.tdameritrade.com/v1/marketdata/$DJI/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + currentTime + '&startDate=' + currentTime + '&needExtendedHoursData=false',
           headers: {
             'Authorization': accessToken,
           }
         };
         axios(dowConfig)
           .then(function (response) {
-            var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
+            var price = response.data.candles[response.data.candles.length - 1].close;
             price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("dow-price").innerHTML = price;
             var priceData = [];
-            var change = quoteResponse.data["$DJI"].lastPrice.toFixed(2) - quoteResponse.data["$DJI"].closePrice.toFixed(2);
+            var change = quoteResponse.data["$DJI"].lastPrice - quoteResponse.data["$DJI"].closePrice;
+            change = change.toFixed(2);
             let color;
             if (change > 0) {
               color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
@@ -1678,6 +1683,7 @@ axios(accessTokenConfig)
               priceData.push(response.data.candles[i].close.toFixed(2));
             }
             var percentChange = change / quoteResponse.data["$DJI"].closePrice * 100;
+            percentChange = percentChange.toFixed(2);
             if (percentChange > 0) {
               document.getElementById("dow-percent-change").innerHTML = "(+" + percentChange + "%)";
             }
@@ -2215,7 +2221,7 @@ function addToWatchlist() {
 
       console.log(response.data);
       let price = response.data[symbol].lastPrice;
-      const change = response.data[symbol].regularMarketNetChange;
+      let change = response.data[symbol].regularMarketNetChange;
  
       if (change > 0) {
         change = "+" + change;
@@ -2228,6 +2234,7 @@ function addToWatchlist() {
         color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
       }
       let percentChange = response.data[symbol].regularMarketPercentChangeInDouble;
+      percentChange = percentChange.toFixed(2);
       if (percentChange > 0) {
         percentChange = "(+" + percentChange + "%)";
       }
@@ -2243,5 +2250,9 @@ function addToWatchlist() {
 }
 function clearWatchlist() {
   localStorage.setItem("_watchlistItems", "");
+}
+//load watchlist when page is reloaded
+for (let i = 0; i < localStorage.getItem("_watchlistItems").length; i++) {
+  
 }
 console.log(localStorage.getItem("_watchlistItems"));
