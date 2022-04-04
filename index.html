@@ -52,17 +52,14 @@
 
             <!-- regular market change -->
             <span class="change">
-              <span id="pos-day-price-change" class="pos-day-price-change"></span><span id="pos-day-percent-change"
-                class="pos-day-percent-change"></span>
-              <span id="neg-day-price-change" class="neg-day-price-change"></span><span id="neg-day-percent-change"
-                class="neg-day-percent-change"></span>
-              <span id="eq-day-price-change" class="eq-day-price-change"></span><span id="eq-day-percent-change"
-                class="eq-day-percent-change"></span>
+              <span id="pos-day-price-change" class="pos-day-price-change"></span>
+              <span id="pos-day-percent-change"class="pos-day-percent-change"></span>
+              <span id="neg-day-price-change" class="neg-day-price-change"></span>
+              <span id="neg-day-percent-change" class="neg-day-percent-change"></span>
+              <span id="eq-day-price-change" class="eq-day-price-change"></span>
+              <span id="eq-day-percent-change" class="eq-day-percent-change"></span>
+              <span class="wishlist-button" id="wishlist-button" onclick="addToWatchlist()">add to wishlist</span>
             </span>
-            <!-- <span class="bid-ask">
-            <span id="bid"></span>
-            <span id="ask"></span>
-          </span> -->
           </div>
           <div class="market-status" id="market-status">
             <span class="market-close-status-text" id="market-close-status-text"></span>
@@ -444,6 +441,15 @@
             <div class="index-chart" id="dow-chart">
               <canvas class="index-chart-canvas" id="dow-chart-canvas"></canvas>
             </div>
+          </div>
+          <div class="watchlist-wrapper" id="watchlist-wrapper">
+            <div class="watchlist-header" id="watchlist-header">
+              <span class="watchlist-text" id="watchlist-text">Watchlist</span>
+              <span class="clear-watchlist" id="clear-watchlist" onclick="clearWatchlist()">clear</span>
+            </div>
+            <ul class="watchlist" id="watchlist">
+              <li class="watchlist-head" id="watchlist-head"></li>
+            </ul>
           </div>
         </div>
       </div>

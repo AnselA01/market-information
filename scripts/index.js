@@ -25,8 +25,18 @@ axios.get(companyNameUrl)
       document.getElementById("company-name").innerHTML = response.data.data[0].name;
     }
   })
-
-var accessTokenConfig = {
+function getAccessToken() {
+  var accessTokenConfig = {
+    method: 'post',
+    url: 'https://api.tdameritrade.com/v1/oauth2/token',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data: "grant_type=refresh_token&refresh_token=XjcIadXu73isZmpyIZT15UhN3mNp9ILkK3gGy26P0cs9DfBaJKlZqMoCxfuv5WjK0WoSd6%2B6xeprq2kM3qGNfBP3Cpcim38Mk%2FlsSC0fknzqDtJixmfKgqJBge8gv9RvUBd5ac%2BarfoijZguw00IwQH9Gl4yPbcQmE%2FaH8BV9YEDkpo2NrCcX5BON7M0t9XHFsuNhHT0yUq7Qsb7DZeOJGP%2BEysq%2FJ9fDeavKSkv45mt%2BgtA2u2ZULeltj7WR2Bkk8fGS6%2BZc9a%2Fccg%2BzIjowoyL36O1yMpZp%2FnbCNwepfgwT%2B9oXDN73NmNXdBx2bQSO8DsyN354S28Ye%2F%2B2vPAxixRdNZZ7HycpDs4HOeYOMdErR4Na9tMINN7D4Q%2BFOkqwYtCLb91CQuH3paL0sNWW0ZFzm6QbqexAFTe59AhAMCBJ85Wlg9pk1%2BqjqD100MQuG4LYrgoVi%2FJHHvlAZDqws0AsekPNvgb%2FLm9x6UdtaKtz9kcH9b%2FHFkjWThiatgCiEg0XA%2Fl%2FazTCx1YccujE0M2%2BXrdhReqaGX34ZJEoOfSh0MzRA%2BoMJhqHJoiEAid0ycT6Hf9TQ7pIsYhaCQA5dUDfJZ%2B%2FD2AUvmefxzQ4mbFiZcNVPLIOGMzSPY9X0T8Gwg69DId%2Fi6mQLiG6axVsIejer%2BaR3x6GmunBcO4SpcWroyHHZQkPnmc2AH4d9HGvkM33ANMZP38ybfnPgeZUoZX6vO%2BFPFYP%2BFw%2FOnpivZYJpsAzQLZYGNIxB7MZqVmLvX4mpPbsT7vXo5NlbrmNvQLNkiHYBbbtZA2ufJfppDUB4Rw%2FIrR3Ogkz%2F%2F6Qw3ckBDgFSzYQqm6yPB8IBjlUCFc5uRWTtFAjqL2E1DTpS6j%2FDEa%2BKbAze2%2FYzqC6XnFbzXXv6K%2BPY4%3D212FD3x19z9sWBHDJACbC00B75E&access_type=&code=&client_id=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH%40AMER.OAUTHAP&redirect_uri="
+  };
+  return axios(accessTokenConfig).then(response => response.data);
+}
+    var accessTokenConfig = {
   method: 'post',
   url: 'https://api.tdameritrade.com/v1/oauth2/token',
   headers: {
@@ -73,7 +83,7 @@ axios(accessTokenConfig)
         else {
           price = price.toFixed(4);
         }
-        
+
         price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         document.getElementById("current-price").innerHTML = price;
 
@@ -135,7 +145,6 @@ axios(accessTokenConfig)
         }
         dayChange = Number(dayChange);
         percentChange = Number(percentChange);
-
         var previousClose = price - dayChange;
         if (previousClose < 1) {
           previousClose = previousClose.toFixed(4);
@@ -573,7 +582,6 @@ axios(accessTokenConfig)
             let change = response.data.candles[numberOfCandles - 1].close - response.data.candles[0].open;
             // document.getElementById("five-day-price-change").innerHTML = change;
             // document.getElementById("five-day-percent-change").innerHTML = percentChange;
-            console.log(change);
             let fiveDayChartValues = [];
             let fiveDayVolumeValues = [];
             for (var i = 0; i < numberOfCandles - 1; i++) {
@@ -1468,7 +1476,6 @@ axios(accessTokenConfig)
         };
         axios(sp500Config)
           .then(function (response) {
-            console.log(quoteResponse.data);
             var price = response.data.candles[response.data.candles.length - 1].close.toFixed(2);
             price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             document.getElementById("sp500-price").innerHTML = price;
@@ -1489,7 +1496,7 @@ axios(accessTokenConfig)
             var spxLabels = [];
             var numberOfCandles = response.data.candles.length;
             if (numberOfCandles == 84) {
-              numberOfCandles-=5;
+              numberOfCandles -= 5;
             }
             for (var i = 0; i < numberOfCandles; i++) {
               spxLabels.push(" ");
@@ -1578,7 +1585,7 @@ axios(accessTokenConfig)
             }
             var numberOfCandles = response.data.candles.length;
             if (numberOfCandles == 94) {
-              numberOfCandles-=15;
+              numberOfCandles -= 15;
             }
             var spxLabels = [];
             for (var i = 0; i < numberOfCandles; i++) {
@@ -2188,3 +2195,58 @@ axios.get(compLogoUrl)
     var logo = response.data.url;
     document.getElementById("logo").src = logo;
   })
+let watchlistItems = "";
+function insertAfter(newNode, existingNode) {
+  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}
+function addToWatchlist() {
+  getAccessToken().then(response => {
+    let accessToken = response.access_token;
+    var config = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
+      headers: { 
+        'Authorization': "Bearer " + accessToken,
+      }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      const symbol = document.getElementById("ticker").innerHTML;
+      const list = document.getElementById("watchlist");
+      const item = document.createElement("li");
+      item.textContext = symbol;
+      item.classList.add("watchlist-item");
+
+      console.log(response.data);
+      let price = response.data[symbol].lastPrice;
+      const change = response.data[symbol].regularMarketNetChange;
+ 
+      if (change > 0) {
+        change = "+" + change;
+        color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      }
+      else if (change < 0) {
+        color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      }
+      else {
+        color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      }
+      let percentChange = response.data[symbol].regularMarketPercentChangeInDouble;
+      if (percentChange > 0) {
+        percentChange = "(+" + percentChange + "%)";
+      }
+      else {
+        percentChange = "(" + percentChange + "%)";
+      }
+      item.innerHTML = symbol + " " + price + " " + change + " " + percentChange;
+  
+      insertAfter(item, list.lastElementChild);
+      localStorage.setItem("_watchlistItems", localStorage.getItem("_watchlistItems") + item.innerHTML);
+    })    
+  })
+}
+function clearWatchlist() {
+  localStorage.setItem("_watchlistItems", "");
+}
+console.log(localStorage.getItem("_watchlistItems"));
