@@ -20,7 +20,7 @@
       <div>
         <form id="search-stock">
           <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input"
-            placeholder="Search for another company... " oninput="this.value = this.value.toUpperCase()">
+            placeholder="Find quote" oninput="this.value = this.value.toUpperCase()">
           <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
             text-transform:uppercase>
         </form>
@@ -39,6 +39,7 @@
           <span class="exchange-and-ticker">
             <span class="exchange" id="exchange"></span>
             <span class="ticker " id="ticker"></span>
+            <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">add to watchlist</span>
           </span>
         </div>
 
@@ -58,7 +59,6 @@
               <span id="neg-day-percent-change" class="neg-day-percent-change"></span>
               <span id="eq-day-price-change" class="eq-day-price-change"></span>
               <span id="eq-day-percent-change" class="eq-day-percent-change"></span>
-              <span class="wishlist-button" id="wishlist-button" onclick="addToWatchlist()">add to wishlist</span>
             </span>
           </div>
           <div class="market-status" id="market-status">

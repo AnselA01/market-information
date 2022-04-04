@@ -203,30 +203,30 @@ header {
 
 .pos-day-price-change {
   vertical-align: 20%;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 10px;
   color: rgb(42, 115, 49);
 }
 
 .neg-day-price-change {
   vertical-align: 20%;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 10px;
   color: rgb(157, 12, 12);
 }
 
 .eq-day-price-change {
   vertical-align: 20%;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 10px;
   color: rgb(58, 58, 58);
 }
@@ -279,10 +279,10 @@ header {
 .pos-ah-change {
   vertical-align: 5%;
   font-size: 23px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 10px;
   color: rgb(42, 115, 49);
   font-weight: bold;
@@ -290,10 +290,10 @@ header {
 
 .neg-ah-change {
   vertical-align: 5%;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 10px;
   color: rgb(157, 12, 12);
   font-size: 23px;
@@ -303,15 +303,24 @@ header {
 .eq-ah-change {
   vertical-align: 5%;
   color: rgb(58, 58, 58);
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 10px;
   font-size: 23px;
   font-weight: bold;
 }
+.pos-ah-price-change {
+  background-color: rgb(231, 244, 234);
+}
+.neg-ah-price-change {
+  background-color: rgb(250, 232, 230);
+}
+.eq-ah-price-change {
+  background-color: rgb(232, 234, 237);
 
+}
 .pos-ah-percent-change {
   vertical-align: 10%;
   color: green;
@@ -714,8 +723,8 @@ header {
 .markets-text {
   font-size: 20px;
   font-weight: bold;
-  margin-left: 20%;
-  margin-top: 11%;
+  margin-left: 19%;
+  margin-top: 5px;
   margin-bottom: 30px;
   width: 50%;
 }
@@ -756,11 +765,27 @@ header {
   margin-bottom: 30px;
   width: 50%;
 }
+.watchlist-add-button {
+  margin-left: 10px;
+  font-size: 14px;
+  color:rgb(77, 77, 77);
+  border: solid rgb(53, 110, 255) 1px;
+  padding-top: 1.5px;
+  padding-bottom: 1.5px;
+  padding-left: 5.5px;
+  padding-right: 5.5px;
+  border-radius: 90px;
+}
+.watchlist-add-button:hover {
+  cursor: pointer;
+  color: white;
+  background-color: rgb(53, 110, 255);
+}
 ul {
   list-style-type: none;
 }
 .watchlist-item {
-  
+
 }
 /* Trending */
 .movers-wrapper {

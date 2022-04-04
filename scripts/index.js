@@ -112,7 +112,6 @@ axios(accessTokenConfig)
           document.getElementById("neg-day-price-change").style.display = "none";
           document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
-
         }
         else if (dayChange < 0) {
           toString(dayChange);
@@ -126,7 +125,6 @@ axios(accessTokenConfig)
           document.getElementById("pos-day-price-change").style.display = "none";
           document.getElementById("eq-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(" + percentChange + "%)" + " | " + quoteResponse.description;
-
         }
         else {
           toString(dayChange);
@@ -141,10 +139,7 @@ axios(accessTokenConfig)
           document.getElementById("neg-day-price-change").style.display = "none";
           document.getElementById("pos-day-price-change").style.display = "none";
           document.title = loadData() + " " + currency + price + " " + "(+" + percentChange + "%)" + " | " + quoteResponse.description;
-
         }
-        dayChange = Number(dayChange);
-        percentChange = Number(percentChange);
         var previousClose = price - dayChange;
         if (previousClose < 1) {
           previousClose = previousClose.toFixed(4);
@@ -343,7 +338,7 @@ axios(accessTokenConfig)
                 toString(ahPercentChange);
                 document.getElementById("eq-ah-price-change").innerHTML = ahChange;
                 document.getElementById("eq-ah-percent-change").innerHTML = "(" + ahPercentChange + "%)";
-                document.getElementById("eq-day-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+                document.getElementById("eq-ah-price-change").style.backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')'
                 document.getElementById("eq-ah-price-change").style.display = "inline";
                 document.getElementById("pos-ah-price-change").style.display = "none";
                 document.getElementById("neg-ah-price-change").style.display = "none";
@@ -399,7 +394,7 @@ axios(accessTokenConfig)
             var times = [];
             var startingTime = 570;
             var suffix = ["AM", "PM"];
-
+                                      //TODO: make the 1 day chart get time values from API instead of loop
             for (var i = 0; startingTime < 24 * 60; i++) {
               var hh = Math.floor(startingTime / 60); // gestartingTiming hours of day in 0-24 format
               var mm = (startingTime % 60); // gestartingTiming minutes of the hour in 0-55 format
