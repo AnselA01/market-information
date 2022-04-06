@@ -19,8 +19,8 @@
     <div class="header-content">
       <div>
         <form id="search-stock">
-          <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input"
-            placeholder="Find quote" oninput="this.value = this.value.toUpperCase()">
+          <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
+            oninput="this.value = this.value.toUpperCase()">
           <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
             text-transform:uppercase>
         </form>
@@ -39,7 +39,8 @@
           <span class="exchange-and-ticker">
             <span class="exchange" id="exchange"></span>
             <span class="ticker " id="ticker"></span>
-            <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">add to watchlist</span>
+            <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">Add to
+              watchlist</span>
           </span>
         </div>
 
@@ -54,7 +55,7 @@
             <!-- regular market change -->
             <span class="change">
               <span id="pos-day-price-change" class="pos-day-price-change"></span>
-              <span id="pos-day-percent-change"class="pos-day-percent-change"></span>
+              <span id="pos-day-percent-change" class="pos-day-percent-change"></span>
               <span id="neg-day-price-change" class="neg-day-price-change"></span>
               <span id="neg-day-percent-change" class="neg-day-percent-change"></span>
               <span id="eq-day-price-change" class="eq-day-price-change"></span>
@@ -393,15 +394,40 @@
                 </div>
               </div>
             </div>
-            <div class="lower-information-options" id="lower-information-options">
+          </div>
+          <div class="lower-information-options" id="lower-information-options">
+
+          </div>
+          <div class="lower-information-historical" id="lower-information-historical">
+            <div class="lower-information-historical-header">
+              <span class="timeframe-text">Timeframe: </span><span><a class="timeframe-selector-text" onclick="historicalTimeframeDropdown()">Daily</a></span>
+            </div>
+            <div class="lower-information-historical-daily">
+              <table>
+                <tr>
+                  <th class="hisotrical-date-header">Date</th>
+                  <th class="hisotrical-open-header">Open</th>
+                  <th class="historical-high-header">High</th>
+                  <th class="historical-low-header">Low</th>
+                  <th class="historical-close-header">Close</th>
+                  <th class="historical-volume-header">Volume</th>
+                </tr>
+                <tr>
+                  <td>data</td>
+                  <td>data</td>
+                  <td>data</td>
+                </tr>
+              </table>
+            </div>
+            <div class="lower-information-historical-weekly">
 
             </div>
-            <div class="lower-information-historical" id="lower-information-historical">
+            <div class="lower-information-historical-monthly">
 
             </div>
-            <div class="lower-information-forum" id="lower-information-forum">
+          </div>
+          <div class="lower-information-forum" id="lower-information-forum">
 
-            </div>
           </div>
         </div>
       </div>
@@ -410,50 +436,56 @@
         <div class="right-market-status" id="right-market-status">
           <div class="index-wrapper" id="sp500-wrapper">
             <div class="index-name-price" id="sp500-name-price">
-              <span class="index-name" id="sp500-name"><a class="index-name-link" id="sp500-name-link">S&P 500</a></span>
+              <span class="index-name" id="sp500-name"><a class="index-name-link" id="sp500-name-link">S&P
+                  500</a></span>
               <span class="index-price" id="sp500-price"></span>
               <div class="index-change" id="sp500-change">
                 <span class="index-price-change" id="sp500-price-change"></span>
                 <span class="index-percent-change" id="sp500-percent-change"></span>
               </div>
               <div class="index-chart" id="sp500-chart">
-                <canvas class="sp500-chart-canvas" id="sp500-chart-canvas"></canvas>
+                <canvas class="index-chart-canvas" id="sp500-chart-canvas"></canvas>
               </div>
             </div>
           </div>
-            <div class="index-name-price" id="nasdaq-name-price">
-              <span class="index-name" id="nasdaq-name"><a class="index-name-link" id="nasdaq-name-link">Nasdaq 100</a></span>
-              <span class="index-price" id="nasdaq-price"></span>
-              <div class="index-change" id="nasdaq-change">
-                <span class="index-price-change" id="nasdaq-price-change"></span>
-                <span class="index-percent-change" id="nasdaq-percent-change"></span>
-              </div>
+          <div class="index-name-price" id="nasdaq-name-price">
+            <span class="index-name" id="nasdaq-name"><a class="index-name-link" id="nasdaq-name-link">Nasdaq
+                100</a></span>
+            <span class="index-price" id="nasdaq-price"></span>
+            <div class="index-change" id="nasdaq-change">
+              <span class="index-price-change" id="nasdaq-price-change"></span>
+              <span class="index-percent-change" id="nasdaq-percent-change"></span>
+            </div>
             <div class="index-chart" id="nasdaq-chart">
               <canvas class="index-chart-canvas" id="nasdaq-chart-canvas"></canvas>
             </div>
-          <div class="index-name-price" id="dow-name-price">
-            <span class="index-name" id="dow-name"><a class="index-name-link" id="dow-name-link">Dow 30</a></span>
-            <span class="index-price" id="dow-price"></span>
-            <div class="index-change" id="dow-change">
-              <span class="index-price-change" id="dow-price-change"></span>
-              <span class="index-percent-change" id="dow-percent-change"></span>
-            </div>
-            <div class="index-chart" id="dow-chart">
-              <canvas class="index-chart-canvas" id="dow-chart-canvas"></canvas>
+            <div class="index-name-price" id="dow-name-price">
+              <span class="index-name" id="dow-name"><a class="index-name-link" id="dow-name-link">Dow 30</a></span>
+              <span class="index-price" id="dow-price"></span>
+              <div class="index-change" id="dow-change">
+                <span class="index-price-change" id="dow-price-change"></span>
+                <span class="index-percent-change" id="dow-percent-change"></span>
+              </div>
+              <div class="index-chart" id="dow-chart">
+                <canvas class="index-chart-canvas" id="dow-chart-canvas"></canvas>
+              </div>
             </div>
           </div>
-          <div class="watchlist-wrapper" id="watchlist-wrapper">
-            <div class="watchlist-header" id="watchlist-header">
-              <span class="watchlist-text" id="watchlist-text">Watchlist</span>
-              <span class="clear-watchlist" id="clear-watchlist" onclick="clearWatchlist()">clear</span>
-            </div>
-            <ul class="watchlist" id="watchlist">
-              <li class="watchlist-head" id="watchlist-head"></li>
-            </ul>
+        </div>
+        <div class="watchlist-wrapper" id="watchlist-wrapper">
+          <div class="watchlist-header" id="watchlist-header">
+            <span class="watchlist-text" id="watchlist-text">Watchlist</span>
+            <span class="clear-watchlist" id="clear-watchlist" onclick="clearWatchlist()">clear</span>
           </div>
+          <table class="watchlist-table" id="watchlist-table">
+            <th>Symbol</th>
+            <th>Last</th>
+            <th>Change</th>
+            <th>% Change</th>
+          </table>
         </div>
       </div>
     </div>
-  </div>
 </body>
+
 </html>

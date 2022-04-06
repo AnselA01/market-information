@@ -118,7 +118,7 @@ header {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 21%;
+  grid-template-columns: 1fr 22%;
 }
 
 .right-side {
@@ -160,14 +160,13 @@ header {
 .logo {
   width: 70px;
   border-radius: 11%;
-  border: solid rgb(155, 155, 155) 0.5px;
-  padding: 4px;
+  padding: 2px;
+  margin-right: 9px;
   vertical-align: middle;
 }
 
 .company-name {
-  padding-top: 50%;
-  margin-left: 5px;
+  /* padding-top: 50%; */
   font-size: 30px;
   font-weight: bold;
 }
@@ -192,6 +191,7 @@ header {
 }
 
 .current-price {
+  margin-right: 5px;
   font-size: 40px;
   font-weight: bold;
 }
@@ -209,6 +209,7 @@ header {
   padding-bottom: 5px;
   border-radius: 10px;
   color: rgb(42, 115, 49);
+  color: rgb()
 }
 
 .neg-day-price-change {
@@ -372,7 +373,7 @@ header {
 .info-line {
   height: 25px;
   border-bottom: solid 1.25px rgb(185, 185, 185);
-  margin-top: 7px;
+  margin-top: 10px;
   color: rgb(58, 58, 58);
 }
 
@@ -418,61 +419,61 @@ header {
 }
 
 .chart-timescale-1d {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 }
 
 .chart-timescale-5d {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 }
 
 .chart-timescale-1m {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 7px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 
 }
 
 .chart-timescale-6m {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 }
 
 .chart-timescale-ytd {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 }
 
 .chart-timescale-1y {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 
 }
 
 .chart-timescale-5y {
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 11px;
 
 }
 
@@ -533,23 +534,6 @@ header {
   margin-left: -10px;
   padding-top: 20px;
 }
-
-.lower-information-volume-canvas-1d {}
-
-.lower-information-volume-canvas-5d {}
-
-.lower-information-volume-canvas-1m {}
-
-.lower-information-volume-canvas-6m {}
-
-.lower-information-volume-canvas-1y {}
-
-.lower-information-volume-canvas-5y {}
-
-
-
-
-
 
 .lower-information-news {
   padding-top: 25px;
@@ -727,6 +711,21 @@ header {
   width: 74.1%;
   line-height: 19px;
 }
+.lower-information-historical-header {
+  margin-bottom: 15px;
+}
+.timeframe-text {
+  font-size: 13.5px;
+}
+.timeframe-selector-text {
+  font-size: 14px;
+  font-weight: bold;
+  color:rgb(53, 110, 255);
+}
+.timeframe-selector-text:hover {
+  cursor: pointer;
+  color: rgb(43, 88, 202)
+}
 
 .markets-text {
   font-size: 20px;
@@ -737,7 +736,9 @@ header {
   width: 50%;
 }
 
-.right-market-status {}
+.right-market-status {
+
+}
 
 .index-name-price {
   margin-bottom: 10px;
@@ -771,16 +772,22 @@ header {
   margin-left: 7px;
   width: 80%;
 }
-
+.watchlist-wrapper {
+  width: 100%;
+}
+.watchlist {
+  padding: 0;
+  width: 100%;
+}
 .watchlist-text {
+  width: 100%;
+  text-align: center;
+  margin-left: 20%;
   font-size: 20px;
   font-weight: bold;
-  margin-left: 25%;
   margin-top: 15%;
   margin-bottom: 30px;
-  width: 50%;
 }
-
 .watchlist-add-button {
   margin-left: 10px;
   font-size: 14px;
@@ -792,18 +799,37 @@ header {
   padding-right: 5.5px;
   border-radius: 90px;
 }
-
 .watchlist-add-button:hover {
   cursor: pointer;
   color: white;
   background-color: rgb(53, 110, 255);
 }
 
-ul {
-  list-style-type: none;
-}
 
-.watchlist-item {}
+.watchlist-table {
+}
+table th {
+  font-size: 12.5px;
+  font-weight: bold;
+  color: black;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 4;
+  float: left;
+}
+table tr, table td {
+  font-size: 14px;
+  color: gray;
+  border-bottom: 1;
+  border-left: 0;
+  border-right: 0;
+  float: left;
+}
+table tr:nth-child(even) {
+  background-color: white;
+  color: gray;
+}
 
 /* Trending */
 .movers-wrapper {

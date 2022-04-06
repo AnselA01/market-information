@@ -36,7 +36,7 @@ function getAccessToken() {
   };
   return axios(accessTokenConfig).then(response => response.data);
 }
-    var accessTokenConfig = {
+var accessTokenConfig = {
   method: 'post',
   url: 'https://api.tdameritrade.com/v1/oauth2/token',
   headers: {
@@ -394,7 +394,7 @@ axios(accessTokenConfig)
             var times = [];
             var startingTime = 570;
             var suffix = ["AM", "PM"];
-                                      //TODO: make the 1 day chart get time values from API instead of loop
+            //TODO: make the 1 day chart get time values from API instead of loop
             for (var i = 0; startingTime < 24 * 60; i++) {
               var hh = Math.floor(startingTime / 60); // gestartingTiming hours of day in 0-24 format
               var mm = (startingTime % 60); // gestartingTiming minutes of the hour in 0-55 format
@@ -573,7 +573,7 @@ axios(accessTokenConfig)
               fullTime = month + " " + day + ", " + hour + ":" + minute + " " + suffix + " " + "GMT-" + timeZone;
               timesLabel.push(fullTime);
             }
-            timesLabel.push("");
+            // timesLabel.push("");
             let change = response.data.candles[numberOfCandles - 1].close - response.data.candles[0].open;
             // document.getElementById("five-day-price-change").innerHTML = change;
             // document.getElementById("five-day-percent-change").innerHTML = percentChange;
@@ -1519,7 +1519,7 @@ axios(accessTokenConfig)
                   borderWidth: 2,
                   spanGaps: false,
                   fill: false,
-                  tension: 0,
+                  tension: 1,
                 },
                 ]
               },
@@ -1612,7 +1612,7 @@ axios(accessTokenConfig)
                   borderWidth: 2,
                   spanGaps: false,
                   fill: false,
-                  tension: 0,
+                  tension: 1,
                 }],
               },
               options: {
@@ -1700,7 +1700,7 @@ axios(accessTokenConfig)
                   borderWidth: 2,
                   spanGaps: false,
                   fill: false,
-                  tension: 0,
+                  tension: 1,
                 },
                 ]
               },
@@ -1965,14 +1965,13 @@ function changeInfoPaneNews() {
   axios.request(newsOptions).then(function (response) {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     var articleNumber = [];
-    for (var i = 0; i < 25; i++) {
+    for (var i = 0; i < response.data.articles.length - 1; i++) {
       if (response.data.articles[i].clean_url != "reddit.com" && response.data.articles[i].clean_url != "youtube.com" && response.data.articles[i].clean_url != "thesun.co.uk" && response.data.articles[i].clean_url != "ign.com" && response.data.articles[i].clean_url != "digitaltrends.com" && response.data.articles[i].clean_url != "metro.co.uk" && response.data.articles[i].clean_url != "sky.com" && response.data.articles[i].clean_url != "mdpi.com" && response.data.articles[i].topic != "entertainment") {
         articleNumber.push(i);
       }
     }
     if (articleNumber.length > 0) {
       var articleOne = response.data.articles[articleNumber[0]];
-      console.log(articleOne);
       document.getElementById("article-1-image-src").src = articleOne.media;
       document.getElementById("article-1-publisher").innerHTML = articleOne.clean_url;
       var date = new Date(articleOne.published_date);
@@ -2139,22 +2138,6 @@ function changeInfoPaneNews() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
-function changeInfoPaneForum() {
-  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
-
-  document.getElementById("lower-information-overview").style.display = "none";
-  document.getElementById("lower-information-chart").style.display = "none";
-  document.getElementById("lower-information-volume").style.display = "none";
-  document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-forum").style.display = "block";
-  document.getElementById("lower-information-options").style.display = "none";
-  document.getElementById("lower-information-historical").style.display = "none";
-}
 function changeInfoPaneOptions() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2172,6 +2155,21 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneHistorical() {
+  getAccessToken().then(response => {
+    let accessToken = response.access_token;
+    var config = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/AAPL/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=1&frequencyType=daily&frequency=1&needExtendedHoursData=false',
+      headers: { 
+        'Authorization': "Bearer " + accessToken,
+      }
+    };
+    axios(config)
+    .then(function (response) {
+      console.log(response);
+    })
+  })
+  console.log("here");
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2187,15 +2185,35 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
 }
+function historicalTimeframeDropdown() {}
+function changeInfoPaneForum() {
+  document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #356EFF 2.5px";
+  document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
+  document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
+
+  document.getElementById("lower-information-overview").style.display = "none";
+  document.getElementById("lower-information-chart").style.display = "none";
+  document.getElementById("lower-information-volume").style.display = "none";
+  document.getElementById("lower-information-news").style.display = "none";
+  document.getElementById("lower-information-forum").style.display = "block";
+  document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("lower-information-historical").style.display = "none";
+}
 
 //logo
 var compLogoUrl = "https://api.twelvedata.com/logo?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&symbol=";
 compLogoUrl = compLogoUrl.concat(loadData());
 axios.get(compLogoUrl)
   .then(response => {
-    var logo = response.data.url;
-    document.getElementById("logo").src = logo;
+    document.getElementById("logo").src = response.data.url;
+    if (document.getElementById("logo")) {
+      document.getElementById("logo").style.border = " 0.5px solid #9b9b9b";
+    }
   })
+
 let watchlistItems = "";
 function insertAfter(newNode, existingNode) {
   existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
@@ -2206,53 +2224,61 @@ function addToWatchlist() {
     var config = {
       method: 'get',
       url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
-      headers: { 
+      headers: {
         'Authorization': "Bearer " + accessToken,
       }
     };
-    
-    axios(config)
-    .then(function (response) {
-      const symbol = document.getElementById("ticker").innerHTML;
-      const list = document.getElementById("watchlist");
-      const item = document.createElement("li");
-      item.textContext = symbol;
-      item.classList.add("watchlist-item");
 
-      console.log(response.data);
-      let price = response.data[symbol].lastPrice;
-      let change = response.data[symbol].regularMarketNetChange;
- 
-      if (change > 0) {
-        change = "+" + change;
-        color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
-      }
-      else if (change < 0) {
-        color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-      }
-      else {
-        color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-      }
-      let percentChange = response.data[symbol].regularMarketPercentChangeInDouble;
-      percentChange = percentChange.toFixed(2);
-      if (percentChange > 0) {
-        percentChange = "(+" + percentChange + "%)";
-      }
-      else {
-        percentChange = "(" + percentChange + "%)";
-      }
-      item.innerHTML = symbol + " " + price + " " + change + " " + percentChange;
-  
-      insertAfter(item, list.lastElementChild);
-      localStorage.setItem("_watchlistItems", localStorage.getItem("_watchlistItems") + item.innerHTML);
-    })    
+    axios(config)
+      .then(function (response) {
+        const symbol = document.getElementById("ticker").innerHTML;
+        let price = response.data[symbol].regularMarketLastPrice;
+        const table = document.getElementById("watchlist-table");
+        let row = table.insertRow();
+        var symbolCell = row.insertCell(0)
+        symbolCell.style.fontWeight = "bold";
+        symbolCell.innerHTML = symbol;
+        var lastCell = row.insertCell(1);
+        lastCell.style.fontWeight = "bold";
+        lastCell.innerHTML = price;
+        var changeCell = row.insertCell(2);
+        var percentChangeCell = row.insertCell(3);
+
+        let change = response.data[symbol].regularMarketNetChange;
+        change = change.toFixed(2);
+
+        if (change > 0) {
+          change = "+" + change;
+          color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+        }
+        else if (change < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+        }
+        else {
+          color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+        }
+        let percentChange = response.data[symbol].regularMarketPercentChangeInDouble;
+        percentChange = percentChange.toFixed(2);
+        if (percentChange > 0) {
+          percentChange = "(+" + percentChange + "%)";
+        }
+        else {
+          percentChange = "(" + percentChange + "%)";
+        }
+        changeCell.style.color = color;
+        changeCell.fontWeight = "bold";
+        changeCell.innerHTML = change;
+        percentChangeCell.style.color = color;
+        percentChangeCell.fontWeight = "bold";
+        percentChangeCell.innerHTML = percentChange;
+      })
   })
 }
 function clearWatchlist() {
   localStorage.setItem("_watchlistItems", "");
+  document.getElementById("watchlist").innerHTML = "";
 }
+//console.log(localStorage.getItem("_watchlistItems"));
+
 //load watchlist when page is reloaded
-for (let i = 0; i < localStorage.getItem("_watchlistItems").length; i++) {
-  
-}
-console.log(localStorage.getItem("_watchlistItems"));
+var watchlistString = localStorage.getItem("_watchlistItems");
