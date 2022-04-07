@@ -10,7 +10,9 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 }
-
+form {
+  display: inline-block;
+}
 header {
   height: 100px;
   background-color: rgb(77, 77, 77);
@@ -43,20 +45,29 @@ header {
 }
 
 .stock-symbol-search-bar {
-  /* display: inline-block; */
+  vertical-align: middle;
+  float: right;
   border-radius: 0;
-  border-color: transparent;
+  border: solid gray 1px;
   background-color: white;
   padding-left: 6.5px;
-  border: none;
   border-top-left-radius: 3.5px;
   border-bottom-left-radius: 3.5px;
-  width: 250px;
+  width: 150px;
   height: 30px;
-  margin-top: 10px;
-  margin-left: 35%;
-  margin-right: -5px;
-  margin-bottom: 9px;
+}
+.stock-submit-button {
+  vertical-align: middle;
+  float: right;
+  background-color: rgb(63, 112, 255);
+  color: white;
+  font-size: 15px;
+  height: 34px;
+  border-color: transparent;
+  border: none;
+  border-top-right-radius: 3.5px;
+  border-bottom-right-radius: 3.5px;
+  margin-right: 2.5%;
 }
 
 .stock-symbol-search-bar:focus {
@@ -88,18 +99,7 @@ header {
   font-size: 15px;
 }
 
-.stock-submit-button {
-  display: inline-block;
-  background-color: rgb(43, 131, 244);
-  color: white;
-  font-size: 15px;
-  margin: 0;
-  height: 32px;
-  border-color: transparent;
-  border: none;
-  border-top-right-radius: 3.5px;
-  border-bottom-right-radius: 3.5px;
-}
+
 
 .stock-submit-button:hover {
   background-color: rgb(35, 86, 214);
@@ -118,11 +118,11 @@ header {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 22%;
+  grid-template-columns: 1fr 23%;
 }
 
 .right-side {
-  padding-left: 30px;
+  padding-left: 25px;
   height: 100%;
   border-left: solid 1.325px rgb(119, 119, 119);
 }
@@ -773,6 +773,7 @@ header {
   width: 80%;
 }
 .watchlist-wrapper {
+  margin-top: 30x;
   width: 100%;
 }
 .watchlist {
@@ -805,47 +806,16 @@ header {
   background-color: rgb(53, 110, 255);
 }
 
-
-.watchlist-table {
-}
-table th {
-  font-size: 12.5px;
-  font-weight: bold;
-  color: black;
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  padding: 4;
-  float: left;
-}
-table tr, table td {
-  font-size: 14px;
-  color: gray;
-  border-bottom: 1;
-  border-left: 0;
-  border-right: 0;
-  float: left;
-}
-table tr:nth-child(even) {
-  background-color: white;
-  color: gray;
-}
-
-/* Trending */
-.movers-wrapper {
-  margin-left: 25px;
-  margin-right: 25px;
-  margin-top: 20px;
-}
-
 table {
+  width: 100%;
+  display: block;
   font-size: 12.5px;
   width: 100%;
   border-collapse: collapse;
+  overflow-x: auto;
 }
 
-td,
-th {
+td, th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 7px;
@@ -856,3 +826,33 @@ tr:nth-child(even) {
   color: rgb(224, 195, 155);
   color: rgb(100, 100, 0);
 }
+table th {
+  font-size: 12.5px;
+  font-weight: bold;
+  color: black;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 4;
+  text-align: center;
+}
+table tr, table td {
+  font-size: 14px;
+  color: black;
+  border-bottom: 1;
+  border-left: 0;
+  border-right: 0;
+  text-align: center;
+}
+table tr:nth-child(even) {
+  background-color: rgb(241, 241, 241);
+  color: black
+}
+
+/* Trending */
+.movers-wrapper {
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 20px;
+}
+

@@ -15,18 +15,6 @@
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   <script src="scripts/index.js"></script>
-  <header>
-    <div class="header-content">
-      <div>
-        <form id="search-stock">
-          <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
-            oninput="this.value = this.value.toUpperCase()">
-          <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
-            text-transform:uppercase>
-        </form>
-      </div>
-    </div>
-  </header>
   <div class="stocks-wrapper">
     <div class="grid-container">
       <div class="left-side">
@@ -41,6 +29,13 @@
             <span class="ticker " id="ticker"></span>
             <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">Add to
               watchlist</span>
+            <span>
+              <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
+              text-transform:uppercase>
+              <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
+                oninput="this.value = this.value.toUpperCase()">
+            </span>
+
           </span>
         </div>
 
@@ -400,7 +395,8 @@
           </div>
           <div class="lower-information-historical" id="lower-information-historical">
             <div class="lower-information-historical-header">
-              <span class="timeframe-text">Timeframe: </span><span><a class="timeframe-selector-text" onclick="historicalTimeframeDropdown()">Daily</a></span>
+              <span class="timeframe-text">Timeframe: </span><span><a class="timeframe-selector-text"
+                  onclick="historicalTimeframeDropdown()">Daily</a></span>
             </div>
             <div class="lower-information-historical-daily">
               <table>
@@ -478,10 +474,15 @@
             <span class="clear-watchlist" id="clear-watchlist" onclick="clearWatchlist()">clear</span>
           </div>
           <table class="watchlist-table" id="watchlist-table">
-            <th>Symbol</th>
-            <th>Last</th>
-            <th>Change</th>
-            <th>% Change</th>
+            <thead>
+              <th>Symbol</th>
+              <th>Last</th>
+              <th>Change</th>
+              <th>% Change</th>
+            </thead>
+            <tbody class="watchlist-table-body" id="watchlist-table-body">
+
+            </tbody>
           </table>
         </div>
       </div>

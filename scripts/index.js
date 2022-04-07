@@ -11,10 +11,16 @@ function loadData() {
   return symbol;
 }
 function getSymbol() {
-  var symbol = document.getElementById("stock-symbol-input").value;
-  saveData(symbol);
-  document.location.href = "stocks.html";
+  saveData(document.getElementById("stock-symbol-input").value);
+  document.location.href = "index.html";
 }
+var input = document.getElementById("stock-symbol-input");
+input.addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.key === "Enter") {
+        getSymbol();
+    }
+});
 var symbol = loadData().toUpperCase();
 document.title = loadData();
 var companyNameUrl = "https://api.twelvedata.com/stocks?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&country=US&symbol=";
@@ -366,10 +372,8 @@ axios(accessTokenConfig)
               else {
                 timeSuffix = timeSuffixes[1];
               }
-
-
               var time = hours + 1 + ":" + minutes + timeSuffix;
-              document.getElementById("market-open-time").innerHTML = hours + 1 + ":" + date.getMinutes() + timeSuffix + " ET";
+              document.getElementById("market-open-time").innerHTML = hours + 1 + ":" + date.getMinutes() + timeSuffix + " GMT-5";
             }
           })
         var chartTime = date.getTime();
@@ -390,29 +394,25 @@ axios(accessTokenConfig)
         axios(OneDaychartConfig)
           .then(function (response) {
             var numberOfCandles = response.data.candles.length;
-            var interval = 1;
-            var times = [];
-            var startingTime = 570;
-            var suffix = ["AM", "PM"];
-            //TODO: make the 1 day chart get time values from API instead of loop
-            for (var i = 0; startingTime < 24 * 60; i++) {
-              var hh = Math.floor(startingTime / 60); // gestartingTiming hours of day in 0-24 format
-              var mm = (startingTime % 60); // gestartingTiming minutes of the hour in 0-55 format
-              times[i] = ("0" + (hh % 12)).slice(-2) + ':' + ("0" + mm).slice(-2) + " " + suffix[Math.floor(hh / 12)]; // pushing data in array in [00:00 - 12:00 AM/PM format]
-              startingTime = startingTime + interval;
-              if (times[i].substring(0, 2) == "00") {
-                times[i] = times[i].replace("00", "12");
-              }
-            }
             var timesLabel = [];
-            for (var i = 0; i < numberOfCandles; i++) {
-              timesLabel.push(times[i]);
-            }
-            timesLabel.push("");
             let chartValues = [];
             let volumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
+            for (var i = 0; i < numberOfCandles; i++) {
               chartValues.push(response.data.candles[i].close.toFixed(2));
+              let date = new Date(response.data.candles[i].datetime);
+              let hours = date.getHours() + 1;
+              if (hours >= 12) {
+                var suffix = " PM"
+              }
+              else var suffix = " AM";
+              if (hours > 12) {
+                hours-=12;
+              }
+              let minutes = date.getMinutes();
+              if (minutes < 10) {
+                minutes = "0" + minutes;
+              }
+              timesLabel.push(hours + ":" + minutes + suffix + " GMT-" + date.getTimezoneOffset() / 60);
               volumeValues.push(response.data.candles[i].volume);
             }
             chartValues.unshift(response.data.candles[0].open);
@@ -1772,6 +1772,7 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
+  window.scrollTo(0, document.body.scrollHeight);
 }
 function changeChartTimescale1d() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "block";
@@ -2185,7 +2186,9 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
 }
-function historicalTimeframeDropdown() {}
+function historicalTimeframeDropdown() {
+  document.getElementById("historical-timeframe-dropdown-menu").style.display = "block";
+}
 function changeInfoPaneForum() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2233,7 +2236,7 @@ function addToWatchlist() {
       .then(function (response) {
         const symbol = document.getElementById("ticker").innerHTML;
         let price = response.data[symbol].regularMarketLastPrice;
-        const table = document.getElementById("watchlist-table");
+        const table = document.getElementById("watchlist-table-body");
         let row = table.insertRow();
         var symbolCell = row.insertCell(0)
         symbolCell.style.fontWeight = "bold";
@@ -2262,23 +2265,28 @@ function addToWatchlist() {
         if (percentChange > 0) {
           percentChange = "(+" + percentChange + "%)";
         }
-        else {
-          percentChange = "(" + percentChange + "%)";
-        }
+        else percentChange = "(" + percentChange + "%)";
+
         changeCell.style.color = color;
         changeCell.fontWeight = "bold";
         changeCell.innerHTML = change;
         percentChangeCell.style.color = color;
         percentChangeCell.fontWeight = "bold";
         percentChangeCell.innerHTML = percentChange;
+        const item = symbol + price + change + percentChange;
+        String(item);
+        localStorage.setItem("_watchlistItems", localStorage.getItem("_watchlistItems") + item.length + item);
+        console.log(localStorage.getItem("_watchlistItems"));
       })
   })
 }
 function clearWatchlist() {
   localStorage.setItem("_watchlistItems", "");
-  document.getElementById("watchlist").innerHTML = "";
+  document.getElementById("watchlist-table-body").innerHTML = "";
 }
-//console.log(localStorage.getItem("_watchlistItems"));
 
 //load watchlist when page is reloaded
-var watchlistString = localStorage.getItem("_watchlistItems");
+// for (let i = 0; i < localStorage.get("_watchlistItems").length; i++) {
+//   let itemLength = 
+//   let watchlistItem = 
+// }
