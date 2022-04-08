@@ -31,7 +31,7 @@
               watchlist</span>
             <span>
               <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
-              text-transform:uppercase>
+                text-transform:uppercase>
               <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
                 oninput="this.value = this.value.toUpperCase()">
             </span>
@@ -190,6 +190,21 @@
               <span class="chart-timescale-ytd" id="chart-timescale-ytd" onclick="changeChartTimescaleYtd()">YTD</span>
               <span class="chart-timescale-1y" id="chart-timescale-1y" onclick="changeChartTimescale1y()">1Y</span>
               <span class="chart-timescale-5y" id="chart-timescale-5y" onclick="changeChartTimescale5y()">5Y</span>
+              <span class="timescale-change">
+                <span class="timescale-text" id="timescale-text"></span>
+                <span class="timescale-price-change" id="5d-timescale-price-change"></span>
+                <span class="timescale-percent-change" id="5d-timescale-percent-change"></span>
+                <span class="timescale-price-change" id="1m-timescale-price-change"></span>
+                <span class="timescale-percent-change" id="1m-timescale-percent-change"></span>
+                <span class="timescale-price-change" id="6m-timescale-price-change"></span>
+                <span class="timescale-percent-change" id="6m-timescale-percent-change"></span>
+                <span class="timescale-price-change" id="ytd-timescale-price-change"></span>
+                <span class="timescale-percent-change" id="ytd-timescale-percent-change"></span>
+                <span class="timescale-price-change" id="1y-timescale-price-change"></span>
+                <span class="timescale-percent-change" id="1y-timescale-percent-change"></span>
+                <span class="timescale-price-change" id="5y-timescale-price-change"></span>
+                <span class="timescale-percent-change" id="5y-timescale-percent-change"></span>
+              </span>
             </div>
             <canvas id="lower-information-chart-canvas-1d" class="lower-information-chart-canvas"></canvas>
             <canvas id="lower-information-chart-canvas-5d" class="lower-information-chart-canvas"></canvas>
@@ -444,17 +459,21 @@
               </div>
             </div>
           </div>
-          <div class="index-name-price" id="nasdaq-name-price">
-            <span class="index-name" id="nasdaq-name"><a class="index-name-link" id="nasdaq-name-link">Nasdaq
-                100</a></span>
-            <span class="index-price" id="nasdaq-price"></span>
-            <div class="index-change" id="nasdaq-change">
-              <span class="index-price-change" id="nasdaq-price-change"></span>
-              <span class="index-percent-change" id="nasdaq-percent-change"></span>
+          <div class="index-wrapper" id="nasdaq-wrapper">
+            <div class="index-name-price" id="nasdaq-name-price">
+              <span class="index-name" id="nasdaq-name"><a class="index-name-link" id="nasdaq-name-link">Nasdaq
+                  100</a></span>
+              <span class="index-price" id="nasdaq-price"></span>
+              <div class="index-change" id="nasdaq-change">
+                <span class="index-price-change" id="nasdaq-price-change"></span>
+                <span class="index-percent-change" id="nasdaq-percent-change"></span>
+              </div>
+              <div class="index-chart" id="nasdaq-chart">
+                <canvas class="index-chart-canvas" id="nasdaq-chart-canvas"></canvas>
+              </div>
             </div>
-            <div class="index-chart" id="nasdaq-chart">
-              <canvas class="index-chart-canvas" id="nasdaq-chart-canvas"></canvas>
-            </div>
+          </div>
+          <div class="index-wrapper" id="dow-wrapper">
             <div class="index-name-price" id="dow-name-price">
               <span class="index-name" id="dow-name"><a class="index-name-link" id="dow-name-link">Dow 30</a></span>
               <span class="index-price" id="dow-price"></span>
@@ -467,26 +486,25 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="watchlist-wrapper" id="watchlist-wrapper">
-          <div class="watchlist-header" id="watchlist-header">
-            <span class="watchlist-text" id="watchlist-text">Watchlist</span>
-            <span class="clear-watchlist" id="clear-watchlist" onclick="clearWatchlist()">clear</span>
-          </div>
-          <table class="watchlist-table" id="watchlist-table">
-            <thead>
-              <th>Symbol</th>
-              <th>Last</th>
-              <th>Change</th>
-              <th>% Change</th>
-            </thead>
-            <tbody class="watchlist-table-body" id="watchlist-table-body">
+          <div class="watchlist-wrapper" id="watchlist-wrapper">
+            <div class="watchlist-header" id="watchlist-header">
+              <span class="watchlist-text" id="watchlist-text">Watchlist</span>
+              <span class="clear-watchlist" id="clear-watchlist" onclick="clearWatchlist()">clear</span>
+            </div>
+            <table class="watchlist-table" id="watchlist-table">
+              <thead>
+                <th>Symbol</th>
+                <th>Last</th>
+                <th>Change</th>
+                <th>% Change</th>
+              </thead>
+              <tbody class="watchlist-table-body" id="watchlist-table-body">
 
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
 </body>
 
 </html>

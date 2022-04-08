@@ -14,13 +14,6 @@ function getSymbol() {
   saveData(document.getElementById("stock-symbol-input").value);
   document.location.href = "index.html";
 }
-var input = document.getElementById("stock-symbol-input");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.key === "Enter") {
-        getSymbol();
-    }
-});
 var symbol = loadData().toUpperCase();
 document.title = loadData();
 var companyNameUrl = "https://api.twelvedata.com/stocks?apikey=921b0a05daf94bde867a7c42a2f236b0&dp=2&country=US&symbol=";
@@ -320,7 +313,7 @@ axios(accessTokenConfig)
                 toString(ahPercentChange);
                 document.getElementById("pos-ah-price-change").innerHTML = "+" + ahChange;
                 document.getElementById("pos-ah-percent-change").innerHTML = "(+" + ahPercentChange + "%)";
-                document.getElementById("pos-ah-price-change").style.backgroundColor = 'rgb(' + 220 + ',' + 238 + ',' + 224 + ')';
+                document.getElementById("pos-ah-price-change").style.backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
                 document.getElementById("pos-ah-price-change").style.display = "inline";
                 document.getElementById("neg-ah-price-change").style.display = "none";
                 document.getElementById("eq-ah-price-change").style.display = "none";
@@ -573,10 +566,6 @@ axios(accessTokenConfig)
               fullTime = month + " " + day + ", " + hour + ":" + minute + " " + suffix + " " + "GMT-" + timeZone;
               timesLabel.push(fullTime);
             }
-            // timesLabel.push("");
-            let change = response.data.candles[numberOfCandles - 1].close - response.data.candles[0].open;
-            // document.getElementById("five-day-price-change").innerHTML = change;
-            // document.getElementById("five-day-percent-change").innerHTML = percentChange;
             let fiveDayChartValues = [];
             let fiveDayVolumeValues = [];
             for (var i = 0; i < numberOfCandles - 1; i++) {
@@ -585,6 +574,26 @@ axios(accessTokenConfig)
             }
             fiveDayChartValues.unshift(response.data.candles[0].open);
             fiveDayVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+            priceChange = priceChange.toFixed(2);
+            if (priceChange > 0) {
+              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+            }
+            else if (priceChange < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+            }
+            else {
+              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+            }
+            document.getElementById("5d-timescale-price-change").style.color = color;
+            document.getElementById("5d-timescale-price-change").innerHTML = priceChange;
+            var percentChange = priceChange / response.data.candles[0].open * 100;
+            percentChange = percentChange.toFixed(2);
+            document.getElementById("5d-timescale-percent-change").style.color = color;
+            document.getElementById("5d-timescale-percent-change").innerHTML = percentChange
             var priceCtx = document.getElementById('lower-information-chart-canvas-5d').getContext('2d');
             var priceChart = new Chart(priceCtx, {
               type: 'line',
@@ -735,6 +744,26 @@ axios(accessTokenConfig)
             }
             oneMonthChartValues.unshift(response.data.candles[0].open);
             oneMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+            priceChange = priceChange.toFixed(2);
+            if (priceChange > 0) {
+              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+            }
+            else if (priceChange < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+            }
+            else {
+              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+            }
+            document.getElementById("1m-timescale-price-change").style.color = color;
+            document.getElementById("1m-timescale-price-change").innerHTML = priceChange;
+            var percentChange = priceChange / response.data.candles[0].open * 100;
+            percentChange = percentChange.toFixed(2);
+            document.getElementById("1m-timescale-percent-change").style.color = color;
+            document.getElementById("1m-timescale-percent-change").innerHTML = percentChange
             var priceCtx = document.getElementById('lower-information-chart-canvas-1m').getContext('2d');
             var priceChart = new Chart(priceCtx, {
               type: 'line',
@@ -885,6 +914,26 @@ axios(accessTokenConfig)
             }
             sixMonthChartValues.unshift(response.data.candles[0].open);
             sixMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+            priceChange = priceChange.toFixed(2);
+            if (priceChange > 0) {
+              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+            }
+            else if (priceChange < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+            }
+            else {
+              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+            }
+            document.getElementById("6m-timescale-price-change").style.color = color;
+            document.getElementById("6m-timescale-price-change").innerHTML = priceChange;
+            var percentChange = priceChange / response.data.candles[0].open * 100;
+            percentChange = percentChange.toFixed(2);
+            document.getElementById("6m-timescale-percent-change").style.color = color;
+            document.getElementById("6m-timescale-percent-change").innerHTML = percentChange
             var sixMonthPriceCtx = document.getElementById('lower-information-chart-canvas-6m').getContext('2d');
             var priceChart = new Chart(sixMonthPriceCtx, {
               type: 'line',
@@ -1035,6 +1084,26 @@ axios(accessTokenConfig)
             }
             ytdChartValues.unshift(response.data.candles[0].open);
             ytdVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+            priceChange = priceChange.toFixed(2);
+            if (priceChange > 0) {
+              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+            }
+            else if (priceChange < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+            }
+            else {
+              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+            }
+            document.getElementById("ytd-timescale-price-change").style.color = color;
+            document.getElementById("ytd-timescale-price-change").innerHTML = priceChange;
+            var percentChange = priceChange / response.data.candles[0].open * 100;
+            percentChange = percentChange.toFixed(2);
+            document.getElementById("ytd-timescale-percent-change").style.color = color;
+            document.getElementById("ytd-timescale-percent-change").innerHTML = percentChange
             var ytdPriceCtx = document.getElementById('lower-information-chart-canvas-ytd').getContext('2d');
             var priceChart = new Chart(ytdPriceCtx, {
               type: 'line',
@@ -1185,6 +1254,26 @@ axios(accessTokenConfig)
             }
             oneYearChartValues.unshift(response.data.candles[0].open);
             oneYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+            priceChange = priceChange.toFixed(2);
+            if (priceChange > 0) {
+              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+            }
+            else if (priceChange < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+            }
+            else {
+              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+            }
+            document.getElementById("1y-timescale-price-change").style.color = color;
+            document.getElementById("1y-timescale-price-change").innerHTML = priceChange;
+            var percentChange = priceChange / response.data.candles[0].open * 100;
+            percentChange = percentChange.toFixed(2);
+            document.getElementById("1y-timescale-percent-change").style.color = color;
+            document.getElementById("1y-timescale-percent-change").innerHTML = percentChange;
             var oneYearPriceCtx = document.getElementById('lower-information-chart-canvas-1y').getContext('2d');
             var priceChart = new Chart(oneYearPriceCtx, {
               type: 'line',
@@ -1338,6 +1427,26 @@ axios(accessTokenConfig)
             }
             fiveYearChartValues.unshift(response.data.candles[0].open);
             fiveYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+            priceChange = priceChange.toFixed(2);
+            if (priceChange > 0) {
+              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+            }
+            else if (priceChange < 0) {
+              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+            }
+            else {
+              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+            }
+            document.getElementById("5y-timescale-price-change").style.color = color;
+            document.getElementById("5y-timescale-price-change").innerHTML = priceChange;
+            var percentChange = priceChange / response.data.candles[0].open * 100;
+            percentChange = percentChange.toFixed(2);
+            document.getElementById("5y-timescale-percent-change").style.color = color;
+            document.getElementById("5y-timescale-percent-change").innerHTML = percentChange
             var fiveYearPriceCtx = document.getElementById('lower-information-chart-canvas-5y').getContext('2d');
             var priceChart = new Chart(fiveYearPriceCtx, {
               type: 'line',
@@ -1490,6 +1599,7 @@ axios(accessTokenConfig)
               color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
               document.getElementById("sp500-price-change").innerHTML = change;
             }
+            document.getElementById("sp500-change").style.color = color;
             var spxLabels = [];
             var numberOfCandles = response.data.candles.length;
             if (numberOfCandles == 84) {
@@ -1582,6 +1692,7 @@ axios(accessTokenConfig)
               color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
               document.getElementById("nasdaq-price-change").innerHTML = change;
             }
+            document.getElementById("nasdaq-change").style.color = color;
             var numberOfCandles = response.data.candles.length;
             if (numberOfCandles == 94) {
               numberOfCandles -= 15;
@@ -1675,6 +1786,7 @@ axios(accessTokenConfig)
               color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
               document.getElementById("dow-price-change").innerHTML = change;
             }
+            document.getElementById("dow-change").style.color = color;
             var spxLabels = [];
             for (var i = 0; i < response.data.candles.length; i++) {
               spxLabels.push(" ");
@@ -1798,6 +1910,20 @@ function changeChartTimescale1d() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
+
+  document.getElementById("timescale-text").innerHTML = " ";
+  document.getElementById("5d-timescale-price-change").style.display = "none";
+  document.getElementById("5d-timescale-percent-change").style.display = "none";
+  document.getElementById("1m-timescale-price-change").style.display = "none";
+  document.getElementById("1m-timescale-percent-change").style.display = "none";
+  document.getElementById("6m-timescale-price-change").style.display = "none";
+  document.getElementById("6m-timescale-percent-change").style.display = "none";
+  document.getElementById("ytd-timescale-price-change").style.display = "none";
+  document.getElementById("ytd-timescale-percent-change").style.display = "none";
+  document.getElementById("1y-timescale-price-change").style.display = "none";
+  document.getElementById("1y-timescale-percent-change").style.display = "none";
+  document.getElementById("5y-timescale-price-change").style.display = "none";
+  document.getElementById("5y-timescale-percent-change").style.display = "none";
 }
 function changeChartTimescale5d() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "none";
@@ -1823,6 +1949,20 @@ function changeChartTimescale5d() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
+
+  document.getElementById("timescale-text").innerHTML = "5 day change:"
+  document.getElementById("5d-timescale-price-change").style.display = "inline";
+  document.getElementById("5d-timescale-percent-change").style.display = "inline";
+  document.getElementById("1m-timescale-price-change").style.display = "none";
+  document.getElementById("1m-timescale-percent-change").style.display = "none";
+  document.getElementById("6m-timescale-price-change").style.display = "none";
+  document.getElementById("6m-timescale-percent-change").style.display = "none";
+  document.getElementById("ytd-timescale-price-change").style.display = "none";
+  document.getElementById("ytd-timescale-percent-change").style.display = "none";
+  document.getElementById("1y-timescale-price-change").style.display = "none";
+  document.getElementById("1y-timescale-percent-change").style.display = "none";
+  document.getElementById("5y-timescale-price-change").style.display = "none";
+  document.getElementById("5y-timescale-percent-change").style.display = "none";
 }
 function changeChartTimescale1m() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "none";
@@ -1848,6 +1988,20 @@ function changeChartTimescale1m() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
+
+  document.getElementById("timescale-text").innerHTML = "1 month change";
+  document.getElementById("5d-timescale-price-change").style.display = "none";
+  document.getElementById("5d-timescale-percent-change").style.display = "none";
+  document.getElementById("1m-timescale-price-change").style.display = "inline";
+  document.getElementById("1m-timescale-percent-change").style.display = "inline";
+  document.getElementById("6m-timescale-price-change").style.display = "none";
+  document.getElementById("6m-timescale-percent-change").style.display = "none";
+  document.getElementById("ytd-timescale-price-change").style.display = "none";
+  document.getElementById("ytd-timescale-percent-change").style.display = "none";
+  document.getElementById("1y-timescale-price-change").style.display = "none";
+  document.getElementById("1y-timescale-percent-change").style.display = "none";
+  document.getElementById("5y-timescale-price-change").style.display = "none";
+  document.getElementById("5y-timescale-percent-change").style.display = "none";
 }
 function changeChartTimescale6m() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "none";
@@ -1873,6 +2027,20 @@ function changeChartTimescale6m() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
+
+  document.getElementById("timescale-text").innerHTML = "6 month change:"
+  document.getElementById("5d-timescale-price-change").style.display = "none";
+  document.getElementById("5d-timescale-percent-change").style.display = "none";
+  document.getElementById("1m-timescale-price-change").style.display = "none";
+  document.getElementById("1m-timescale-percent-change").style.display = "none";
+  document.getElementById("6m-timescale-price-change").style.display = "inline";
+  document.getElementById("6m-timescale-percent-change").style.display = "inline";
+  document.getElementById("ytd-timescale-price-change").style.display = "none";
+  document.getElementById("ytd-timescale-percent-change").style.display = "none";
+  document.getElementById("1y-timescale-price-change").style.display = "none";
+  document.getElementById("1y-timescale-percent-change").style.display = "none";
+  document.getElementById("5y-timescale-price-change").style.display = "none";
+  document.getElementById("5y-timescale-percent-change").style.display = "none";
 }
 function changeChartTimescaleYtd() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "none";
@@ -1898,6 +2066,20 @@ function changeChartTimescaleYtd() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 53 + ',' + 110 + ',' + 255 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
+
+  document.getElementById("timescale-text").innerHTML = "YTD change:";
+  document.getElementById("5d-timescale-price-change").style.display = "none";
+  document.getElementById("5d-timescale-percent-change").style.display = "none";
+  document.getElementById("1m-timescale-price-change").style.display = "none";
+  document.getElementById("1m-timescale-percent-change").style.display = "none";
+  document.getElementById("6m-timescale-price-change").style.display = "none";
+  document.getElementById("6m-timescale-percent-change").style.display = "none";
+  document.getElementById("ytd-timescale-price-change").style.display = "inline";
+  document.getElementById("ytd-timescale-percent-change").style.display = "inline";
+  document.getElementById("1y-timescale-price-change").style.display = "none";
+  document.getElementById("1y-timescale-percent-change").style.display = "none";
+  document.getElementById("5y-timescale-price-change").style.display = "none";
+  document.getElementById("5y-timescale-percent-change").style.display = "none";
 }
 function changeChartTimescale1y() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "none";
@@ -1923,6 +2105,20 @@ function changeChartTimescale1y() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 53 + ',' + 110 + ',' + 255 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
+
+  document.getElementById("timescale-text").innerHTML = "1 year change:";
+  document.getElementById("5d-timescale-price-change").style.display = "none";
+  document.getElementById("5d-timescale-percent-change").style.display = "none";
+  document.getElementById("1m-timescale-price-change").style.display = "none";
+  document.getElementById("1m-timescale-percent-change").style.display = "none";
+  document.getElementById("6m-timescale-price-change").style.display = "none";
+  document.getElementById("6m-timescale-percent-change").style.display = "none";
+  document.getElementById("ytd-timescale-price-change").style.display = "none";
+  document.getElementById("ytd-timescale-percent-change").style.display = "none";
+  document.getElementById("1y-timescale-price-change").style.display = "inline";
+  document.getElementById("1y-timescale-percent-change").style.display = "inline";
+  document.getElementById("5y-timescale-price-change").style.display = "none";
+  document.getElementById("5y-timescale-percent-change").style.display = "none";
 }
 function changeChartTimescale5y() {
   document.getElementById("lower-information-chart-canvas-1d").style.display = "none";
@@ -1948,6 +2144,20 @@ function changeChartTimescale5y() {
   document.getElementById("chart-timescale-ytd").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-1y").style.color = 'rgb(' + 71 + ',' + 71 + ',' + 71 + ')';
   document.getElementById("chart-timescale-5y").style.color = 'rgb(' + 53 + ',' + 110 + ',' + 255 + ')';
+
+  document.getElementById("timescale-text").innerHTML = "Past 5 years:";
+  document.getElementById("5d-timescale-price-change").style.display = "none";
+  document.getElementById("5d-timescale-percent-change").style.display = "none";
+  document.getElementById("1m-timescale-price-change").style.display = "none";
+  document.getElementById("1m-timescale-percent-change").style.display = "none";
+  document.getElementById("6m-timescale-price-change").style.display = "none";
+  document.getElementById("6m-timescale-percent-change").style.display = "none";
+  document.getElementById("ytd-timescale-price-change").style.display = "none";
+  document.getElementById("ytd-timescale-percent-change").style.display = "none";
+  document.getElementById("1y-timescale-price-change").style.display = "none";
+  document.getElementById("1y-timescale-percent-change").style.display = "none";
+  document.getElementById("5y-timescale-price-change").style.display = "inline";
+  document.getElementById("5y-timescale-percent-change").style.display = "inline";
 }
 function changeInfoPaneNews() {
   const newsOptions = {

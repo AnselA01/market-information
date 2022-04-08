@@ -45,7 +45,6 @@ header {
 }
 
 .stock-symbol-search-bar {
-  vertical-align: middle;
   float: right;
   border-radius: 0;
   border: solid gray 1px;
@@ -55,9 +54,9 @@ header {
   border-bottom-left-radius: 3.5px;
   width: 150px;
   height: 30px;
+  margin-top: 20px;
 }
 .stock-submit-button {
-  vertical-align: middle;
   float: right;
   background-color: rgb(63, 112, 255);
   color: white;
@@ -68,6 +67,7 @@ header {
   border-top-right-radius: 3.5px;
   border-bottom-right-radius: 3.5px;
   margin-right: 2.5%;
+  margin-top: 20px;
 }
 
 .stock-symbol-search-bar:focus {
@@ -159,29 +159,25 @@ header {
 
 .logo {
   width: 70px;
-  border-radius: 11%;
-  padding: 2px;
+  border-radius: 10%;
   margin-right: 9px;
   vertical-align: middle;
 }
 
 .company-name {
-  /* padding-top: 50%; */
   font-size: 30px;
   font-weight: bold;
 }
 
 .exchange-and-ticker {
   color: rgb(71, 71, 71);
-  margin-left: 15px;
+  margin-left: 10px;
   font-size: 18px;
 }
 
 .price-currency-and-change {
   margin-top: 20px;
   margin-bottom: 15px;
-  /* border-top: solid rgb(119, 119, 119) 1.325px;
-  border-bottom: solid rgb(119, 119, 119) 1.325px; */
   width: 95%;
 }
 
@@ -328,7 +324,7 @@ header {
 
 .pos-ah-percent-change {
   vertical-align: 10%;
-  color: green;
+  color: rgb(42, 115, 49);
   margin-left: 3px;
   font-size: 20px;
   font-weight: bold;
@@ -413,7 +409,7 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 40%;
+  width: 100%;
   margin-left: 0;
   padding-bottom: 10px;
 }
@@ -515,12 +511,19 @@ header {
 .chart-timescale-5y:hover {
   background-color: rgb(196, 214, 252);
   cursor: pointer;
-
+}
+.timescale-text {
+  font-weight: bold;
 }
 
+.timescale-change {
+  padding-top: 5px; 
+  margin-left: 45%;
+  width: 100%;
+}
 .lower-information-chart {
   display: none;
-  width: 93.75%;
+  width: 95.25%;
   height: 300px;
   margin-top: 20;
   margin-left: 13.5px;
@@ -529,7 +532,7 @@ header {
 
 .lower-information-volume {
   display: none;
-  width: 96.15%;
+  width: 97.7%;
   height: 150px;
   margin-left: -10px;
   padding-top: 20px;
@@ -739,9 +742,12 @@ header {
 .right-market-status {
 
 }
+.index-wrapper {
+  margin-bottom: 40px;
+}
 
 .index-name-price {
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .index-name-link {
@@ -761,7 +767,7 @@ header {
 
 .index-change {
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-top: 3px;
 }
 
 .index-percent-change {
@@ -773,8 +779,6 @@ header {
   width: 80%;
 }
 .watchlist-wrapper {
-  margin-top: 30x;
-  width: 100%;
 }
 .watchlist {
   padding: 0;
