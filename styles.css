@@ -169,10 +169,10 @@ header {
   font-weight: bold;
 }
 
-.exchange-and-ticker {
-  color: rgb(71, 71, 71);
-  margin-left: 10px;
-  font-size: 18px;
+.ticker {
+  font-size: 30px;
+  color: rgb(100, 100, 100);
+  margin-left: 1px;
 }
 
 .price-currency-and-change {
@@ -362,7 +362,7 @@ header {
 
 .company-info {
   width: 100%;
-  margin-top: 40px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 
@@ -406,10 +406,9 @@ header {
 }
 
 .chart-timescale-selector {
-  display: flex;
+  /* display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: space-between; */
   margin-left: 0;
   padding-bottom: 10px;
 }
@@ -513,13 +512,13 @@ header {
   cursor: pointer;
 }
 .timescale-text {
-  font-weight: bold;
+
 }
 
 .timescale-change {
+  font-weight: bold;
   padding-top: 5px; 
-  margin-left: 45%;
-  width: 100%;
+  float: right;
 }
 .lower-information-chart {
   display: none;
@@ -529,7 +528,9 @@ header {
   margin-left: 13.5px;
   margin-bottom: 30px;
 }
-
+.timescale-selector-and-change {
+  margin-bottom: 20px;
+}
 .lower-information-volume {
   display: none;
   width: 97.7%;
@@ -552,9 +553,15 @@ header {
 }
 
 .lower-information-historical {
+  width: 75%;
   display: none;
 }
-
+.lower-information-historical-daily {
+  width: 75%;
+}
+.historical-table {
+  width: 5px;
+}
 .lower-information-overview-text {
   border-bottom: solid rgb(53, 110, 255) 2.5px;
 }
@@ -743,7 +750,7 @@ header {
 
 }
 .index-wrapper {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .index-name-price {

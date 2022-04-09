@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
   <title>Stock Information</title>
@@ -14,7 +13,6 @@
   <script src="https://code.jscharting.com/latest/jscharting.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-  <script src="scripts/index.js"></script>
   <div class="stocks-wrapper">
     <div class="grid-container">
       <div class="left-side">
@@ -25,8 +23,7 @@
           <span><img id="logo" class="logo" onerror="this.style.display='none'"></span>
           <span id="company-name" class="company-name"></span>
           <span class="exchange-and-ticker">
-            <span class="exchange" id="exchange"></span>
-            <span class="ticker " id="ticker"></span>
+            <span class="ticker" id="ticker"></span>
             <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">Add to
               watchlist</span>
             <span>
@@ -182,14 +179,17 @@
             </div>
           </div>
           <div class="lower-information-chart" id="lower-information-chart">
-            <div class="chart-timescale-selector" id="chart-timescale-selector">
-              <span class="chart-timescale-1d" id="chart-timescale-1d" onclick="changeChartTimescale1d()">1D</span>
-              <span class="chart-timescale-5d" id="chart-timescale-5d" onclick="changeChartTimescale5d()">5D</span>
-              <span class="chart-timescale-1m" id="chart-timescale-1m" onclick="changeChartTimescale1m()">1M</span>
-              <span class="chart-timescale-6m" id="chart-timescale-6m" onclick="changeChartTimescale6m()">6M</span>
-              <span class="chart-timescale-ytd" id="chart-timescale-ytd" onclick="changeChartTimescaleYtd()">YTD</span>
-              <span class="chart-timescale-1y" id="chart-timescale-1y" onclick="changeChartTimescale1y()">1Y</span>
-              <span class="chart-timescale-5y" id="chart-timescale-5y" onclick="changeChartTimescale5y()">5Y</span>
+            <div class="timescale-selector-and-change">
+              <span class="chart-timescale-selector" id="chart-timescale-selector">
+                <span class="chart-timescale-1d" id="chart-timescale-1d" onclick="changeChartTimescale1d()">1D</span>
+                <span class="chart-timescale-5d" id="chart-timescale-5d" onclick="changeChartTimescale5d()">5D</span>
+                <span class="chart-timescale-1m" id="chart-timescale-1m" onclick="changeChartTimescale1m()">1M</span>
+                <span class="chart-timescale-6m" id="chart-timescale-6m" onclick="changeChartTimescale6m()">6M</span>
+                <span class="chart-timescale-ytd" id="chart-timescale-ytd"
+                  onclick="changeChartTimescaleYtd()">YTD</span>
+                <span class="chart-timescale-1y" id="chart-timescale-1y" onclick="changeChartTimescale1y()">1Y</span>
+                <span class="chart-timescale-5y" id="chart-timescale-5y" onclick="changeChartTimescale5y()">5Y</span>
+              </span>
               <span class="timescale-change">
                 <span class="timescale-text" id="timescale-text"></span>
                 <span class="timescale-price-change" id="5d-timescale-price-change"></span>
@@ -410,31 +410,60 @@
           </div>
           <div class="lower-information-historical" id="lower-information-historical">
             <div class="lower-information-historical-header">
-              <span class="timeframe-text">Timeframe: </span><span><a class="timeframe-selector-text"
-                  onclick="historicalTimeframeDropdown()">Daily</a></span>
+              <span class="timeframe-text">Timeframe: </span>
+              <span>
+                <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalDaily()">Daily</a>
+              </span>
+              <span>
+                <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalWeekly()">Weekly</a>
+              </span>
+              <span>
+                <a class="timeframe-selector-text"onclick="changeHistoricalPaneHistoricalMonthly()">Monthly</a>
+              </span>
             </div>
-            <div class="lower-information-historical-daily">
-              <table>
+            <div class="lower-information-historical-daily" id="lower-information-historical-daily">
+              <table id="historical-daily-table historical-table">
                 <tr>
-                  <th class="hisotrical-date-header">Date</th>
+                  <th class="historical-date-header">Date</th>
                   <th class="hisotrical-open-header">Open</th>
                   <th class="historical-high-header">High</th>
                   <th class="historical-low-header">Low</th>
                   <th class="historical-close-header">Close</th>
                   <th class="historical-volume-header">Volume</th>
                 </tr>
-                <tr>
-                  <td>data</td>
-                  <td>data</td>
-                  <td>data</td>
-                </tr>
+                <tbody id="historical-table-body-daily">
+
+                </tbody>
               </table>
             </div>
-            <div class="lower-information-historical-weekly">
+            <div class="lower-information-historical-weekly" id="lower-information-historical-weekly">
+              <table id="historical-daily-table historical-table">
+                <tr>
+                  <th class="historical-date-header">Date</th>
+                  <th class="hisotrical-open-header">Open</th>
+                  <th class="historical-high-header">High</th>
+                  <th class="historical-low-header">Low</th>
+                  <th class="historical-close-header">Close</th>
+                  <th class="historical-volume-header">Volume</th>
+                </tr>
+                <tbody id="historical-table-body-weekly">
 
+                </tbody>
+              </table>
             </div>
-            <div class="lower-information-historical-monthly">
-
+            <div class="lower-information-historical-monthly" id="lower-information-historical-monthly">
+              <table id="historical-daily-table historical-table">
+                <tr>
+                  <th class="historical-date-header">Date</th>
+                  <th class="hisotrical-open-header">Open</th>
+                  <th class="historical-high-header">High</th>
+                  <th class="historical-low-header">Low</th>
+                  <th class="historical-close-header">Close</th>
+                  <th class="historical-volume-header">Volume</th>
+                </tr>
+                <tbody id="historical-table-body-monthly">
+                </tbody>
+              </table>
             </div>
           </div>
           <div class="lower-information-forum" id="lower-information-forum">
@@ -505,6 +534,7 @@
           </div>
         </div>
       </div>
+      <script src="scripts/index.js"></script>
 </body>
 
 </html>
