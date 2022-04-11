@@ -1595,6 +1595,12 @@ axios(accessTokenConfig)
       .then(function (quoteResponse) {
         var date = new Date();
         var currentTime = date.getTime();
+        if (date.getDay() == 0) {
+          currentTime = date.getTime() - 172800000;
+        }
+        if (date.getDay() == 6) {
+          currentTime = date.getTime() - 86400000;
+        }
         var sp500Config = {
           method: 'get',
           url: 'https://api.tdameritrade.com/v1/marketdata/$SPX.X/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + currentTime + '&startDate=' + currentTime + '&needExtendedHoursData=false',
@@ -2387,6 +2393,24 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "block";
   document.getElementById("lower-information-historical").style.display = "none";
+
+  getAccessToken().then(response =>{
+    var accessToken = "Bearer " + response.access_token;
+    var config = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=AAPL&strikeCount=12&includeQuotes=FALSE',
+      headers: { 
+        'Authorization': accessToken,
+      }
+    };
+    
+    axios(config)
+    .then(function (response) {
+      console.log(response.data);
+    })
+
+
+  })
 }
 function changeInfoPaneHistorical() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2426,36 +2450,50 @@ function changeInfoPaneHistoricalDaily() {
         for (let i = 0; i < response.data.candles.length - 1; i++) {
           let row = table.insertRow(0);
           let dateCell = row.insertCell(0);
+          dateCell.style.width = 1/6 * 100 + "%";
+          dateCell.style.whiteSpace = "nowrap";
+          dateCell.style.float = "left";
           dateCell.style.fontWeight = "bold";
+          dateCell.style.fontSize = "14.5px";
           let date = new Date(response.data.candles[i].datetime);
           month = monthNames[date.getMonth()];
           day = date.getDate();
           year = date.getFullYear();
           let fullDate = month + " " + day + ", " + year;
-          console.log(fullDate);
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
+          openCell.style.width = 1/5 * 100 + "%";
+          openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
+          highCell.style.width = 1/5 * 100 + "%";
+          highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
+          lowCell.style.width = 1/5 * 100 + "%";
+          lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
+          closeCell.style.width = 1/5 * 100 + "%";
+          closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
           closeCell.innerHTML = closePrice;
 
           let volumeCell = row.insertCell(5);
+          volumeCell.style.whiteSpace = "nowrap";
+          volumeCell.style.float = "right";
+          volumeCell.style.fontSize = "14.5px";
           let volume = response.data.candles[i].volume;
           volume = volume.toLocaleString("en-US");
           volumeCell.innerHTML = volume;
@@ -2484,7 +2522,11 @@ function changeInfoPaneHistoricalWeekly() {
         for (let i = 0; i < response.data.candles.length - 1; i++) {
           let row = table.insertRow(0);
           let dateCell = row.insertCell(0);
+          dateCell.style.width = 1/6 * 100 + "%";
+          dateCell.style.whiteSpace = "nowrap";
+          dateCell.style.float = "left";
           dateCell.style.fontWeight = "bold";
+          dateCell.style.fontSize = "14.5px";
           let date = new Date(response.data.candles[i].datetime);
           month = monthNames[date.getMonth()];
           day = date.getDate();
@@ -2493,26 +2535,37 @@ function changeInfoPaneHistoricalWeekly() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
+          openCell.style.width = 1/5 * 100 + "%";
+          openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
+          highCell.style.width = 1/5 * 100 + "%";
+          highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
+          lowCell.style.width = 1/5 * 100 + "%";
+          lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
+          closeCell.style.width = 1/5 * 100 + "%";
+          closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
           closeCell.innerHTML = closePrice;
 
           let volumeCell = row.insertCell(5);
+          volumeCell.style.whiteSpace = "nowrap";
+          volumeCell.style.float = "right";
+          volumeCell.style.fontSize = "14.5px";
           let volume = response.data.candles[i].volume;
           volume = volume.toLocaleString("en-US");
           volumeCell.innerHTML = volume;
@@ -2521,7 +2574,76 @@ function changeInfoPaneHistoricalWeekly() {
   })
 }
 function changeInfoPaneHistoricalMonthly() {
+  document.getElementById("lower-information-historical-daily").style.display = "none";
+  document.getElementById("lower-information-historical-weekly").style.display = "none";
+  document.getElementById("lower-information-historical-monthly").style.display = "block";
+  getAccessToken().then(response => {
+    let accessToken = response.access_token;
+    var config = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=10&frequencyType=monthly&frequency=1&needExtendedHoursData=false',
+      headers: {
+        'Authorization': "Bearer " + accessToken,
+      }
+    };
+    axios(config)
+      .then(function (response) {
+        console.log(response);
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const table = document.getElementById("historical-table-body-monthly");
+        for (let i = 0; i < response.data.candles.length - 1; i++) {
+          let row = table.insertRow(0);
+          let dateCell = row.insertCell(0);
+          dateCell.style.width = 1/6 * 100 + "%";
+          dateCell.style.whiteSpace = "nowrap";
+          dateCell.style.float = "left";
+          dateCell.style.fontWeight = "bold";
+          dateCell.style.fontSize = "14.5px";
+          let date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          year = date.getFullYear();
+          let fullDate = month + " " + day + ", " + year;
+          dateCell.innerHTML = fullDate;
 
+          let openCell = row.insertCell(1);
+          openCell.style.width = 1/5 * 100 + "%";
+          openCell.style.fontSize = "14.5px";
+          let openPrice = response.data.candles[i].open;
+          openPrice = openPrice.toFixed(2);
+          openCell.innerHTML = openPrice;
+
+          let highCell = row.insertCell(2);
+          highCell.style.width = 1/5 * 100 + "%";
+          highCell.style.fontSize = "14.5px";
+          let highPrice = response.data.candles[i].high;
+          highPrice = highPrice.toFixed(2);
+          highCell.innerHTML = highPrice;
+
+          let lowCell = row.insertCell(3);
+          lowCell.style.width = 1/5 * 100 + "%";
+          lowCell.style.fontSize = "14.5px";
+          let lowPrice = response.data.candles[i].low;
+          lowPrice = lowPrice.toFixed(2);
+          lowCell.innerHTML = lowPrice;
+
+          let closeCell = row.insertCell(4);
+          closeCell.style.width = 1/5 * 100 + "%";
+          closeCell.style.fontSize = "14.5px";
+          let closePrice = response.data.candles[i].close;
+          closePrice = closePrice.toFixed(2);
+          closeCell.innerHTML = closePrice;
+
+          let volumeCell = row.insertCell(5);
+          volumeCell.style.whiteSpace = "nowrap";
+          volumeCell.style.float = "right";
+          volumeCell.style.fontSize = "14.5px";
+          let volume = response.data.candles[i].volume;
+          volume = volume.toLocaleString("en-US");
+          volumeCell.innerHTML = volume;
+        }
+      })
+  })
 }
 function changeInfoPaneForum() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";

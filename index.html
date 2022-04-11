@@ -406,7 +406,13 @@
             </div>
           </div>
           <div class="lower-information-options" id="lower-information-options">
-
+            <div class="options-header-selector" id="options-header-selector">
+              <span class="options-date-selector" id="options-date-selector">Expiration Dates
+                <select id="expiration-dates" class="expiration-dates">
+                  <option value="volvo">date1</option>
+                </select>
+              </span>
+            </div>
           </div>
           <div class="lower-information-historical" id="lower-information-historical">
             <div class="lower-information-historical-header">
@@ -418,18 +424,18 @@
                 <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalWeekly()">Weekly</a>
               </span>
               <span>
-                <a class="timeframe-selector-text"onclick="changeHistoricalPaneHistoricalMonthly()">Monthly</a>
+                <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalMonthly()">Monthly</a>
               </span>
             </div>
             <div class="lower-information-historical-daily" id="lower-information-historical-daily">
               <table id="historical-daily-table historical-table">
                 <tr>
-                  <th class="historical-date-header">Date</th>
-                  <th class="hisotrical-open-header">Open</th>
-                  <th class="historical-high-header">High</th>
-                  <th class="historical-low-header">Low</th>
-                  <th class="historical-close-header">Close</th>
-                  <th class="historical-volume-header">Volume</th>
+                  <th class="historical-header historical-header-date">Date</th>
+                  <th class="historical-header">Open</th>
+                  <th class="historical-header">High</th>
+                  <th class="historical-header">Low</th>
+                  <th class="historical-header">Close</th>
+                  <th class="historical-header historical-header-volume">Volume</th>
                 </tr>
                 <tbody id="historical-table-body-daily">
 
@@ -439,12 +445,12 @@
             <div class="lower-information-historical-weekly" id="lower-information-historical-weekly">
               <table id="historical-daily-table historical-table">
                 <tr>
-                  <th class="historical-date-header">Date</th>
-                  <th class="hisotrical-open-header">Open</th>
-                  <th class="historical-high-header">High</th>
-                  <th class="historical-low-header">Low</th>
-                  <th class="historical-close-header">Close</th>
-                  <th class="historical-volume-header">Volume</th>
+                  <th class="historical-header historical-header-date">Date</th>
+                  <th class="historical-header">Open</th>
+                  <th class="historical-header">High</th>
+                  <th class="historical-header">Low</th>
+                  <th class="historical-header">Close</th>
+                  <th class="historical-header historical-header-volume">Volume</th>
                 </tr>
                 <tbody id="historical-table-body-weekly">
 
@@ -452,14 +458,14 @@
               </table>
             </div>
             <div class="lower-information-historical-monthly" id="lower-information-historical-monthly">
-              <table id="historical-daily-table historical-table">
+              <table id="historical-daily-monthly historical-table">
                 <tr>
-                  <th class="historical-date-header">Date</th>
-                  <th class="hisotrical-open-header">Open</th>
-                  <th class="historical-high-header">High</th>
-                  <th class="historical-low-header">Low</th>
-                  <th class="historical-close-header">Close</th>
-                  <th class="historical-volume-header">Volume</th>
+                  <th class="historical-header historical-header-date">Date</th>
+                  <th class="historical-header">Open</th>
+                  <th class="historical-header">High</th>
+                  <th class="historical-header">Low</th>
+                  <th class="historical-header">Close</th>
+                  <th class="historical-header historical-header-volume">Volume</th>
                 </tr>
                 <tbody id="historical-table-body-monthly">
                 </tbody>
