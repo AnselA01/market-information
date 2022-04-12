@@ -2398,7 +2398,7 @@ function changeInfoPaneOptions() {
     var accessToken = "Bearer " + response.access_token;
     var config = {
       method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=AAPL&strikeCount=12&includeQuotes=FALSE',
+      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=12&includeQuotes=FALSE',
       headers: { 
         'Authorization': accessToken,
       }
@@ -2406,11 +2406,29 @@ function changeInfoPaneOptions() {
     
     axios(config)
     .then(function (response) {
-      console.log(response.data);
+      console.log(response);
+      var expirationDateSelect = document.getElementById("expiration-dates");
+      const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      let expirationDates = Object.keys(response.data.callExpDateMap);
+      for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
+        let expMonth = expirationDates[i].substring(5, 7);
+        if (expMonth < 10) {
+          expMonth = expMonth.substring(1, 2);
+        }
+        let expirationDate = monthNames[expMonth] + " " + + expirationDates[i].substring(8, 10) + ", " + expirationDates[i].substring(0, 4);
+        let expirationDateOption = document.createElement("option");
+        expirationDateOption.setAttribute("id", "expiration-date-option-" + i + 1);
+        expirationDateOption.value = expirationDate;
+        expirationDateOption.innerHTML = expirationDate;
+        expirationDateOption.onChange = optionDropdown(response.data, i); //make onclick function for all options dates
+        expirationDateSelect.appendChild(expirationDateOption);
+      }
     })
-
-
   })
+}
+function optionDropdown(response, number) {
+  console.log(response);
+  console.log(number);
 }
 function changeInfoPaneHistorical() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2588,7 +2606,6 @@ function changeInfoPaneHistoricalMonthly() {
     };
     axios(config)
       .then(function (response) {
-        console.log(response);
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const table = document.getElementById("historical-table-body-monthly");
         for (let i = 0; i < response.data.candles.length - 1; i++) {

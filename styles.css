@@ -160,6 +160,7 @@ header {
 .logo {
   width: 70px;
   border-radius: 10%;
+  border: transparent;
   margin-right: 9px;
   vertical-align: middle;
 }
