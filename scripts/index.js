@@ -2410,6 +2410,7 @@ function changeInfoPaneOptions() {
       var expirationDateSelect = document.getElementById("expiration-dates");
       const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       let expirationDates = Object.keys(response.data.callExpDateMap);
+      console.log(expirationDates);
       for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
         let expMonth = expirationDates[i].substring(5, 7);
         if (expMonth < 10) {
@@ -2420,13 +2421,13 @@ function changeInfoPaneOptions() {
         expirationDateOption.setAttribute("id", "expiration-date-option-" + i + 1);
         expirationDateOption.value = expirationDate;
         expirationDateOption.innerHTML = expirationDate;
-        expirationDateOption.onChange = optionDropdown(response.data, i); //make onclick function for all options dates
+        expirationDateOption.onChange = expirationDateClickEvent(response.data.callExpDateMap, response.data.putExpDateMap, i); //make onclick function
         expirationDateSelect.appendChild(expirationDateOption);
       }
     })
   })
 }
-function optionDropdown(response, number) {
+function expirationDateClickEvent(response, number) {
   console.log(response);
   console.log(number);
 }
