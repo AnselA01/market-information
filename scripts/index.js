@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 function saveData(symbol) {
   var symbol = {
     Symbol: symbol
@@ -24,6 +26,16 @@ axios.get(companyNameUrl)
       document.getElementById("company-name").innerHTML = response.data.data[0].name;
     }
   })
+function getMarketStatus() {
+  var marketStatusConfig = {
+    method: 'get',
+    url: 'https://api.tdameritrade.com/v1/marketdata/EQUITY/hours?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&date=2022-04-16',
+    headers: { 
+      'Authorization': ''
+    }
+  };
+  return axios(marketStatusConfig).then(response => response.data);
+} 
 function getAccessToken() {
   var accessTokenConfig = {
     method: 'post',
@@ -296,7 +308,6 @@ axios(accessTokenConfig)
                 var time = hours + ":" + minutes + "PM ET";
                 document.getElementById("ah-time").innerHTML = time;
               }
-
               var ahChange = quoteResponse.lastPrice - quoteResponse.regularMarketLastPrice;
               ahChange = ahChange.toFixed(2);
               var ahPercentChange = (ahChange / quoteResponse.regularMarketLastPrice) * 100;
@@ -367,1222 +378,6 @@ axios(accessTokenConfig)
               document.getElementById("market-open-time").innerHTML = hours + 1 + ":" + date.getMinutes() + timeSuffix + " GMT-5";
             }
           })
-        var chartTime = date.getTime();
-        if (date.getDay() == 6) {
-          chartTime = date.getTime() - 86400000;
-        }
-        else if (date.getDay() == 0) {
-          chartTime = date.getTime() - 172800000
-        }
-        //1 day chart
-        var OneDaychartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + chartTime + '&startDate=' + chartTime + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(OneDaychartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            let chartValues = [];
-            let volumeValues = [];
-            for (var i = 0; i < numberOfCandles; i++) {
-              chartValues.push(response.data.candles[i].close.toFixed(2));
-              let date = new Date(response.data.candles[i].datetime);
-              let hours = date.getHours() + 1;
-              if (hours >= 12) {
-                var suffix = " PM"
-              }
-              else var suffix = " AM";
-              if (hours > 12) {
-                hours -= 12;
-              }
-              let minutes = date.getMinutes();
-              if (minutes < 10) {
-                minutes = "0" + minutes;
-              }
-              timesLabel.push(hours + ":" + minutes + suffix + " GMT-" + date.getTimezoneOffset() / 60);
-              volumeValues.push(response.data.candles[i].volume);
-            }
-            chartValues.unshift(response.data.candles[0].open);
-            volumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceCtx = document.getElementById('lower-information-chart-canvas-1d').getContext('2d');
-            var priceChart = new Chart(priceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: chartValues,
-                  label: symbol,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-              }
-            });
-            var volumeCtx = document.getElementById('lower-information-volume-canvas-1d').getContext('2d');
-            var volumeChart = new Chart(volumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: volumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString();
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
-        //5 day chart
-        var chartTime = date.getTime();
-        var chartEndDate = date.getTime() - 432000000;
-        var FiveDaychartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=5&endDate=' + chartTime + '&startDate=' + chartEndDate + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(FiveDaychartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            var date = new Date();
-            var month;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var day;
-            var hour;
-            var minute;
-            var timeZone;
-            for (var i = 0; i < numberOfCandles; i++) {
-              date = new Date(response.data.candles[i].datetime);
-              month = monthNames[date.getMonth()];
-              day = date.getDate();
-              hour = date.getHours();
-              minute = date.getMinutes();
-              timeZone = date.getTimezoneOffset() / 60;
-              if (hour > 12) {
-                hour -= 12;
-                suffix = "PM";
-              }
-              else if (hour == 12) {
-                suffix = "PM";
-              }
-              else suffix = "AM";
-              if (minute < 10) {
-                minute = "0" + minute;
-              }
-              fullTime = month + " " + day + ", " + hour + ":" + minute + " " + suffix + " " + "GMT-" + timeZone;
-              timesLabel.push(fullTime);
-            }
-            let fiveDayChartValues = [];
-            let fiveDayVolumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              fiveDayChartValues.push(response.data.candles[i].close.toFixed(2));
-              fiveDayVolumeValues.push(response.data.candles[i].volume);
-            }
-            fiveDayChartValues.unshift(response.data.candles[0].open);
-            fiveDayVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
-            priceChange = priceChange.toFixed(2);
-            var percentChange = priceChange / response.data.candles[0].open * 100;
-            percentChange = percentChange.toFixed(2);
-            if (priceChange > 0) {
-              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
-              document.getElementById("5d-timescale-price-change").innerHTML = "+" + priceChange;
-              document.getElementById("5d-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
-            }
-            else if (priceChange < 0) {
-              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-              document.getElementById("5d-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("5d-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
-            }
-            else {
-              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
-              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-              document.getElementById("5d-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("5d-timescale-price-change").innerHTML = "(" + priceChange + "%)";
-            }
-            document.getElementById("5d-timescale-price-change").style.color = color;
-            document.getElementById("5d-timescale-percent-change").style.color = color;
-            var priceCtx = document.getElementById('lower-information-chart-canvas-5d').getContext('2d');
-            var priceChart = new Chart(priceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: fiveDayChartValues,
-                  label: symbol,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-              }
-            });
-            var fiveDayVolumeCtx = document.getElementById('lower-information-volume-canvas-5d').getContext('2d');
-            var volumeChart = new Chart(fiveDayVolumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: fiveDayVolumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString();
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
-        //1 month chart
-        var chartEndDate = date.getTime();
-        var oneMonthChartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(oneMonthChartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            var date = new Date();
-            var year;
-            var month;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var day;
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              date = new Date(response.data.candles[i].datetime);
-              month = monthNames[date.getMonth()];
-              day = date.getDate();
-              year = date.getFullYear();
-              fullTime = month + " " + day + ", " + year;
-              timesLabel.push(fullTime);
-            }
-            timesLabel.push("");
-
-            let oneMonthChartValues = [];
-            let oneMonthVolumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              oneMonthChartValues.push(response.data.candles[i].close.toFixed(2));
-              oneMonthVolumeValues.push(response.data.candles[i].volume);
-            }
-            oneMonthChartValues.unshift(response.data.candles[0].open);
-            oneMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
-            priceChange = priceChange.toFixed(2);
-            var percentChange = priceChange / response.data.candles[0].open * 100;
-            percentChange = percentChange.toFixed(2);
-            if (priceChange > 0) {
-              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
-              document.getElementById("1m-timescale-price-change").innerHTML = "+" + priceChange;
-              document.getElementById("1m-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
-            }
-            else if (priceChange < 0) {
-              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-              document.getElementById("1m-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("1m-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
-            }
-            else {
-              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
-              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-              document.getElementById("1m-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("1m-timescale-price-change").innerHTML = "(" + priceChange + "%)";
-            }
-            document.getElementById("1m-timescale-price-change").style.color = color;
-            document.getElementById("1m-timescale-percent-change").style.color = color;
-            var priceCtx = document.getElementById('lower-information-chart-canvas-1m').getContext('2d');
-            var priceChart = new Chart(priceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: oneMonthChartValues,
-                  label: symbol,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-              }
-            });
-            var oneMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-1m').getContext('2d');
-            var oneMonthVOlumeChart = new Chart(oneMonthVolumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: oneMonthVolumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString();
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
-        //6 month chart
-        var chartEndDate = date.getTime();
-        var sixMonthChartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=6&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(sixMonthChartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            var date = new Date();
-            var year;
-            var month;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var day;
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              date = new Date(response.data.candles[i].datetime);
-              month = monthNames[date.getMonth()];
-              day = date.getDate();
-              year = date.getFullYear();
-              fullTime = month + " " + day + ", " + year;
-              timesLabel.push(fullTime);
-            }
-            timesLabel.push("");
-
-            let sixMonthChartValues = [];
-            let sixMonthVolumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              sixMonthChartValues.push(response.data.candles[i].close.toFixed(2));
-              sixMonthVolumeValues.push(response.data.candles[i].volume);
-            }
-            sixMonthChartValues.unshift(response.data.candles[0].open);
-            sixMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
-            priceChange = priceChange.toFixed(2);
-            var percentChange = priceChange / response.data.candles[0].open * 100;
-            percentChange = percentChange.toFixed(2);
-            if (priceChange > 0) {
-              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
-              document.getElementById("6m-timescale-price-change").innerHTML = "+" + priceChange;
-              document.getElementById("6m-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
-            }
-            else if (priceChange < 0) {
-              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-              document.getElementById("6m-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("6m-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
-            }
-            else {
-              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
-              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-              document.getElementById("6m-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("6m-timescale-price-change").innerHTML = "(" + priceChange + "%)";
-            }
-            document.getElementById("6m-timescale-price-change").style.color = color;
-            document.getElementById("6m-timescale-percent-change").style.color = color;
-            var sixMonthPriceCtx = document.getElementById('lower-information-chart-canvas-6m').getContext('2d');
-            var priceChart = new Chart(sixMonthPriceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: sixMonthChartValues,
-                  label: symbol,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-              }
-            });
-            var sixMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-6m').getContext('2d');
-            var sixMonthVOlumeChart = new Chart(sixMonthVolumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: sixMonthVolumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString();
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
-        //year to date chart
-        var chartEndDate = date.getTime();
-        var ytdChartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=ytd&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(ytdChartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            var date = new Date();
-            var year;
-            var month;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var day;
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              date = new Date(response.data.candles[i].datetime);
-              month = monthNames[date.getMonth()];
-              day = date.getDate();
-              year = date.getFullYear();
-              fullTime = month + " " + day + ", " + year;
-              timesLabel.push(fullTime);
-            }
-            timesLabel.push("");
-
-            let ytdChartValues = [];
-            let ytdVolumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              ytdChartValues.push(response.data.candles[i].close.toFixed(2));
-              ytdVolumeValues.push(response.data.candles[i].volume);
-            }
-            ytdChartValues.unshift(response.data.candles[0].open);
-            ytdVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
-            priceChange = priceChange.toFixed(2);
-            var percentChange = priceChange / response.data.candles[0].open * 100;
-            percentChange = percentChange.toFixed(2);
-            if (priceChange > 0) {
-              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
-              document.getElementById("ytd-timescale-price-change").innerHTML = "+" + priceChange;
-              document.getElementById("ytd-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
-            }
-            else if (priceChange < 0) {
-              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-              document.getElementById("ytd-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("ytd-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
-            }
-            else {
-              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
-              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-              document.getElementById("ytd-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("ytd-timescale-price-change").innerHTML = "(" + priceChange + "%)";
-            }
-            document.getElementById("ytd-timescale-price-change").style.color = color;
-            document.getElementById("ytd-timescale-percent-change").style.color = color;
-            var ytdPriceCtx = document.getElementById('lower-information-chart-canvas-ytd').getContext('2d');
-            var priceChart = new Chart(ytdPriceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: ytdChartValues,
-                  label: symbol,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-              }
-            });
-            var ytdVolumeCtx = document.getElementById('lower-information-volume-canvas-ytd').getContext('2d');
-            var ytdVOlumeChart = new Chart(ytdVolumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: ytdVolumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString("en-US");
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
-        //1 year chart
-        var chartEndDate = date.getTime();
-        var oneYearChartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(oneYearChartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            var date = new Date();
-            var year;
-            var month;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var day;
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              date = new Date(response.data.candles[i].datetime);
-              month = monthNames[date.getMonth()];
-              day = date.getDate();
-              year = date.getFullYear();
-              fullTime = month + " " + day + ", " + year;
-              timesLabel.push(fullTime);
-            }
-            timesLabel.push("");
-
-            let oneYearChartValues = [];
-            let oneYearVolumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              oneYearChartValues.push(response.data.candles[i].close.toFixed(2));
-              oneYearVolumeValues.push(response.data.candles[i].volume);
-            }
-            oneYearChartValues.unshift(response.data.candles[0].open);
-            oneYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
-            priceChange = priceChange.toFixed(2);
-            var percentChange = priceChange / response.data.candles[0].open * 100;
-            percentChange = percentChange.toFixed(2);
-            if (priceChange > 0) {
-              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
-              document.getElementById("1y-timescale-price-change").innerHTML = "+" + priceChange;
-              document.getElementById("1y-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
-            }
-            else if (priceChange < 0) {
-              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-              document.getElementById("1y-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("1y-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
-            }
-            else {
-              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
-              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-              document.getElementById("1y-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("1y-timescale-price-change").innerHTML = "(" + priceChange + "%)";
-            }
-            document.getElementById("1y-timescale-price-change").style.color = color;
-            document.getElementById("1y-timescale-percent-change").style.color = color;
-            var oneYearPriceCtx = document.getElementById('lower-information-chart-canvas-1y').getContext('2d');
-            var priceChart = new Chart(oneYearPriceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: oneYearChartValues,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  label: symbol,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-                label: {
-                  display: false,
-                },
-              }
-            });
-            var oneYearVolumeCtx = document.getElementById('lower-information-volume-canvas-1y').getContext('2d');
-            var oneYearVOlumeChart = new Chart(oneYearVolumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: oneYearVolumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString();
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
-        //5 year chart
-        var chartEndDate = date.getTime();
-        var fiveYearChartConfig = {
-          method: 'get',
-          url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=5&frequencyType=weekly&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
-          headers: {
-            'Authorization': accessToken
-          }
-        };
-        axios(fiveYearChartConfig)
-          .then(function (response) {
-            var numberOfCandles = response.data.candles.length;
-            var timesLabel = [];
-            var date = new Date();
-            var year;
-            var month;
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            var day;
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              date = new Date(response.data.candles[i].datetime);
-              month = monthNames[date.getMonth()];
-              day = date.getDate();
-              year = date.getFullYear();
-              fullTime = month + " " + day + ", " + year;
-              timesLabel.push(fullTime);
-            }
-            timesLabel.push("");
-
-            let fiveYearChartValues = [];
-            let fiveYearVolumeValues = [];
-            for (var i = 0; i < numberOfCandles - 1; i++) {
-              fiveYearChartValues.push(response.data.candles[i].close.toFixed(2));
-              fiveYearVolumeValues.push(response.data.candles[i].volume);
-            }
-            fiveYearChartValues.unshift(response.data.candles[0].open);
-            fiveYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
-            var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
-            priceChange = priceChange.toFixed(2);
-            var percentChange = priceChange / response.data.candles[0].open * 100;
-            percentChange = percentChange.toFixed(2);
-            if (priceChange > 0) {
-              color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-              backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
-              document.getElementById("5y-timescale-price-change").innerHTML = "+" + priceChange;
-              document.getElementById("5y-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
-            }
-            else if (priceChange < 0) {
-              color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-              backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
-              document.getElementById("5y-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("5y-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
-            }
-            else {
-              color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
-              backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
-              document.getElementById("5y-timescale-price-change").innerHTML = priceChange;
-              document.getElementById("5y-timescale-price-change").innerHTML = "(" + priceChange + "%)";
-            }
-            document.getElementById("5y-timescale-price-change").style.color = color;
-            document.getElementById("5y-timescale-percent-change").style.color = color;
-            var fiveYearPriceCtx = document.getElementById('lower-information-chart-canvas-5y').getContext('2d');
-            var priceChart = new Chart(fiveYearPriceCtx, {
-              type: 'line',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: fiveYearChartValues,
-                  label: symbol,
-                  borderColor: color,
-                  backgroundColor: backgroundColor,
-                  pointBackgroundColor: color,
-                  borderWidth: 2,
-                  spanGaps: false,
-                  tension: 0.05,
-                },
-                ]
-              },
-              options: {
-                tooltips: {
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }]
-                },
-              }
-            });
-            var fiveYearVolumeCtx = document.getElementById('lower-information-volume-canvas-5y').getContext('2d');
-            var fiveYearVolumeChart = new Chart(fiveYearVolumeCtx, {
-              type: 'bar',
-              data: {
-                labels: timesLabel,
-                datasets: [{
-                  data: fiveYearVolumeValues,
-                  backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
-                },]
-              },
-              options: {
-                tooltips: {
-                  callbacks: {
-                    label: function (tooltipItem, data) {
-                      var value = data.datasets[0].data[tooltipItem.index];
-                      if (parseInt(value) >= 1000) {
-                        return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                      }
-                      else {
-                        return "Volume: " + value;
-                      }
-                    }
-                  },
-                  mode: 'index',
-                  intersect: false,
-                  displayColors: false,
-                },
-                hover: {
-                  mode: 'index',
-                  intersect: false,
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                  display: false,
-                },
-                elements: {
-                  point: {
-                    radius: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    gridLines: {
-                      display: false
-                    },
-                    ticks: {
-                      display: false,
-                    }
-                  }],
-                  yAxes: [{
-                    gridLine: {
-                      display: false,
-                    },
-                    ticks: {
-                      beginAtZero: true,
-                      userCallback: function (value, index, values) {
-                        return value.toLocaleString();
-                      }
-                    }
-                  }]
-                },
-              }
-            });
-          })
       })
     var quoteConfig = {
       method: 'get',
@@ -1600,6 +395,9 @@ axios(accessTokenConfig)
         }
         if (date.getDay() == 6) {
           currentTime = date.getTime() - 86400000;
+        }
+        else if (date.getDay() != 0 && date.getDay() != 6) {
+          
         }
         var sp500Config = {
           method: 'get',
@@ -1879,7 +677,6 @@ axios(accessTokenConfig)
           })
       })
   })
-
 function changeInfoPaneOverview() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #356EFF 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -1896,10 +693,1245 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
+function loadChart() {
+  var date = new Date();
+  getAccessToken().then(response => {
+    var accessToken = "Bearer " + response.access_token;
+    var chartTime = date.getTime();
+    if (date.getDay() == 6) {
+      chartTime = date.getTime() - 86400000;
+    }
+    else if (date.getDay() == 0) {
+      chartTime = date.getTime() - 172800000
+    }
+    if (document.getElementById("pos-day-price-change")) {
+      var color = document.getElementById("pos-day-price-change").style.color;
+      var backgroundColor = document.getElementById("pos-day-price-change").style.backgroundColor;
+    }
+    else if (document.getElementById("neg-day-price-chang")) {
+      var color = document.getElementById("neg-day-price-change").style.color;
+      var backgroundColor = document.getElementById("neg-day-price-change").style.backgroundColor;
+
+    }
+    else if (document.getElementById("eq-day-price-chang ")) {
+      var color = document.getElementById("eq-day-price-change").style.color;
+      var backgroundColor = document.getElementById("eq-day-price-change").style.backgroundColor;
+
+    }
+    var OneDaychartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=1&endDate=' + chartTime + '&startDate=' + chartTime + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(OneDaychartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        let chartValues = [];
+        let volumeValues = [];
+        for (var i = 0; i < numberOfCandles; i++) {
+          chartValues.push(response.data.candles[i].close.toFixed(2));
+          let date = new Date(response.data.candles[i].datetime);
+          let hours = date.getHours() + 1;
+          if (hours >= 12) {
+            var suffix = " PM"
+          }
+          else var suffix = " AM";
+          if (hours > 12) {
+            hours -= 12;
+          }
+          let minutes = date.getMinutes();
+          if (minutes < 10) {
+            minutes = "0" + minutes;
+          }
+          timesLabel.push(hours + ":" + minutes + suffix + " GMT-" + date.getTimezoneOffset() / 60);
+          volumeValues.push(response.data.candles[i].volume);
+        }
+        chartValues.unshift(response.data.candles[0].open);
+        volumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceCtx = document.getElementById('lower-information-chart-canvas-1d').getContext('2d');
+        var priceChart = new Chart(priceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: chartValues,
+              label: symbol,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+          }
+        });
+        var volumeCtx = document.getElementById('lower-information-volume-canvas-1d').getContext('2d');
+        var volumeChart = new Chart(volumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: volumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString();
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+    //5 day chart
+    var chartTime = date.getTime();
+    var chartEndDate = date.getTime() - 432000000;
+    var FiveDaychartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=day&frequencyType=minute&frequency=5&endDate=' + chartTime + '&startDate=' + chartEndDate + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(FiveDaychartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        var date = new Date();
+        var month;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var day;
+        var hour;
+        var minute;
+        var timeZone;
+        for (var i = 0; i < numberOfCandles; i++) {
+          date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          hour = date.getHours();
+          minute = date.getMinutes();
+          timeZone = date.getTimezoneOffset() / 60;
+          if (hour > 12) {
+            hour -= 12;
+            suffix = "PM";
+          }
+          else if (hour == 12) {
+            suffix = "PM";
+          }
+          else suffix = "AM";
+          if (minute < 10) {
+            minute = "0" + minute;
+          }
+          fullTime = month + " " + day + ", " + hour + ":" + minute + " " + suffix + " " + "GMT-" + timeZone;
+          timesLabel.push(fullTime);
+        }
+        let fiveDayChartValues = [];
+        let fiveDayVolumeValues = [];
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          fiveDayChartValues.push(response.data.candles[i].close.toFixed(2));
+          fiveDayVolumeValues.push(response.data.candles[i].volume);
+        }
+        fiveDayChartValues.unshift(response.data.candles[0].open);
+        fiveDayVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+        priceChange = priceChange.toFixed(2);
+        var percentChange = priceChange / response.data.candles[0].open * 100;
+        percentChange = percentChange.toFixed(2);
+        if (priceChange > 0) {
+          color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+          backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("5d-timescale-price-change").innerHTML = "+" + priceChange;
+          document.getElementById("5d-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
+        }
+        else if (priceChange < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+          document.getElementById("5d-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("5d-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
+        }
+        else {
+          color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+          backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+          document.getElementById("5d-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("5d-timescale-price-change").innerHTML = "(" + priceChange + "%)";
+        }
+        document.getElementById("5d-timescale-price-change").style.color = color;
+        document.getElementById("5d-timescale-percent-change").style.color = color;
+        var priceCtx = document.getElementById('lower-information-chart-canvas-5d').getContext('2d');
+        var priceChart = new Chart(priceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: fiveDayChartValues,
+              label: symbol,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+          }
+        });
+        var fiveDayVolumeCtx = document.getElementById('lower-information-volume-canvas-5d').getContext('2d');
+        var volumeChart = new Chart(fiveDayVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: fiveDayVolumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString();
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+    //1 month chart
+    var chartEndDate = date.getTime();
+    var oneMonthChartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(oneMonthChartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        var date = new Date();
+        var year;
+        var month;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var day;
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          year = date.getFullYear();
+          fullTime = month + " " + day + ", " + year;
+          timesLabel.push(fullTime);
+        }
+        timesLabel.push("");
+
+        let oneMonthChartValues = [];
+        let oneMonthVolumeValues = [];
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          oneMonthChartValues.push(response.data.candles[i].close.toFixed(2));
+          oneMonthVolumeValues.push(response.data.candles[i].volume);
+        }
+        oneMonthChartValues.unshift(response.data.candles[0].open);
+        oneMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+        priceChange = priceChange.toFixed(2);
+        var percentChange = priceChange / response.data.candles[0].open * 100;
+        percentChange = percentChange.toFixed(2);
+        if (priceChange > 0) {
+          color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+          backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("1m-timescale-price-change").innerHTML = "+" + priceChange;
+          document.getElementById("1m-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
+        }
+        else if (priceChange < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+          document.getElementById("1m-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("1m-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
+        }
+        else {
+          color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+          backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+          document.getElementById("1m-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("1m-timescale-price-change").innerHTML = "(" + priceChange + "%)";
+        }
+        document.getElementById("1m-timescale-price-change").style.color = color;
+        document.getElementById("1m-timescale-percent-change").style.color = color;
+        var priceCtx = document.getElementById('lower-information-chart-canvas-1m').getContext('2d');
+        var priceChart = new Chart(priceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: oneMonthChartValues,
+              label: symbol,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+          }
+        });
+        var oneMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-1m').getContext('2d');
+        var oneMonthVOlumeChart = new Chart(oneMonthVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: oneMonthVolumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString();
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+    //6 month chart
+    var chartEndDate = date.getTime();
+    var sixMonthChartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=month&period=6&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(sixMonthChartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        var date = new Date();
+        var year;
+        var month;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var day;
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          year = date.getFullYear();
+          fullTime = month + " " + day + ", " + year;
+          timesLabel.push(fullTime);
+        }
+        timesLabel.push("");
+
+        let sixMonthChartValues = [];
+        let sixMonthVolumeValues = [];
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          sixMonthChartValues.push(response.data.candles[i].close.toFixed(2));
+          sixMonthVolumeValues.push(response.data.candles[i].volume);
+        }
+        sixMonthChartValues.unshift(response.data.candles[0].open);
+        sixMonthVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+        priceChange = priceChange.toFixed(2);
+        var percentChange = priceChange / response.data.candles[0].open * 100;
+        percentChange = percentChange.toFixed(2);
+        if (priceChange > 0) {
+          color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+          backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("6m-timescale-price-change").innerHTML = "+" + priceChange;
+          document.getElementById("6m-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
+        }
+        else if (priceChange < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+          document.getElementById("6m-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("6m-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
+        }
+        else {
+          color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+          backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+          document.getElementById("6m-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("6m-timescale-price-change").innerHTML = "(" + priceChange + "%)";
+        }
+        document.getElementById("6m-timescale-price-change").style.color = color;
+        document.getElementById("6m-timescale-percent-change").style.color = color;
+        var sixMonthPriceCtx = document.getElementById('lower-information-chart-canvas-6m').getContext('2d');
+        var priceChart = new Chart(sixMonthPriceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: sixMonthChartValues,
+              label: symbol,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+          }
+        });
+        var sixMonthVolumeCtx = document.getElementById('lower-information-volume-canvas-6m').getContext('2d');
+        var sixMonthVOlumeChart = new Chart(sixMonthVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: sixMonthVolumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString();
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+    //year to date chart
+    var chartEndDate = date.getTime();
+    var ytdChartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=ytd&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(ytdChartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        var date = new Date();
+        var year;
+        var month;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var day;
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          year = date.getFullYear();
+          fullTime = month + " " + day + ", " + year;
+          timesLabel.push(fullTime);
+        }
+        timesLabel.push("");
+
+        let ytdChartValues = [];
+        let ytdVolumeValues = [];
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          ytdChartValues.push(response.data.candles[i].close.toFixed(2));
+          ytdVolumeValues.push(response.data.candles[i].volume);
+        }
+        ytdChartValues.unshift(response.data.candles[0].open);
+        ytdVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+        priceChange = priceChange.toFixed(2);
+        var percentChange = priceChange / response.data.candles[0].open * 100;
+        percentChange = percentChange.toFixed(2);
+        if (priceChange > 0) {
+          color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+          backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("ytd-timescale-price-change").innerHTML = "+" + priceChange;
+          document.getElementById("ytd-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
+        }
+        else if (priceChange < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+          document.getElementById("ytd-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("ytd-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
+        }
+        else {
+          color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+          backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+          document.getElementById("ytd-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("ytd-timescale-price-change").innerHTML = "(" + priceChange + "%)";
+        }
+        document.getElementById("ytd-timescale-price-change").style.color = color;
+        document.getElementById("ytd-timescale-percent-change").style.color = color;
+        var ytdPriceCtx = document.getElementById('lower-information-chart-canvas-ytd').getContext('2d');
+        var priceChart = new Chart(ytdPriceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: ytdChartValues,
+              label: symbol,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+          }
+        });
+        var ytdVolumeCtx = document.getElementById('lower-information-volume-canvas-ytd').getContext('2d');
+        var ytdVOlumeChart = new Chart(ytdVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: ytdVolumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString("en-US");
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+    //1 year chart
+    var chartEndDate = date.getTime();
+    var oneYearChartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=1&frequencyType=daily&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(oneYearChartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        var date = new Date();
+        var year;
+        var month;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var day;
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          year = date.getFullYear();
+          fullTime = month + " " + day + ", " + year;
+          timesLabel.push(fullTime);
+        }
+        timesLabel.push("");
+
+        let oneYearChartValues = [];
+        let oneYearVolumeValues = [];
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          oneYearChartValues.push(response.data.candles[i].close.toFixed(2));
+          oneYearVolumeValues.push(response.data.candles[i].volume);
+        }
+        oneYearChartValues.unshift(response.data.candles[0].open);
+        oneYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+        priceChange = priceChange.toFixed(2);
+        var percentChange = priceChange / response.data.candles[0].open * 100;
+        percentChange = percentChange.toFixed(2);
+        if (priceChange > 0) {
+          color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+          backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("1y-timescale-price-change").innerHTML = "+" + priceChange;
+          document.getElementById("1y-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
+        }
+        else if (priceChange < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+          document.getElementById("1y-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("1y-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
+        }
+        else {
+          color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+          backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+          document.getElementById("1y-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("1y-timescale-price-change").innerHTML = "(" + priceChange + "%)";
+        }
+        document.getElementById("1y-timescale-price-change").style.color = color;
+        document.getElementById("1y-timescale-percent-change").style.color = color;
+        var oneYearPriceCtx = document.getElementById('lower-information-chart-canvas-1y').getContext('2d');
+        var priceChart = new Chart(oneYearPriceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: oneYearChartValues,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              label: symbol,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+            label: {
+              display: false,
+            },
+          }
+        });
+        var oneYearVolumeCtx = document.getElementById('lower-information-volume-canvas-1y').getContext('2d');
+        var oneYearVOlumeChart = new Chart(oneYearVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: oneYearVolumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString();
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+    //5 year chart
+    var chartEndDate = date.getTime();
+    var fiveYearChartConfig = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + symbol + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=5&frequencyType=weekly&frequency=1&endDate=' + chartEndDate + '&needExtendedHoursData=false',
+      headers: {
+        'Authorization': accessToken
+      }
+    };
+    axios(fiveYearChartConfig)
+      .then(function (response) {
+        var numberOfCandles = response.data.candles.length;
+        var timesLabel = [];
+        var date = new Date();
+        var year;
+        var month;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var day;
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          date = new Date(response.data.candles[i].datetime);
+          month = monthNames[date.getMonth()];
+          day = date.getDate();
+          year = date.getFullYear();
+          fullTime = month + " " + day + ", " + year;
+          timesLabel.push(fullTime);
+        }
+        timesLabel.push("");
+
+        let fiveYearChartValues = [];
+        let fiveYearVolumeValues = [];
+        for (var i = 0; i < numberOfCandles - 1; i++) {
+          fiveYearChartValues.push(response.data.candles[i].close.toFixed(2));
+          fiveYearVolumeValues.push(response.data.candles[i].volume);
+        }
+        fiveYearChartValues.unshift(response.data.candles[0].open);
+        fiveYearVolumeValues.push(response.data.candles[numberOfCandles - 1].volume);
+        var priceChange = response.data.candles[response.data.candles.length - 1].close - response.data.candles[0].open;
+        priceChange = priceChange.toFixed(2);
+        var percentChange = priceChange / response.data.candles[0].open * 100;
+        percentChange = percentChange.toFixed(2);
+        if (priceChange > 0) {
+          color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+          backgroundColor = 'rgb(' + 231 + ',' + 244 + ',' + 234 + ')';
+          document.getElementById("5y-timescale-price-change").innerHTML = "+" + priceChange;
+          document.getElementById("5y-timescale-percent-change").innerHTML = "(+" + percentChange + "%)";
+        }
+        else if (priceChange < 0) {
+          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+          backgroundColor = 'rgb(' + 250 + ',' + 232 + ',' + 230 + ')';
+          document.getElementById("5y-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("5y-timescale-percent-change").innerHTML = "(" + percentChange + "%)";
+        }
+        else {
+          color = 'rgb(' + 58 + ',' + 58 + ',' + 58 + ')';
+          backgroundColor = 'rgb(' + 232 + ',' + 234 + ',' + 237 + ')';
+          document.getElementById("5y-timescale-price-change").innerHTML = priceChange;
+          document.getElementById("5y-timescale-price-change").innerHTML = "(" + priceChange + "%)";
+        }
+        document.getElementById("5y-timescale-price-change").style.color = color;
+        document.getElementById("5y-timescale-percent-change").style.color = color;
+        var fiveYearPriceCtx = document.getElementById('lower-information-chart-canvas-5y').getContext('2d');
+        var priceChart = new Chart(fiveYearPriceCtx, {
+          type: 'line',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: fiveYearChartValues,
+              label: symbol,
+              borderColor: color,
+              backgroundColor: backgroundColor,
+              pointBackgroundColor: color,
+              borderWidth: 2,
+              spanGaps: false,
+              tension: 0.05,
+            },
+            ]
+          },
+          options: {
+            tooltips: {
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }]
+            },
+          }
+        });
+        var fiveYearVolumeCtx = document.getElementById('lower-information-volume-canvas-5y').getContext('2d');
+        var fiveYearVolumeChart = new Chart(fiveYearVolumeCtx, {
+          type: 'bar',
+          data: {
+            labels: timesLabel,
+            datasets: [{
+              data: fiveYearVolumeValues,
+              backgroundColor: 'rgb(' + 10 + ',' + 93 + ',' + 128 + ')',
+            },]
+          },
+          options: {
+            tooltips: {
+              callbacks: {
+                label: function (tooltipItem, data) {
+                  var value = data.datasets[0].data[tooltipItem.index];
+                  if (parseInt(value) >= 1000) {
+                    return "Volume: " + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                  }
+                  else {
+                    return "Volume: " + value;
+                  }
+                }
+              },
+              mode: 'index',
+              intersect: false,
+              displayColors: false,
+            },
+            hover: {
+              mode: 'index',
+              intersect: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            },
+            scales: {
+              xAxes: [{
+                gridLines: {
+                  display: false
+                },
+                ticks: {
+                  display: false,
+                }
+              }],
+              yAxes: [{
+                gridLine: {
+                  display: false,
+                },
+                ticks: {
+                  beginAtZero: true,
+                  userCallback: function (value, index, values) {
+                    return value.toLocaleString();
+                  }
+                }
+              }]
+            },
+          }
+        });
+      })
+  })
+  changeChartTimescale1d();
+}
 function changeInfoPaneChart() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-chart-text").style.borderRadius = "90";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -1907,7 +1939,8 @@ function changeInfoPaneChart() {
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "block";
-  changeChartTimescale1d();
+  loadChart();
+  
   document.getElementById("lower-information-volume").style.display = "block";
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
@@ -2394,42 +2427,136 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-options").style.display = "block";
   document.getElementById("lower-information-historical").style.display = "none";
 
-  getAccessToken().then(response =>{
+  getAccessToken().then(response => {
     var accessToken = "Bearer " + response.access_token;
     var config = {
       method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=12&includeQuotes=FALSE',
-      headers: { 
+      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=30&includeQuotes=FALSE',
+      headers: {
         'Authorization': accessToken,
       }
     };
-    
+
     axios(config)
-    .then(function (response) {
-      console.log(response);
-      var expirationDateSelect = document.getElementById("expiration-dates");
-      const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      let expirationDates = Object.keys(response.data.callExpDateMap);
-      console.log(expirationDates);
-      for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
-        let expMonth = expirationDates[i].substring(5, 7);
-        if (expMonth < 10) {
-          expMonth = expMonth.substring(1, 2);
+      .then(function (response) {
+        // console.log(response);
+        var expirationDateSelect = document.getElementById("expiration-dates");
+        var optionsDataTableParent = document.getElementById("options-data-table-body");
+        const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let expirationDates = Object.keys(response.data.callExpDateMap);
+        for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
+          console.log(i);
+          let expMonth = expirationDates[i].substring(5, 7);
+          if (expMonth < 10) {
+            expMonth = expMonth.substring(1, 2);
+          }
+          let expirationDate = monthNames[expMonth] + " " + + expirationDates[i].substring(8, 10) + ", " + expirationDates[i].substring(0, 4);
+          let expirationDateOption = document.createElement("option");
+          expirationDateOption.setAttribute("id", "expiration-date-option-" + i);
+          let optionsDataTable = document.createElement("tr");
+          optionsDataTable.setAttribute("id", "options-data-row-" + i);
+          optionsDataTableParent.appendChild(optionsDataTable);
+          expirationDateOption.value = expirationDate;
+          expirationDateOption.innerHTML = expirationDate;
+          expirationDateSelect.appendChild(expirationDateOption);
+          if (i < 1) {
+            optionExpirationSelectChange(response, 0);
+          }
+          document.getElementById("expiration-dates").onchange = function() {
+            document.getElementById("options-data-table-header-expiration-text").innerHTML = expirationDateSelect.value;
+            optionExpirationSelectChange(response, expirationDateSelect.selectedIndex);
+          } 
         }
-        let expirationDate = monthNames[expMonth] + " " + + expirationDates[i].substring(8, 10) + ", " + expirationDates[i].substring(0, 4);
-        let expirationDateOption = document.createElement("option");
-        expirationDateOption.setAttribute("id", "expiration-date-option-" + i + 1);
-        expirationDateOption.value = expirationDate;
-        expirationDateOption.innerHTML = expirationDate;
-        expirationDateOption.onChange = expirationDateClickEvent(response.data.callExpDateMap, response.data.putExpDateMap, i); //make onclick function
-        expirationDateSelect.appendChild(expirationDateOption);
-      }
-    })
+      })
   })
 }
-function expirationDateClickEvent(response, number) {
-  console.log(response);
-  console.log(number);
+function optionExpirationSelectChange(response, selectedIndex) {
+  // console.log(response);
+  let callObject = response.data.callExpDateMap[Object.keys(response.data.callExpDateMap)[selectedIndex]];
+  let putObject = response.data.putExpDateMap[Object.keys(response.data.putExpDateMap)[selectedIndex]];
+  console.log(callObject);
+  console.log(putObject);
+  let table = document.getElementById("options-data-table-body");
+  let parentRow = document.getElementById("options-data-table-body");
+  for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
+    let row = table.insertRow(i);
+    let callPriceCell = row.insertCell(0);
+    callPriceCell.innerHTML = callObject[Object.keys(callObject)[i]][0].last;
+    let callChange = row.insertCell(1);
+    let callChangeNum = callObject[Object.keys(callObject)[i]][0].netChange;
+    let callPercentChange = row.insertCell(2);
+    let callPercentChangeNum = callObject[Object.keys(callObject)[i]][0].percentChange;
+    if (callChangeNum > 0) {
+      callChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      callChange.innerHTML = "+" + callChangeNum;
+    }
+    else if (callChangeNum < 0) {
+      callChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      callChange.innerHTML = callChangeNum;
+    }
+    else {
+      callChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      callChange.innerHTML = callChangeNum;
+    }
+
+    if (callPercentChangeNum > 0) {
+      callPercentChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      callPercentChange.innerHTML = "+" + callPercentChangeNum + "%";
+    }
+    else if (callPercentChangeNum < 0) {
+      callPercentChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      callPercentChange.innerHTML = callPercentChangeNum + "%";
+    }
+    else {
+      callPercentChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      callPercentChange.innerHTML = callPercentChangeNum + "%";
+    }
+    let callVolume = row.insertCell(3)
+    callVolume.innerHTML = callObject[Object.keys(callObject)[i]][0].totalVolume;
+    let callOpenInterest = row.insertCell(4);
+    callOpenInterest.innerHTML = callObject[Object.keys(callObject)[i]][0].openInterest;
+
+    let strike = row.insertCell(5);
+    strike.style.fontWeight = "bold";
+    strike.style.borderLeft = "solid black 1px";
+    strike.style.borderRight = "solid black 0.5px";
+    strike.innerHTML = putObject[Object.keys(putObject)[i]][0].strikePrice;
+
+    let putPriceCell = row.insertCell(6);
+    putPriceCell.innerHTML = putObject[Object.keys(putObject)[i]][0].last;
+    let putChange = row.insertCell(7);
+    let putChangeNum = putObject[Object.keys(putObject)[i]][0].netChange;
+    let putPercentChange = row.insertCell(8);
+    let putPercentChangeNum = putObject[Object.keys(putObject)[i]][0].percentChange;
+    if (putChangeNum > 0) {
+      putChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      putChange.innerHTML = "+" + putChangeNum;
+    }
+    else if (putChangeNum < 0) {
+      putChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      putChange.innerHTML = putChangeNum;
+    }
+    else {
+      putChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      putChange.innerHTML = putChangeNum;
+    }
+    if (putPercentChangeNum > 0) {
+      putPercentChange.style.color ='rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      putPercentChange.innerHTML = "+" + putPercentChangeNum + "%";
+    }
+    else if (putPercentChangeNum < 0) {
+      putPercentChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      putPercentChange.innerHTML = putPercentChangeNum + "%";
+    }
+    else {
+      putPercentChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      putPercentChange.innerHTML = putPercentChangeNum + "%";
+    }
+    let putVolume = row.insertCell(9)
+    putVolume.innerHTML = putObject[Object.keys(putObject)[i]][0].totalVolume;
+    let putOpenInterest = row.insertCell(10);
+    putOpenInterest.innerHTML = putObject[Object.keys(putObject)[i]][0].openInterest;
+  }
 }
 function changeInfoPaneHistorical() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2469,7 +2596,7 @@ function changeInfoPaneHistoricalDaily() {
         for (let i = 0; i < response.data.candles.length - 1; i++) {
           let row = table.insertRow(0);
           let dateCell = row.insertCell(0);
-          dateCell.style.width = 1/6 * 100 + "%";
+          dateCell.style.width = 1 / 6 * 100 + "%";
           dateCell.style.whiteSpace = "nowrap";
           dateCell.style.float = "left";
           dateCell.style.fontWeight = "bold";
@@ -2482,28 +2609,28 @@ function changeInfoPaneHistoricalDaily() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
-          openCell.style.width = 1/5 * 100 + "%";
+          openCell.style.width = 1 / 5 * 100 + "%";
           openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
-          highCell.style.width = 1/5 * 100 + "%";
+          highCell.style.width = 1 / 5 * 100 + "%";
           highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
-          lowCell.style.width = 1/5 * 100 + "%";
+          lowCell.style.width = 1 / 5 * 100 + "%";
           lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
-          closeCell.style.width = 1/5 * 100 + "%";
+          closeCell.style.width = 1 / 5 * 100 + "%";
           closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
@@ -2541,7 +2668,7 @@ function changeInfoPaneHistoricalWeekly() {
         for (let i = 0; i < response.data.candles.length - 1; i++) {
           let row = table.insertRow(0);
           let dateCell = row.insertCell(0);
-          dateCell.style.width = 1/6 * 100 + "%";
+          dateCell.style.width = 1 / 6 * 100 + "%";
           dateCell.style.whiteSpace = "nowrap";
           dateCell.style.float = "left";
           dateCell.style.fontWeight = "bold";
@@ -2554,28 +2681,28 @@ function changeInfoPaneHistoricalWeekly() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
-          openCell.style.width = 1/5 * 100 + "%";
+          openCell.style.width = 1 / 5 * 100 + "%";
           openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
-          highCell.style.width = 1/5 * 100 + "%";
+          highCell.style.width = 1 / 5 * 100 + "%";
           highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
-          lowCell.style.width = 1/5 * 100 + "%";
+          lowCell.style.width = 1 / 5 * 100 + "%";
           lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
-          closeCell.style.width = 1/5 * 100 + "%";
+          closeCell.style.width = 1 / 5 * 100 + "%";
           closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
@@ -2612,7 +2739,7 @@ function changeInfoPaneHistoricalMonthly() {
         for (let i = 0; i < response.data.candles.length - 1; i++) {
           let row = table.insertRow(0);
           let dateCell = row.insertCell(0);
-          dateCell.style.width = 1/6 * 100 + "%";
+          dateCell.style.width = 1 / 6 * 100 + "%";
           dateCell.style.whiteSpace = "nowrap";
           dateCell.style.float = "left";
           dateCell.style.fontWeight = "bold";
@@ -2625,28 +2752,28 @@ function changeInfoPaneHistoricalMonthly() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
-          openCell.style.width = 1/5 * 100 + "%";
+          openCell.style.width = 1 / 5 * 100 + "%";
           openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
-          highCell.style.width = 1/5 * 100 + "%";
+          highCell.style.width = 1 / 5 * 100 + "%";
           highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
-          lowCell.style.width = 1/5 * 100 + "%";
+          lowCell.style.width = 1 / 5 * 100 + "%";
           lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
-          closeCell.style.width = 1/5 * 100 + "%";
+          closeCell.style.width = 1 / 5 * 100 + "%";
           closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
@@ -2745,12 +2872,12 @@ function addToWatchlist() {
         changeCell.fontWeight = "bold";
         changeCell.innerHTML = change;
         percentChangeCell.style.color = color;
-        percentChangeCell.fontWeight = "bold";
         percentChangeCell.innerHTML = percentChange;
+        percentChangeCell.fontWeight = "bold";
         const item = symbol + price + change + percentChange;
         String(item);
         localStorage.setItem("_watchlistItems", localStorage.getItem("_watchlistItems") + item.length + item);
-        console.log(localStorage.getItem("_watchlistItems"));
+        // console.log(localStorage.getItem("_watchlistItems"));
       })
   })
 }
