@@ -10,9 +10,11 @@ body {
   max-width: 100%;
   overflow-x: hidden;
 }
+
 form {
   display: inline-block;
 }
+
 header {
   height: 100px;
   background-color: rgb(77, 77, 77);
@@ -56,6 +58,7 @@ header {
   height: 30px;
   margin-top: 20px;
 }
+
 .stock-submit-button {
   float: right;
   background-color: rgb(63, 112, 255);
@@ -503,26 +506,28 @@ header {
   background-color: rgb(196, 214, 252);
   cursor: pointer;
 }
-.timescale-text {
 
-}
+.timescale-text {}
 
 .timescale-change {
   font-weight: bold;
-  padding-top: 5px; 
+  padding-top: 5px;
   float: right;
 }
+
 .lower-information-chart {
   display: none;
-  width: 95.25%;
+  width: 95.5%;
   height: 300px;
   margin-top: 20;
   margin-left: 13.5px;
   margin-bottom: 30px;
 }
+
 .timescale-selector-and-change {
   margin-bottom: 20px;
 }
+
 .lower-information-volume {
   display: none;
   width: 97.7%;
@@ -548,21 +553,27 @@ header {
   display: none;
   width: 96.75%;
 }
+
 .lower-information-historical-daily {
   width: 96.75%;
 }
+
 .historical-table {
   width: 100%;
 }
+
 .historical-header {
   font-size: 14.5px;
 }
+
 .historical-header-date {
   float: left;
 }
+
 .historical-header-volume {
   float: right;
 }
+
 .lower-information-overview-text {
   border-bottom: solid rgb(53, 110, 255) 2.5px;
 }
@@ -722,17 +733,26 @@ header {
   width: 74.1%;
   line-height: 19px;
 }
+
+.options-data-table {
+}
+.options-data-table-header {
+  color: rgb(68, 68, 68);
+}
 .lower-information-historical-header {
   margin-bottom: 15px;
 }
+
 .timeframe-text {
   font-size: 13.5px;
 }
+
 .timeframe-selector-text {
   font-size: 14px;
   font-weight: bold;
-  color:rgb(53, 110, 255);
+  color: rgb(53, 110, 255);
 }
+
 .timeframe-selector-text:hover {
   cursor: pointer;
   color: rgb(43, 88, 202)
@@ -747,9 +767,8 @@ header {
   width: 50%;
 }
 
-.right-market-status {
+.right-market-status {}
 
-}
 .index-wrapper {
   margin-bottom: 20px;
 }
@@ -786,13 +805,14 @@ header {
   margin-left: 7px;
   width: 80%;
 }
-.watchlist-wrapper {
 
-}
+.watchlist-wrapper {}
+
 .watchlist {
   padding: 0;
   width: 100%;
 }
+
 .watchlist-text {
   width: 100%;
   text-align: center;
@@ -802,6 +822,7 @@ header {
   margin-top: 15%;
   margin-bottom: 30px;
 }
+
 .watchlist-add-button {
   margin-left: 10px;
   font-size: 14px;
@@ -813,6 +834,7 @@ header {
   padding-right: 5.5px;
   border-radius: 90px;
 }
+
 .watchlist-add-button:hover {
   cursor: pointer;
   color: white;
@@ -825,7 +847,8 @@ table {
   overflow-x: auto;
 }
 
-td, th {
+td,
+th {
   border: none;
   text-align: left;
   padding: 7px;
@@ -836,6 +859,7 @@ tr:nth-child(even) {
   color: rgb(224, 195, 155);
   color: rgb(100, 100, 0);
 }
+
 table th {
   font-size: 12.5px;
   font-weight: bold;
@@ -843,12 +867,15 @@ table th {
   padding: 4;
   text-align: center;
 }
-table tr, table td {
+
+table tr,
+table td {
   font-size: 14px;
   color: black;
   border-bottom: solid gray 0.5px;
   text-align: center;
 }
+
 table tr:nth-child(even) {
   background-color: rgb(241, 241, 241);
   color: black
@@ -860,4 +887,3 @@ table tr:nth-child(even) {
   margin-right: 25px;
   margin-top: 20px;
 }
-

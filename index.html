@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Stock Information</title>
@@ -407,23 +408,45 @@
           </div>
           <div class="lower-information-options" id="lower-information-options">
             <div class="options-header-selector" id="options-header-selector">
-              <span class="options-date-selector" id="options-date-selector">Expiration Dates
+              <span class="options-date-selector" id="options-date-selector">Expiration Date
                 <select id="expiration-dates" class="expiration-dates">
                 </select>
               </span>
+              <div class="options-data-table-wrapper" id="options-data-table-wrapper">
+                <table class="options-data-table" id="options-data-table">
+                  <thead>
+                    <tr class="options-data-table-header">
+                      <th class="options-data-table-header">Last Price</th>
+                      <th class="options-data-table-header">Change</th>
+                      <th class="options-data-table-header">% Change</th>
+                      <th class="options-data-table-header">Volume</th>
+                      <th class="options-data-table-header">Open Interest</th>
+                      <th class="options-data-table-header">Strike</th>
+                      <th class="options-data-table-header">Last Price</th>
+                      <th class="options-data-table-header">Change</th>
+                      <th class="options-data-table-header">% Change</th>
+                      <th class="options-data-table-header">Volume</th>
+                      <th class="options-data-table-header">Open Interest</th>
+                    </tr>
+                  </thead>
+                  <tbody class="options-data-table-body" id="options-data-table-body">
+
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
           <div class="lower-information-historical" id="lower-information-historical">
             <div class="lower-information-historical-header">
               <span class="timeframe-text">Timeframe: </span>
               <span>
-                <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalDaily()">Daily</a>
+                <a class="timeframe-selector-text" onclick="changeInfoPaneHistoricalDaily()">Daily</a>
               </span>
               <span>
-                <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalWeekly()">Weekly</a>
+                <a class="timeframe-selector-text" onclick="changeInfoPaneHistoricalWeekly()">Weekly</a>
               </span>
               <span>
-                <a class="timeframe-selector-text"onclick="changeInfoPaneHistoricalMonthly()">Monthly</a>
+                <a class="timeframe-selector-text" onclick="changeInfoPaneHistoricalMonthly()">Monthly</a>
               </span>
             </div>
             <div class="lower-information-historical-daily" id="lower-information-historical-daily">
