@@ -733,12 +733,48 @@ header {
   width: 74.1%;
   line-height: 19px;
 }
+.options-header-table-wrapper {
+  width: 81%;
+}
+.options-data-table-wrapper {
+  width: max-content;
+}
+
+.options-header-selector {
+  margin-bottom: 30px;
+}
+
+.options-header-text {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 10px;
+}
+
+.options-header-text-calls-puts {
+  font-size: 17px;
+  font-weight: bold;
+
+}
+.options-header-text-date {
+  font-size: 15px;
+  font-weight: bold;
+}
 
 .options-data-table {
+  display: inline-table;
 }
+
 .options-data-table-header {
   color: rgb(68, 68, 68);
 }
+
+.options-sidebar {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 .lower-information-historical-header {
   margin-bottom: 15px;
 }

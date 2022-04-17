@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-
 function saveData(symbol) {
   var symbol = {
     Symbol: symbol
@@ -30,12 +28,13 @@ function getMarketStatus() {
   var marketStatusConfig = {
     method: 'get',
     url: 'https://api.tdameritrade.com/v1/marketdata/EQUITY/hours?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&date=2022-04-16',
-    headers: { 
-      'Authorization': ''
-    }
   };
-  return axios(marketStatusConfig).then(response => response.data);
-} 
+  return axios(marketStatusConfig).then(response => response);
+}
+getMarketStatus().then(response => {
+  console.log(response.data[0]);
+})
+
 function getAccessToken() {
   var accessTokenConfig = {
     method: 'post',
@@ -397,7 +396,6 @@ axios(accessTokenConfig)
           currentTime = date.getTime() - 86400000;
         }
         else if (date.getDay() != 0 && date.getDay() != 6) {
-          
         }
         var sp500Config = {
           method: 'get',
@@ -1940,7 +1938,7 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "block";
   loadChart();
-  
+
   document.getElementById("lower-information-volume").style.display = "block";
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
@@ -2436,16 +2434,14 @@ function changeInfoPaneOptions() {
         'Authorization': accessToken,
       }
     };
-
+    const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     axios(config)
       .then(function (response) {
         // console.log(response);
         var expirationDateSelect = document.getElementById("expiration-dates");
         var optionsDataTableParent = document.getElementById("options-data-table-body");
-        const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let expirationDates = Object.keys(response.data.callExpDateMap);
         for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
-          console.log(i);
           let expMonth = expirationDates[i].substring(5, 7);
           if (expMonth < 10) {
             expMonth = expMonth.substring(1, 2);
@@ -2462,20 +2458,25 @@ function changeInfoPaneOptions() {
           if (i < 1) {
             optionExpirationSelectChange(response, 0);
           }
-          document.getElementById("expiration-dates").onchange = function() {
+          document.getElementById("expiration-dates").onchange = function () {
             document.getElementById("options-data-table-header-expiration-text").innerHTML = expirationDateSelect.value;
             optionExpirationSelectChange(response, expirationDateSelect.selectedIndex);
-          } 
+          }
         }
       })
   })
 }
 function optionExpirationSelectChange(response, selectedIndex) {
   // console.log(response);
+  let expirationDateObj = Object.keys(response.data.callExpDateMap)[selectedIndex].substring(0, 10);
+  expirationDateObj = new Date(expirationDateObj);
+  expirationDateObj.setDate(expirationDateObj.getDate() + 1);
+  document.getElementById("options-header-text-date").innerHTML = expirationDateObj.toLocaleString('default', { month: 'long' }) + " " + expirationDateObj.getDate() + ", " + expirationDateObj.getFullYear();
+
   let callObject = response.data.callExpDateMap[Object.keys(response.data.callExpDateMap)[selectedIndex]];
   let putObject = response.data.putExpDateMap[Object.keys(response.data.putExpDateMap)[selectedIndex]];
-  console.log(callObject);
-  console.log(putObject);
+  // console.log(callObject);
+  // console.log(putObject);
   let table = document.getElementById("options-data-table-body");
   let parentRow = document.getElementById("options-data-table-body");
   for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
@@ -2512,13 +2513,13 @@ function optionExpirationSelectChange(response, selectedIndex) {
       callPercentChange.innerHTML = callPercentChangeNum + "%";
     }
     let callVolume = row.insertCell(3)
-    callVolume.innerHTML = callObject[Object.keys(callObject)[i]][0].totalVolume;
+    callVolume.innerHTML = callObject[Object.keys(callObject)[i]][0].totalVolume.toLocaleString("en-US");
     let callOpenInterest = row.insertCell(4);
-    callOpenInterest.innerHTML = callObject[Object.keys(callObject)[i]][0].openInterest;
+    callOpenInterest.innerHTML = callObject[Object.keys(callObject)[i]][0].openInterest.toLocaleString("en-US");
 
     let strike = row.insertCell(5);
     strike.style.fontWeight = "bold";
-    strike.style.borderLeft = "solid black 1px";
+    strike.style.borderLeft = "solid black 0.5px";
     strike.style.borderRight = "solid black 0.5px";
     strike.innerHTML = putObject[Object.keys(putObject)[i]][0].strikePrice;
 
@@ -2541,7 +2542,7 @@ function optionExpirationSelectChange(response, selectedIndex) {
       putChange.innerHTML = putChangeNum;
     }
     if (putPercentChangeNum > 0) {
-      putPercentChange.style.color ='rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      putPercentChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
       putPercentChange.innerHTML = "+" + putPercentChangeNum + "%";
     }
     else if (putPercentChangeNum < 0) {
@@ -2553,9 +2554,9 @@ function optionExpirationSelectChange(response, selectedIndex) {
       putPercentChange.innerHTML = putPercentChangeNum + "%";
     }
     let putVolume = row.insertCell(9)
-    putVolume.innerHTML = putObject[Object.keys(putObject)[i]][0].totalVolume;
+    putVolume.innerHTML = putObject[Object.keys(putObject)[i]][0].totalVolume.toLocaleString("en-US");
     let putOpenInterest = row.insertCell(10);
-    putOpenInterest.innerHTML = putObject[Object.keys(putObject)[i]][0].openInterest;
+    putOpenInterest.innerHTML = putObject[Object.keys(putObject)[i]][0].openInterest.toLocaleString("en-US");
   }
 }
 function changeInfoPaneHistorical() {
