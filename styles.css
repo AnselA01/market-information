@@ -9,7 +9,9 @@ body {
   font-family: Helvetica;
   max-width: 100%;
   overflow-x: hidden;
+  font-family: 'Roboto' monospace;
 }
+
 
 form {
   display: inline-block;
@@ -179,7 +181,12 @@ header {
   margin-left: 1px;
 }
 
+.price-and-currency {
+  font-size: 0px;
+}
+
 .price-currency-and-change {
+  font-size: 20px;
   margin-top: 20px;
   margin-bottom: 15px;
   width: 95%;
@@ -890,12 +897,6 @@ th {
   padding: 7px;
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-  color: rgb(224, 195, 155);
-  color: rgb(100, 100, 0);
-}
-
 table th {
   font-size: 12.5px;
   font-weight: bold;
@@ -912,10 +913,10 @@ table td {
   text-align: center;
 }
 
-table tr:nth-child(even) {
+/* table tr:nth-child(even) {
   background-color: rgb(241, 241, 241);
   color: black
-}
+} */
 
 /* Trending */
 .movers-wrapper {

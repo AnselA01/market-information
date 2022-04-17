@@ -2429,7 +2429,7 @@ function changeInfoPaneOptions() {
     var accessToken = "Bearer " + response.access_token;
     var config = {
       method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=30&includeQuotes=FALSE',
+      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=18&includeQuotes=FALSE',
       headers: {
         'Authorization': accessToken,
       }
@@ -2438,15 +2438,14 @@ function changeInfoPaneOptions() {
     axios(config)
       .then(function (response) {
         // console.log(response);
+        document.getElementById("options-data-table-body").innerHTML = "";
         var expirationDateSelect = document.getElementById("expiration-dates");
         var optionsDataTableParent = document.getElementById("options-data-table-body");
-        let expirationDates = Object.keys(response.data.callExpDateMap);
         for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
-          let expMonth = expirationDates[i].substring(5, 7);
-          if (expMonth < 10) {
-            expMonth = expMonth.substring(1, 2);
-          }
-          let expirationDate = monthNames[expMonth] + " " + + expirationDates[i].substring(8, 10) + ", " + expirationDates[i].substring(0, 4);
+          let expirationDateObj = Object.keys(response.data.callExpDateMap)[i].substring(0, 10);
+          expirationDateObj = new Date(expirationDateObj);
+          expirationDateObj.setDate(expirationDateObj.getDate() + 1);
+          let expirationDate = expirationDateObj.toLocaleString('default', { month: 'long' }) + " " + expirationDateObj.getDate() + ", " + expirationDateObj.getFullYear();
           let expirationDateOption = document.createElement("option");
           expirationDateOption.setAttribute("id", "expiration-date-option-" + i);
           let optionsDataTable = document.createElement("tr");
@@ -2456,10 +2455,11 @@ function changeInfoPaneOptions() {
           expirationDateOption.innerHTML = expirationDate;
           expirationDateSelect.appendChild(expirationDateOption);
           if (i < 1) {
+            expirationDateSelect.value = document.getElementById("expiration-date-option-0");
             optionExpirationSelectChange(response, 0);
           }
           document.getElementById("expiration-dates").onchange = function () {
-            document.getElementById("options-data-table-header-expiration-text").innerHTML = expirationDateSelect.value;
+            document.getElementById("options-header-text-date").innerHTML = expirationDateSelect.value;
             optionExpirationSelectChange(response, expirationDateSelect.selectedIndex);
           }
         }
@@ -2467,7 +2467,8 @@ function changeInfoPaneOptions() {
   })
 }
 function optionExpirationSelectChange(response, selectedIndex) {
-  // console.log(response);
+  document.getElementById("options-data-table-body").innerHTML = "";
+  console.log(response);
   let expirationDateObj = Object.keys(response.data.callExpDateMap)[selectedIndex].substring(0, 10);
   expirationDateObj = new Date(expirationDateObj);
   expirationDateObj.setDate(expirationDateObj.getDate() + 1);
@@ -2475,10 +2476,7 @@ function optionExpirationSelectChange(response, selectedIndex) {
 
   let callObject = response.data.callExpDateMap[Object.keys(response.data.callExpDateMap)[selectedIndex]];
   let putObject = response.data.putExpDateMap[Object.keys(response.data.putExpDateMap)[selectedIndex]];
-  // console.log(callObject);
-  // console.log(putObject);
   let table = document.getElementById("options-data-table-body");
-  let parentRow = document.getElementById("options-data-table-body");
   for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
     let row = table.insertRow(i);
     let callPriceCell = row.insertCell(0);
@@ -2591,7 +2589,6 @@ function changeInfoPaneHistoricalDaily() {
     };
     axios(config)
       .then(function (response) {
-        console.log(response);
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const table = document.getElementById("historical-table-body-daily");
         for (let i = 0; i < response.data.candles.length - 1; i++) {
@@ -2610,34 +2607,53 @@ function changeInfoPaneHistoricalDaily() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
-          openCell.style.width = 1 / 5 * 100 + "%";
+          openCell.style.width = 1 / 6 * 100 + "%";
           openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
-          highCell.style.width = 1 / 5 * 100 + "%";
+          highCell.style.width = 1 / 6 * 100 + "%";
           highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
-          lowCell.style.width = 1 / 5 * 100 + "%";
+          lowCell.style.width = 1 / 6 * 100 + "%";
           lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
-          closeCell.style.width = 1 / 5 * 100 + "%";
+          closeCell.style.width = 1 / 6 * 100 + "%";
           closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
           closeCell.innerHTML = closePrice;
 
-          let volumeCell = row.insertCell(5);
+          let changeCell = row.insertCell(5);
+          changeCell.style.width = 1 / 6 * 100 + "%";
+          changeCell.style.fontSize = "14.5px"
+          if (i > 0) {
+            let percentChange = ((response.data.candles[i].open - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
+            percentChange = percentChange.toFixed(2);
+            if (percentChange > 0) {
+              percentChange = "+" + percentChange;
+              changeCell.style.color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+            }
+            else if (percentChange < 0) {
+              changeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+            }
+            else {
+              changeCell.style.color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
+            }
+            changeCell.innerHTML = percentChange + "%";
+          }
+
+          let volumeCell = row.insertCell(6);
           volumeCell.style.whiteSpace = "nowrap";
           volumeCell.style.float = "right";
           volumeCell.style.fontSize = "14.5px";
@@ -2682,34 +2698,53 @@ function changeInfoPaneHistoricalWeekly() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
-          openCell.style.width = 1 / 5 * 100 + "%";
+          openCell.style.width = 1 / 6 * 100 + "%";
           openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
-          highCell.style.width = 1 / 5 * 100 + "%";
+          highCell.style.width = 1 / 6 * 100 + "%";
           highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
-          lowCell.style.width = 1 / 5 * 100 + "%";
+          lowCell.style.width = 1 /6 * 100 + "%";
           lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
-          closeCell.style.width = 1 / 5 * 100 + "%";
+          closeCell.style.width = 1 / 6 * 100 + "%";
           closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
           closeCell.innerHTML = closePrice;
 
-          let volumeCell = row.insertCell(5);
+          let changeCell = row.insertCell(5);
+          changeCell.style.width = 1 / 6 * 100 + "%";
+          changeCell.style.fontSize = "14.5px"
+          if (i > 0) {
+            let percentChange = ((response.data.candles[i].open - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
+            percentChange = percentChange.toFixed(2);
+            if (percentChange > 0) {
+              percentChange = "+" + percentChange;
+              changeCell.style.color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+            }
+            else if (percentChange < 0) {
+              changeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+            }
+            else {
+              changeCell.style.color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
+            }
+            changeCell.innerHTML = percentChange + "%";
+          }
+
+          let volumeCell = row.insertCell(6);
           volumeCell.style.whiteSpace = "nowrap";
           volumeCell.style.float = "right";
           volumeCell.style.fontSize = "14.5px";
@@ -2753,34 +2788,53 @@ function changeInfoPaneHistoricalMonthly() {
           dateCell.innerHTML = fullDate;
 
           let openCell = row.insertCell(1);
-          openCell.style.width = 1 / 5 * 100 + "%";
+          openCell.style.width = 1 / 6 * 100 + "%";
           openCell.style.fontSize = "14.5px";
           let openPrice = response.data.candles[i].open;
           openPrice = openPrice.toFixed(2);
           openCell.innerHTML = openPrice;
 
           let highCell = row.insertCell(2);
-          highCell.style.width = 1 / 5 * 100 + "%";
+          highCell.style.width = 1 / 6 * 100 + "%";
           highCell.style.fontSize = "14.5px";
           let highPrice = response.data.candles[i].high;
           highPrice = highPrice.toFixed(2);
           highCell.innerHTML = highPrice;
 
           let lowCell = row.insertCell(3);
-          lowCell.style.width = 1 / 5 * 100 + "%";
+          lowCell.style.width = 1 / 6 * 100 + "%";
           lowCell.style.fontSize = "14.5px";
           let lowPrice = response.data.candles[i].low;
           lowPrice = lowPrice.toFixed(2);
           lowCell.innerHTML = lowPrice;
 
           let closeCell = row.insertCell(4);
-          closeCell.style.width = 1 / 5 * 100 + "%";
+          closeCell.style.width = 1 / 6 * 100 + "%";
           closeCell.style.fontSize = "14.5px";
           let closePrice = response.data.candles[i].close;
           closePrice = closePrice.toFixed(2);
           closeCell.innerHTML = closePrice;
 
-          let volumeCell = row.insertCell(5);
+          let changeCell = row.insertCell(5);
+          changeCell.style.width = 1 / 6 * 100 + "%";
+          changeCell.style.fontSize = "14.5px"
+          if (i > 0) {
+            let percentChange = ((response.data.candles[i].open - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
+            percentChange = percentChange.toFixed(2);
+            if (percentChange > 0) {
+              percentChange = "+" + percentChange;
+              changeCell.style.color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+            }
+            else if (percentChange < 0) {
+              changeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+            }
+            else {
+              changeCell.style.color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
+            }
+            changeCell.innerHTML = percentChange + "%";
+          }
+
+          let volumeCell = row.insertCell(6);
           volumeCell.style.whiteSpace = "nowrap";
           volumeCell.style.float = "right";
           volumeCell.style.fontSize = "14.5px";
