@@ -1,3 +1,4 @@
+
 function saveData(symbol) {
   var symbol = {
     Symbol: symbol
@@ -27,12 +28,12 @@ axios.get(companyNameUrl)
 function getMarketStatus() {
   var marketStatusConfig = {
     method: 'get',
-    url: 'https://api.tdameritrade.com/v1/marketdata/EQUITY/hours?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&date=2022-04-16',
+    url: 'https://api.tdameritrade.com/v1/marketdata/EQUITY/hours?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&',
   };
-  return axios(marketStatusConfig).then(response => response);
+  return axios(marketStatusConfig).then(response => response.data.equity.EQ.sessionHours);
 }
 getMarketStatus().then(response => {
-  console.log(response.data[0]);
+
 })
 
 function getAccessToken() {
@@ -66,7 +67,7 @@ axios(accessTokenConfig)
         Authorization: accessToken
       },
     };
-    //console.log(accessToken)
+    // console.log(accessToken)
     axios(quoteConfig)
       .then(function (response) {
         var quoteResponse = response.data[symbol];
@@ -182,7 +183,6 @@ axios(accessTokenConfig)
             var fundamentalsParsed = response.data[symbol].fundamental;
 
             var exchange = response.data[symbol].exchange;
-            //document.getElementById("exchange").innerHTML = exchange + ": ";
             document.getElementById("primary-exchange").innerHTML = exchange;
 
             var sharesOutstanding = fundamentalsParsed.sharesOutstanding;
@@ -226,7 +226,6 @@ axios(accessTokenConfig)
             if (numsBeforeComma == 3) {
               marketCap = marketCap.substring(0, 3) + "." + marketCap.substring(4, 6);
             }
-            //add suffix
             if (numCommas == 2) {
               marketCap += "M";
             }
@@ -284,29 +283,8 @@ axios(accessTokenConfig)
         axios.get("https://api.twelvedata.com/market_state?exchange=NYSE&apikey=921b0a05daf94bde867a7c42a2f236b0&dp")
           .then(response => {
             if (!response.data[0].is_market_open) {
+              document.getElementById("after-hours").style.display = "block";
               document.getElementById("ah-currency").innerHTML = currency;
-              document.getElementById("ah-time").innerHTML = time;
-              document.getElementById("market-close-status-text").innerHTML = "At close: ";
-              document.getElementById("market-close-time").innerHTML = "4:00PM ET"
-              document.getElementById("ah-status-text").innerHTML = "After hours: ";
-              var date = new Date();
-              var hours = date.getHours() + 1;
-              if (hours > 12) {
-                hours -= 12;
-              }
-              if (date.getHours() > 19) {
-                document.getElementById("ah-time").innerHTML = "8:00PM ET";
-              }
-              else {
-                var minutes = date.getMinutes();
-                if (minutes < 10) {
-                  String(minutes);
-                  minutes = "0" + minutes;
-                  Number(minutes);
-                }
-                var time = hours + ":" + minutes + "PM ET";
-                document.getElementById("ah-time").innerHTML = time;
-              }
               var ahChange = quoteResponse.lastPrice - quoteResponse.regularMarketLastPrice;
               ahChange = ahChange.toFixed(2);
               var ahPercentChange = (ahChange / quoteResponse.regularMarketLastPrice) * 100;
@@ -354,27 +332,7 @@ axios(accessTokenConfig)
               }
             }
             else {
-              document.getElementById("ah-currency").style.display = "none";
-              document.getElementById("ah-time").style.display = "none";
-              var date = new Date();
-              document.getElementById("market-open-status-text").innerHTML = "Market open: ";
-              var timeSuffixes = ["AM", "PM"];
-              var minutes = date.getMinutes();
-              var hours = date.getHours() + 1;
-              if (hours > 12) {
-                hours = hours - 12;
-              }
-              if (minutes < 10) {
-                String(minutes);
-                minutes = "0" + minutes;
-                Number(minutes);
-                timeSuffix = timeSuffixes[0];
-              }
-              else {
-                timeSuffix = timeSuffixes[1];
-              }
-              var time = hours + 1 + ":" + minutes + timeSuffix;
-              document.getElementById("market-open-time").innerHTML = hours + 1 + ":" + date.getMinutes() + timeSuffix + " GMT-5";
+              document.getElementById("after-hours").style.display = "none";
             }
           })
       })
@@ -702,18 +660,18 @@ function loadChart() {
     else if (date.getDay() == 0) {
       chartTime = date.getTime() - 172800000
     }
-    if (document.getElementById("pos-day-price-change")) {
-      var color = document.getElementById("pos-day-price-change").style.color;
-      var backgroundColor = document.getElementById("pos-day-price-change").style.backgroundColor;
+    if (document.getElementById("pos-day-price-change").style.display != "none") {
+      var oneDayColor = "#2A7331"
+      var oneDayBackgroundColor = "#E7F4EA";
     }
-    else if (document.getElementById("neg-day-price-chang")) {
-      var color = document.getElementById("neg-day-price-change").style.color;
-      var backgroundColor = document.getElementById("neg-day-price-change").style.backgroundColor;
+    else if (document.getElementById("neg-day-price-change").style.display != "none") {
+      var oneDayColor = "#950A0A"
+      var oneDayBackgroundColor = "#F8E8E6";
 
     }
-    else if (document.getElementById("eq-day-price-chang ")) {
-      var color = document.getElementById("eq-day-price-change").style.color;
-      var backgroundColor = document.getElementById("eq-day-price-change").style.backgroundColor;
+    else if (document.getElementById("eq-day-price-change").style.display != "none") {
+      var oneDayColor = document.getElementById("eq-day-price-change").style.color;
+      var oneDayBackgroundColor = document.getElementById("eq-day-price-change").style.backgroundColor;
 
     }
     var OneDaychartConfig = {
@@ -757,9 +715,9 @@ function loadChart() {
             datasets: [{
               data: chartValues,
               label: symbol,
-              borderColor: color,
-              backgroundColor: backgroundColor,
-              pointBackgroundColor: color,
+              borderColor: oneDayColor,
+              backgroundColor: oneDayBackgroundColor,
+              pointBackgroundColor: oneDayColor,
               borderWidth: 2,
               spanGaps: false,
               tension: 0.05,
@@ -1064,16 +1022,12 @@ function loadChart() {
       .then(function (response) {
         var numberOfCandles = response.data.candles.length;
         var timesLabel = [];
-        var date = new Date();
-        var year;
-        var month;
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        var day;
         for (var i = 0; i < numberOfCandles - 1; i++) {
-          date = new Date(response.data.candles[i].datetime);
-          month = monthNames[date.getMonth()];
-          day = date.getDate();
-          year = date.getFullYear();
+          let date = new Date(response.data.candles[i].datetime);
+          let month = monthNames[date.getMonth()];
+          let day = date.getDate();
+          let year = date.getFullYear();
           fullTime = month + " " + day + ", " + year;
           timesLabel.push(fullTime);
         }
@@ -1927,6 +1881,8 @@ function loadChart() {
   })
   changeChartTimescale1d();
 }
+loadChart();
+
 function changeInfoPaneChart() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2.5px";
@@ -1937,8 +1893,6 @@ function changeInfoPaneChart() {
 
   document.getElementById("lower-information-overview").style.display = "none";
   document.getElementById("lower-information-chart").style.display = "block";
-  loadChart();
-
   document.getElementById("lower-information-volume").style.display = "block";
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
@@ -2422,7 +2376,6 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
-  document.getElementById("lower-information-options").style.display = "block";
   document.getElementById("lower-information-historical").style.display = "none";
 
   getAccessToken().then(response => {
@@ -2464,11 +2417,12 @@ function changeInfoPaneOptions() {
           }
         }
       })
+    document.getElementById("lower-information-options").style.display = "block";
   })
 }
 function optionExpirationSelectChange(response, selectedIndex) {
   document.getElementById("options-data-table-body").innerHTML = "";
-  console.log(response);
+  // console.log(response);
   let expirationDateObj = Object.keys(response.data.callExpDateMap)[selectedIndex].substring(0, 10);
   expirationDateObj = new Date(expirationDateObj);
   expirationDateObj.setDate(expirationDateObj.getDate() + 1);
@@ -2477,84 +2431,99 @@ function optionExpirationSelectChange(response, selectedIndex) {
   let callObject = response.data.callExpDateMap[Object.keys(response.data.callExpDateMap)[selectedIndex]];
   let putObject = response.data.putExpDateMap[Object.keys(response.data.putExpDateMap)[selectedIndex]];
   let table = document.getElementById("options-data-table-body");
-  for (let i = 0; i < Object.keys(response.data.callExpDateMap).length; i++) {
+  for (let i = 0; i < Object.keys(callObject).length; i++) {
     let row = table.insertRow(i);
     let callPriceCell = row.insertCell(0);
-    callPriceCell.innerHTML = callObject[Object.keys(callObject)[i]][0].last;
-    let callChange = row.insertCell(1);
-    let callChangeNum = callObject[Object.keys(callObject)[i]][0].netChange;
-    let callPercentChange = row.insertCell(2);
-    let callPercentChangeNum = callObject[Object.keys(callObject)[i]][0].percentChange;
+    callPriceCell.innerHTML = callObject[Object.keys(callObject)[i]][0].last.toFixed(2);
+    let callChangeCell = row.insertCell(1);
+    let callChangeNum = callObject[Object.keys(callObject)[i]][0].netChange.toFixed(2);
+    let callPercentChangeCell = row.insertCell(2);
+    let callPercentChangeNum = callObject[Object.keys(callObject)[i]][0].percentChange.toFixed(2);
     if (callChangeNum > 0) {
-      callChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
-      callChange.innerHTML = "+" + callChangeNum;
+      callChangeCell.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      callChangeCell.innerHTML = "+" + callChangeNum;
     }
     else if (callChangeNum < 0) {
-      callChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-      callChange.innerHTML = callChangeNum;
+      callChangeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      callChangeCell.innerHTML = callChangeNum;
     }
     else {
-      callChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-      callChange.innerHTML = callChangeNum;
+      callChangeCell.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      callChangeCell.innerHTML = callChangeNum;
     }
 
     if (callPercentChangeNum > 0) {
-      callPercentChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
-      callPercentChange.innerHTML = "+" + callPercentChangeNum + "%";
+      callPercentChangeCell.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      callPercentChangeCell.innerHTML = "+" + callPercentChangeNum + "%";
     }
     else if (callPercentChangeNum < 0) {
-      callPercentChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-      callPercentChange.innerHTML = callPercentChangeNum + "%";
+      callPercentChangeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      callPercentChangeCell.innerHTML = callPercentChangeNum + "%";
     }
     else {
-      callPercentChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-      callPercentChange.innerHTML = callPercentChangeNum + "%";
+      callPercentChangeCell.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      callPercentChangeCell.innerHTML = callPercentChangeNum + "%";
     }
-    let callVolume = row.insertCell(3)
-    callVolume.innerHTML = callObject[Object.keys(callObject)[i]][0].totalVolume.toLocaleString("en-US");
-    let callOpenInterest = row.insertCell(4);
-    callOpenInterest.innerHTML = callObject[Object.keys(callObject)[i]][0].openInterest.toLocaleString("en-US");
+    let callVolumeCell = row.insertCell(3)
+    callVolumeCell.innerHTML = callObject[Object.keys(callObject)[i]][0].totalVolume.toLocaleString("en-US");
+    let callOpenInterestCell = row.insertCell(4);
+    callOpenInterestCell.innerHTML = callObject[Object.keys(callObject)[i]][0].openInterest.toLocaleString("en-US");
 
     let strike = row.insertCell(5);
+    // strike.onclick = strikeOnClick(callObject, putObject, strike.innerHTML);
     strike.style.fontWeight = "bold";
     strike.style.borderLeft = "solid black 0.5px";
     strike.style.borderRight = "solid black 0.5px";
     strike.innerHTML = putObject[Object.keys(putObject)[i]][0].strikePrice;
 
     let putPriceCell = row.insertCell(6);
-    putPriceCell.innerHTML = putObject[Object.keys(putObject)[i]][0].last;
-    let putChange = row.insertCell(7);
-    let putChangeNum = putObject[Object.keys(putObject)[i]][0].netChange;
-    let putPercentChange = row.insertCell(8);
-    let putPercentChangeNum = putObject[Object.keys(putObject)[i]][0].percentChange;
+    putPriceCell.innerHTML = putObject[Object.keys(putObject)[i]][0].last.toFixed(2);
+    let putChangeCell = row.insertCell(7);
+    let putChangeNum = putObject[Object.keys(putObject)[i]][0].netChange.toFixed(2);
+    let putPercentChangeCell = row.insertCell(8);
+    let putPercentChangeNum = putObject[Object.keys(putObject)[i]][0].percentChange.toFixed(2);
     if (putChangeNum > 0) {
-      putChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
-      putChange.innerHTML = "+" + putChangeNum;
+      putChangeCell.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      putChangeCell.innerHTML = "+" + putChangeNum;
     }
     else if (putChangeNum < 0) {
-      putChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-      putChange.innerHTML = putChangeNum;
+      putChangeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      putChangeCell.innerHTML = putChangeNum;
     }
     else {
-      putChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-      putChange.innerHTML = putChangeNum;
+      putChangeCell.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      putChangeCell.innerHTML = putChangeNum;
     }
     if (putPercentChangeNum > 0) {
-      putPercentChange.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
-      putPercentChange.innerHTML = "+" + putPercentChangeNum + "%";
+      putPercentChangeCell.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
+      putPercentChangeCell.innerHTML = "+" + putPercentChangeNum + "%";
     }
     else if (putPercentChangeNum < 0) {
-      putPercentChange.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-      putPercentChange.innerHTML = putPercentChangeNum + "%";
+      putPercentChangeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+      putPercentChangeCell.innerHTML = putPercentChangeNum + "%";
     }
     else {
-      putPercentChange.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-      putPercentChange.innerHTML = putPercentChangeNum + "%";
+      putPercentChangeCell.style.color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
+      putPercentChangeCell.innerHTML = putPercentChangeNum + "%";
     }
-    let putVolume = row.insertCell(9)
-    putVolume.innerHTML = putObject[Object.keys(putObject)[i]][0].totalVolume.toLocaleString("en-US");
-    let putOpenInterest = row.insertCell(10);
-    putOpenInterest.innerHTML = putObject[Object.keys(putObject)[i]][0].openInterest.toLocaleString("en-US");
+    let putVolumeCell = row.insertCell(9)
+    putVolumeCell.innerHTML = putObject[Object.keys(putObject)[i]][0].totalVolume.toLocaleString("en-US");
+    let putOpenInterestCell = row.insertCell(10);
+    putOpenInterestCell.innerHTML = putObject[Object.keys(putObject)[i]][0].openInterest.toLocaleString("en-US");
+    if (strike.innerHTML < document.getElementById("current-price").innerHTML) {
+      callPriceCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      callChangeCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      callPercentChangeCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      callVolumeCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      callOpenInterestCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+    }
+    else if (strike > document.getElementById("current-price").innerHTML) {
+      putPriceCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      putChangeCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      putPercentChangeCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      putVolumeCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+      putOpenInterestCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
+    }
   }
 }
 function changeInfoPaneHistorical() {
@@ -2576,8 +2545,15 @@ function changeInfoPaneHistorical() {
 }
 function changeInfoPaneHistoricalDaily() {
   document.getElementById("lower-information-historical-daily").style.display = "block";
+  document.getElementById("timeframe-selector-text-daily").style.color = "black";
   document.getElementById("lower-information-historical-weekly").style.display = "none";
+  document.getElementById("timeframe-selector-text-weekly").style.color = "#356EFF";
   document.getElementById("lower-information-historical-monthly").style.display = "none";
+  document.getElementById("timeframe-selector-text-monthly").style.color = "#356EFF";
+
+  document.getElementById("historical-table-body-weekly").innerHTML = "";
+  document.getElementById("historical-table-body-monthly").innerHTML = "";
+
   getAccessToken().then(response => {
     let accessToken = response.access_token;
     var config = {
@@ -2638,7 +2614,7 @@ function changeInfoPaneHistoricalDaily() {
           changeCell.style.width = 1 / 6 * 100 + "%";
           changeCell.style.fontSize = "14.5px"
           if (i > 0) {
-            let percentChange = ((response.data.candles[i].open - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
+            let percentChange = ((response.data.candles[i].close - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
             percentChange = percentChange.toFixed(2);
             if (percentChange > 0) {
               percentChange = "+" + percentChange;
@@ -2666,8 +2642,14 @@ function changeInfoPaneHistoricalDaily() {
 }
 function changeInfoPaneHistoricalWeekly() {
   document.getElementById("lower-information-historical-daily").style.display = "none";
+  document.getElementById("timeframe-selector-text-daily").style.color = "#356EFF";
   document.getElementById("lower-information-historical-weekly").style.display = "block";
+  document.getElementById("timeframe-selector-text-weekly").style.color = "black";
   document.getElementById("lower-information-historical-monthly").style.display = "none";
+  document.getElementById("timeframe-selector-text-monthly").style.color = "#356EFF";
+
+  document.getElementById("historical-table-body-daily").innerHTML = "";
+  document.getElementById("historical-table-body-monthly").innerHTML = "";
   getAccessToken().then(response => {
     let accessToken = response.access_token;
     var config = {
@@ -2679,99 +2661,8 @@ function changeInfoPaneHistoricalWeekly() {
     };
     axios(config)
       .then(function (response) {
-        console.log(response);
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const table = document.getElementById("historical-table-body-weekly");
-        for (let i = 0; i < response.data.candles.length - 1; i++) {
-          let row = table.insertRow(0);
-          let dateCell = row.insertCell(0);
-          dateCell.style.width = 1 / 6 * 100 + "%";
-          dateCell.style.whiteSpace = "nowrap";
-          dateCell.style.float = "left";
-          dateCell.style.fontWeight = "bold";
-          dateCell.style.fontSize = "14.5px";
-          let date = new Date(response.data.candles[i].datetime);
-          month = monthNames[date.getMonth()];
-          day = date.getDate();
-          year = date.getFullYear();
-          let fullDate = month + " " + day + ", " + year;
-          dateCell.innerHTML = fullDate;
-
-          let openCell = row.insertCell(1);
-          openCell.style.width = 1 / 6 * 100 + "%";
-          openCell.style.fontSize = "14.5px";
-          let openPrice = response.data.candles[i].open;
-          openPrice = openPrice.toFixed(2);
-          openCell.innerHTML = openPrice;
-
-          let highCell = row.insertCell(2);
-          highCell.style.width = 1 / 6 * 100 + "%";
-          highCell.style.fontSize = "14.5px";
-          let highPrice = response.data.candles[i].high;
-          highPrice = highPrice.toFixed(2);
-          highCell.innerHTML = highPrice;
-
-          let lowCell = row.insertCell(3);
-          lowCell.style.width = 1 /6 * 100 + "%";
-          lowCell.style.fontSize = "14.5px";
-          let lowPrice = response.data.candles[i].low;
-          lowPrice = lowPrice.toFixed(2);
-          lowCell.innerHTML = lowPrice;
-
-          let closeCell = row.insertCell(4);
-          closeCell.style.width = 1 / 6 * 100 + "%";
-          closeCell.style.fontSize = "14.5px";
-          let closePrice = response.data.candles[i].close;
-          closePrice = closePrice.toFixed(2);
-          closeCell.innerHTML = closePrice;
-
-          let changeCell = row.insertCell(5);
-          changeCell.style.width = 1 / 6 * 100 + "%";
-          changeCell.style.fontSize = "14.5px"
-          if (i > 0) {
-            let percentChange = ((response.data.candles[i].open - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
-            percentChange = percentChange.toFixed(2);
-            if (percentChange > 0) {
-              percentChange = "+" + percentChange;
-              changeCell.style.color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
-            }
-            else if (percentChange < 0) {
-              changeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-            }
-            else {
-              changeCell.style.color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
-            }
-            changeCell.innerHTML = percentChange + "%";
-          }
-
-          let volumeCell = row.insertCell(6);
-          volumeCell.style.whiteSpace = "nowrap";
-          volumeCell.style.float = "right";
-          volumeCell.style.fontSize = "14.5px";
-          let volume = response.data.candles[i].volume;
-          volume = volume.toLocaleString("en-US");
-          volumeCell.innerHTML = volume;
-        }
-      })
-  })
-}
-function changeInfoPaneHistoricalMonthly() {
-  document.getElementById("lower-information-historical-daily").style.display = "none";
-  document.getElementById("lower-information-historical-weekly").style.display = "none";
-  document.getElementById("lower-information-historical-monthly").style.display = "block";
-  getAccessToken().then(response => {
-    let accessToken = response.access_token;
-    var config = {
-      method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=10&frequencyType=monthly&frequency=1&needExtendedHoursData=false',
-      headers: {
-        'Authorization': "Bearer " + accessToken,
-      }
-    };
-    axios(config)
-      .then(function (response) {
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const table = document.getElementById("historical-table-body-monthly");
         for (let i = 0; i < response.data.candles.length - 1; i++) {
           let row = table.insertRow(0);
           let dateCell = row.insertCell(0);
@@ -2819,7 +2710,99 @@ function changeInfoPaneHistoricalMonthly() {
           changeCell.style.width = 1 / 6 * 100 + "%";
           changeCell.style.fontSize = "14.5px"
           if (i > 0) {
-            let percentChange = ((response.data.candles[i].open - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
+            let percentChange = ((response.data.candles[i].close - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
+            percentChange = percentChange.toFixed(2);
+            if (percentChange > 0) {
+              percentChange = "+" + percentChange;
+              changeCell.style.color = 'rgb(' + 41 + ',' + 115 + ',' + 49 + ')';
+            }
+            else if (percentChange < 0) {
+              changeCell.style.color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
+            }
+            else {
+              changeCell.style.color = 'rgb(' + 100 + ',' + 100 + ',' + 100 + ')';
+            }
+            changeCell.innerHTML = percentChange + "%";
+          }
+
+          let volumeCell = row.insertCell(6);
+          volumeCell.style.whiteSpace = "nowrap";
+          volumeCell.style.float = "right";
+          volumeCell.style.fontSize = "14.5px";
+          let volume = response.data.candles[i].volume;
+          volume = volume.toLocaleString("en-US");
+          volumeCell.innerHTML = volume;
+        }
+      })
+  })
+}
+function changeInfoPaneHistoricalMonthly() {
+  document.getElementById("lower-information-historical-daily").style.display = "none";
+  document.getElementById("timeframe-selector-text-daily").style.color = "#356EFF";
+  document.getElementById("lower-information-historical-weekly").style.display = "none";
+  document.getElementById("timeframe-selector-text-weekly").style.color = "#356EFF";
+  document.getElementById("lower-information-historical-monthly").style.display = "block";
+  document.getElementById("timeframe-selector-text-monthly").style.color = "black";
+
+  document.getElementById("historical-table-body-daily").innerHTML = "";
+  document.getElementById("historical-table-body-weekly").innerHTML = "";
+  getAccessToken().then(response => {
+    let accessToken = response.access_token;
+    var config = {
+      method: 'get',
+      url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/pricehistory?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&periodType=year&period=10&frequencyType=monthly&frequency=1&needExtendedHoursData=false',
+      headers: {
+        'Authorization': "Bearer " + accessToken,
+      }
+    };
+    axios(config)
+      .then(function (response) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const table = document.getElementById("historical-table-body-monthly");
+        for (let i = 0; i < response.data.candles.length - 1; i++) {
+          let row = table.insertRow(0);
+          let dateCell = row.insertCell(0);
+          dateCell.style.width = 1 / 6 * 100 + "%";
+          dateCell.style.whiteSpace = "nowrap";
+          dateCell.style.float = "left";
+          dateCell.style.fontWeight = "bold";
+          dateCell.style.fontSize = "14.5px";
+          let date = new Date(response.data.candles[i].datetime);
+          dateCell.innerHTML = monthNames[date.getMonth()] + " " + date.getFullYear();;
+
+          let openCell = row.insertCell(1);
+          openCell.style.width = 1 / 6 * 100 + "%";
+          openCell.style.fontSize = "14.5px";
+          let openPrice = response.data.candles[i].open;
+          openPrice = openPrice.toFixed(2);
+          openCell.innerHTML = openPrice;
+
+          let highCell = row.insertCell(2);
+          highCell.style.width = 1 / 6 * 100 + "%";
+          highCell.style.fontSize = "14.5px";
+          let highPrice = response.data.candles[i].high;
+          highPrice = highPrice.toFixed(2);
+          highCell.innerHTML = highPrice;
+
+          let lowCell = row.insertCell(3);
+          lowCell.style.width = 1 / 6 * 100 + "%";
+          lowCell.style.fontSize = "14.5px";
+          let lowPrice = response.data.candles[i].low;
+          lowPrice = lowPrice.toFixed(2);
+          lowCell.innerHTML = lowPrice;
+
+          let closeCell = row.insertCell(4);
+          closeCell.style.width = 1 / 6 * 100 + "%";
+          closeCell.style.fontSize = "14.5px";
+          let closePrice = response.data.candles[i].close;
+          closePrice = closePrice.toFixed(2);
+          closeCell.innerHTML = closePrice;
+
+          let changeCell = row.insertCell(5);
+          changeCell.style.width = 1 / 6 * 100 + "%";
+          changeCell.style.fontSize = "14.5px"
+          if (i > 0) {
+            let percentChange = ((response.data.candles[i].close - response.data.candles[i - 1].close) / response.data.candles[i - 1].close) * 100;
             percentChange = percentChange.toFixed(2);
             if (percentChange > 0) {
               percentChange = "+" + percentChange;
@@ -2940,7 +2923,6 @@ function clearWatchlist() {
   localStorage.setItem("_watchlistItems", "");
   document.getElementById("watchlist-table-body").innerHTML = "";
 }
-
 //load watchlist when page is reloaded
 // for (let i = 0; i < localStorage.get("_watchlistItems").length; i++) {
 //   let itemLength =
