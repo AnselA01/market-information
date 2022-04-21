@@ -32,9 +32,6 @@ function getMarketStatus() {
   };
   return axios(marketStatusConfig).then(response => response.data.equity.EQ.sessionHours);
 }
-getMarketStatus().then(response => {
-
-})
 
 function getAccessToken() {
   var accessTokenConfig = {
@@ -67,7 +64,6 @@ axios(accessTokenConfig)
         Authorization: accessToken
       },
     };
-    // console.log(accessToken)
     axios(quoteConfig)
       .then(function (response) {
         var quoteResponse = response.data[symbol];
@@ -2382,7 +2378,7 @@ function changeInfoPaneOptions() {
     var accessToken = "Bearer " + response.access_token;
     var config = {
       method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=18&includeQuotes=FALSE',
+      url: 'https://api.tdameritrade.com/v1/marketdata/chains?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH&symbol=' + loadData() + '&strikeCount=24&includeQuotes=FALSE',
       headers: {
         'Authorization': accessToken,
       }
@@ -2856,75 +2852,41 @@ axios.get(compLogoUrl)
     }
   })
 
-let watchlistItems = "";
 function insertAfter(newNode, existingNode) {
   existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
 }
 function addToWatchlist() {
-  getAccessToken().then(response => {
-    let accessToken = response.access_token;
+
+  getAccessToken().then(accessTokenResponse => {
+
+    var data = JSON.stringify({
+      name: "marketInformationWebsiteWatchlist",
+      watchlistId: "1911392956",
+      watchlistItems: [
+        {
+          instrument: {
+            symbol: loadData(),
+            assetType: "EQUITY"
+          },
+          "sequenceId": 0
+        }
+      ]
+    });
+
     var config = {
-      method: 'get',
-      url: 'https://api.tdameritrade.com/v1/marketdata/' + loadData() + '/quotes?apikey=PBTASGIYTYGO8FI5QLXRZS63AXHG40XH',
+      method: 'patch',
+      url: 'https://api.tdameritrade.com/v1/accounts/250077377/watchlists/1911392956',
       headers: {
-        'Authorization': "Bearer " + accessToken,
-      }
+        Authorization: "Bearer " + accessTokenResponse.data.access_token,
+        "Content-Type": 'application/json'
+      },
+      data: data
     };
 
     axios(config)
       .then(function (response) {
-        const symbol = document.getElementById("ticker").innerHTML;
-        let price = response.data[symbol].regularMarketLastPrice;
-        const table = document.getElementById("watchlist-table-body");
-        let row = table.insertRow();
-        var symbolCell = row.insertCell(0)
-        symbolCell.style.fontWeight = "bold";
-        symbolCell.innerHTML = symbol;
-        var lastCell = row.insertCell(1);
-        lastCell.style.fontWeight = "bold";
-        lastCell.innerHTML = price;
-        var changeCell = row.insertCell(2);
-        var percentChangeCell = row.insertCell(3);
-
-        let change = response.data[symbol].regularMarketNetChange;
-        change = change.toFixed(2);
-
-        if (change > 0) {
-          change = "+" + change;
-          color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
-        }
-        else if (change < 0) {
-          color = 'rgb(' + 157 + ',' + 12 + ',' + 12 + ')';
-        }
-        else {
-          color = 'rgb(' + 130 + ',' + 130 + ',' + 130 + ')';
-        }
-        let percentChange = response.data[symbol].regularMarketPercentChangeInDouble;
-        percentChange = percentChange.toFixed(2);
-        if (percentChange > 0) {
-          percentChange = "(+" + percentChange + "%)";
-        }
-        else percentChange = "(" + percentChange + "%)";
-
-        changeCell.style.color = color;
-        changeCell.fontWeight = "bold";
-        changeCell.innerHTML = change;
-        percentChangeCell.style.color = color;
-        percentChangeCell.innerHTML = percentChange;
-        percentChangeCell.fontWeight = "bold";
-        const item = symbol + price + change + percentChange;
-        String(item);
-        localStorage.setItem("_watchlistItems", localStorage.getItem("_watchlistItems") + item.length + item);
-        // console.log(localStorage.getItem("_watchlistItems"));
+        console.log(JSON.stringify(response.data));
       })
   })
 }
-function clearWatchlist() {
-  localStorage.setItem("_watchlistItems", "");
-  document.getElementById("watchlist-table-body").innerHTML = "";
-}
-//load watchlist when page is reloaded
-// for (let i = 0; i < localStorage.get("_watchlistItems").length; i++) {
-//   let itemLength =
-//   let watchlistItem =
-// }
+function clearWatchlist() {}
