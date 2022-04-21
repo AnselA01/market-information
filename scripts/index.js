@@ -643,6 +643,7 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function loadChart() {
@@ -1893,6 +1894,7 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
   window.scrollTo(0, document.body.scrollHeight);
 }
@@ -2357,6 +2359,7 @@ function changeInfoPaneNews() {
   document.getElementById("lower-information-news").style.display = "block";
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
 function changeInfoPaneOptions() {
@@ -2386,6 +2389,11 @@ function changeInfoPaneOptions() {
     const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     axios(config)
       .then(function (response) {
+        if (response.data.status == "FAILED") {
+          document.getElementById("options-failed-symbol").innerHTML = loadData();
+          document.getElementById("options-failed-text").style.display = "block";
+          console.log("here");
+        }
         // console.log(response);
         document.getElementById("options-data-table-body").innerHTML = "";
         var expirationDateSelect = document.getElementById("expiration-dates");
@@ -2413,7 +2421,6 @@ function changeInfoPaneOptions() {
           }
         }
       })
-    document.getElementById("lower-information-options").style.display = "block";
   })
 }
 function optionExpirationSelectChange(response, selectedIndex) {
@@ -2521,6 +2528,7 @@ function optionExpirationSelectChange(response, selectedIndex) {
       putOpenInterestCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
     }
   }
+  document.getElementById("lower-information-options").style.display = "block";
 }
 function changeInfoPaneHistorical() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
@@ -2536,6 +2544,7 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "block";
   changeInfoPaneHistoricalDaily();
 }
@@ -2838,6 +2847,7 @@ function changeInfoPaneForum() {
   document.getElementById("lower-information-news").style.display = "none";
   document.getElementById("lower-information-forum").style.display = "block";
   document.getElementById("lower-information-options").style.display = "none";
+  document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 }
 
@@ -2868,7 +2878,7 @@ function addToWatchlist() {
             symbol: loadData(),
             assetType: "EQUITY"
           },
-          "sequenceId": 0
+          sequenceId: 0
         }
       ]
     });
