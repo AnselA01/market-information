@@ -2425,7 +2425,6 @@ function changeInfoPaneOptions() {
 }
 function optionExpirationSelectChange(response, selectedIndex) {
   document.getElementById("options-data-table-body").innerHTML = "";
-  // console.log(response);
   let expirationDateObj = Object.keys(response.data.callExpDateMap)[selectedIndex].substring(0, 10);
   expirationDateObj = new Date(expirationDateObj);
   expirationDateObj.setDate(expirationDateObj.getDate() + 1);
@@ -2441,7 +2440,8 @@ function optionExpirationSelectChange(response, selectedIndex) {
     let callChangeCell = row.insertCell(1);
     let callChangeNum = callObject[Object.keys(callObject)[i]][0].netChange.toFixed(2);
     let callPercentChangeCell = row.insertCell(2);
-    let callPercentChangeNum = callObject[Object.keys(callObject)[i]][0].percentChange.toFixed(2);
+    let callPercentChangeNum = (callObject[Object.keys(callObject)[i]][0].netChange / (callObject[Object.keys(callObject)[i]][0].netChange + callObject[Object.keys(callObject)[i]][0].last)) * 100;
+    callPercentChangeNum = callPercentChangeNum.toFixed(2);
     if (callChangeNum > 0) {
       callChangeCell.style.color = 'rgb(' + 42 + ',' + 115 + ',' + 49 + ')';
       callChangeCell.innerHTML = "+" + callChangeNum;
@@ -2473,7 +2473,90 @@ function optionExpirationSelectChange(response, selectedIndex) {
     callOpenInterestCell.innerHTML = callObject[Object.keys(callObject)[i]][0].openInterest.toLocaleString("en-US");
 
     let strike = row.insertCell(5);
-    // strike.onclick = strikeOnClick(callObject, putObject, strike.innerHTML);
+    strike.innerHTML = putObject[Object.keys(putObject)[i]][0].strikePrice;
+    
+    strike.setAttribute("class", "options-strike-cell");
+    strike.onclick = function() {
+      if (strike.innerHTML.slice(-2) != ".5") var newStrike = strike.innerHTML + ".0";
+      else var newStrike = strike.innerHTML;
+      console.log(callObject[newStrike][0]);
+      console.log(callObject[newStrike][0].description);
+      if (callObject[newStrike][0].description.includes('(')) {
+        var callOptionTitle = callObject[newStrike][0].description.substring(0, callObject[newStrike][0].description.indexOf('(') - 1);
+        var putOptionTitle = putObject[newStrike][0].description.substring(0, putObject[newStrike][0].description.indexOf('(') - 1);
+      }
+      else {
+        var callOptionTitle = callObject[newStrike][0].description;
+        var putOptionTitle = putObject[newStrike][0].description;
+      }
+      document.getElementById("sidebar-call-option-title").innerHTML = callOptionTitle;
+      let bidPrice = callObject[newStrike][0].bid;
+      bidPrice = bidPrice.toFixed(2);
+      document.getElementById("sidebar-call-bid").innerHTML = bidPrice;
+      document.getElementById("sidebar-call-bid-size").innerHTML = "x " + callObject[newStrike][0].bidSize;
+
+      let last = callObject[newStrike][0].last;
+      last = last.toFixed(2);
+      document.getElementById("sidebar-call-last").innerHTML = last;
+
+      let askPrice = callObject[newStrike][0].ask;
+      askPrice = askPrice.toFixed(2);
+      document.getElementById("sidebar-call-ask").innerHTML = askPrice;
+      document.getElementById("sidebar-call-ask-size").innerHTML = "x " + callObject[newStrike][0].askSize;
+
+      let mark = callObject[newStrike][0].mark; 
+      mark = mark.toFixed(2);
+      document.getElementById("sidebar-call-mark").innerHTML = mark;
+      let highPrice = callObject[newStrike][0].highPrice;
+      highPrice = highPrice.toFixed(2);
+      document.getElementById("sidebar-call-high").innerHTML = highPrice;
+      let lowPrice = callObject[newStrike][0].lowPrice;
+      lowPrice = lowPrice.toFixed(2);
+      document.getElementById("sidebar-call-low").innerHTML = lowPrice;
+
+      document.getElementById("sidebar-call-delta").innerHTML = callObject[newStrike][0].delta;
+      document.getElementById("sidebar-call-iv").innerHTML = callObject[newStrike][0].volatility;
+      document.getElementById("sidebar-call-gamma").innerHTML = callObject[newStrike][0].gamma;
+
+      document.getElementById("sidebar-call-rho").innerHTML = callObject[newStrike][0].rho;
+      document.getElementById("sidebar-call-theta").innerHTML = callObject[newStrike][0].theta;
+      document.getElementById("sidebar-call-vega").innerHTML = callObject[newStrike][0].vega;
+
+      document.getElementById("sidebar-put-option-title").innerHTML = putOptionTitle;
+      bidPrice = putObject[newStrike][0].bid;
+      bidPrice = bidPrice.toFixed(2);
+      document.getElementById("sidebar-put-bid").innerHTML = bidPrice;
+      document.getElementById("sidebar-put-bid-size").innerHTML = "x " + putObject[newStrike][0].bidSize;
+
+      last = putObject[newStrike][0].last;
+      last = last.toFixed(2);
+      document.getElementById("sidebar-put-last").innerHTML = last;
+
+      askPrice = putObject[newStrike][0].ask;
+      askPrice = askPrice.toFixed(2);
+      document.getElementById("sidebar-put-ask").innerHTML = askPrice;
+      document.getElementById("sidebar-put-ask-size").innerHTML = "x " + putObject[newStrike][0].askSize;
+
+      mark = putObject[newStrike][0].mark; 
+      mark = mark.toFixed(2);
+      document.getElementById("sidebar-put-mark").innerHTML = mark;
+      highPrice = putObject[newStrike][0].highPrice;
+      highPrice = highPrice.toFixed(2);
+      document.getElementById("sidebar-put-high").innerHTML = highPrice;
+      lowPrice = putObject[newStrike][0].lowPrice;
+      lowPrice = lowPrice.toFixed(2);
+      document.getElementById("sidebar-put-low").innerHTML = lowPrice;
+
+      document.getElementById("sidebar-put-delta").innerHTML = putObject[newStrike][0].delta;
+      document.getElementById("sidebar-put-iv").innerHTML = putObject[newStrike][0].volatility;
+      document.getElementById("sidebar-put-gamma").innerHTML = putObject[newStrike][0].gamma;
+
+      document.getElementById("sidebar-put-rho").innerHTML = putObject[newStrike][0].rho;
+      document.getElementById("sidebar-put-theta").innerHTML = putObject[newStrike][0].theta;
+      document.getElementById("sidebar-put-vega").innerHTML = putObject[newStrike][0].vega;
+      
+      document.getElementById("options-sidebar").style.display = "inline-flex";
+    }
     strike.style.fontWeight = "bold";
     strike.style.borderLeft = "solid black 0.5px";
     strike.style.borderRight = "solid black 0.5px";
@@ -2528,6 +2611,7 @@ function optionExpirationSelectChange(response, selectedIndex) {
       putOpenInterestCell.style.backgroundColor = "rgb(" + 226 + ", " + 240 + ", " + 255 + ")";
     }
   }
+  document.getElementById("options-sidebar").style.display = "none";
   document.getElementById("lower-information-options").style.display = "block";
 }
 function changeInfoPaneHistorical() {
@@ -2545,8 +2629,8 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("options-failed-text").style.display = "none";
-  document.getElementById("lower-information-historical").style.display = "block";
   changeInfoPaneHistoricalDaily();
+  document.getElementById("lower-information-historical").style.display = "block";
 }
 function changeInfoPaneHistoricalDaily() {
   document.getElementById("lower-information-historical-daily").style.display = "block";

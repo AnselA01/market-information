@@ -12,41 +12,6 @@ body {
   font-family: 'Roboto' monospace;
 }
 
-form {
-  display: inline-block;
-}
-
-header {
-  height: 100px;
-  background-color: rgb(77, 77, 77);
-  margin-bottom: 30px;
-  box-shadow: 0px 7px 20px -7px rgba(0, 0, 0, 0.75);
-}
-
-.header-content {
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
-.header-link {
-  margin-top: 15px;
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.header-link-text:link {
-  text-decoration: none;
-}
-
-.header-link-text:visited {
-  color: black;
-}
-
-.header-link-text:hover {
-  text-decoration: underline;
-}
-
 .stock-symbol-search-bar {
   float: right;
   border-radius: 0;
@@ -103,8 +68,6 @@ header {
   font-size: 15px;
 }
 
-
-
 .stock-submit-button:hover {
   background-color: rgb(35, 86, 214);
   cursor: pointer;
@@ -143,18 +106,8 @@ header {
   color: rgb(83, 83, 83)
 }
 
-.title {
-  font-size: 30px;
-  font-weight: bold;
-  margin-right: 5px;
-}
-
 .index-search {
   width: 50px;
-}
-
-.next-page {
-  font-size: 17px;
 }
 
 .name-and-image {
@@ -781,7 +734,6 @@ header {
 .options-header-text-calls-puts {
   font-size: 17px;
   font-weight: bold;
-
 }
 
 .options-header-text-date {
@@ -793,7 +745,11 @@ header {
 .options-data-table {
   display: inline-table;
 }
-
+.options-strike-cell:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  color:rgb(39, 108, 255);
+}
 .options-data-table-body tr:hover {
   background-color: rgb(226, 240, 255);
 }
@@ -807,6 +763,41 @@ header {
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin-left: 10px;
+}
+.sidebar-option-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 15.5px;
+  margin-bottom: 5px;
+}
+
+.sidebar-seperator {
+  margin: 10px 0 10px 0;
+  border-bottom: dashed 1px black;
+  max-width: 95%;
+  margin-left: 2.5%;
+}
+
+.sidebar-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.sidebar-row-margin {
+  margin-bottom: 7.5px;
+}
+
+.sidebar-text {
+  font-weight: bold;
+  font-size: 15px
+}
+
+.sidebar-data {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(68, 68, 68);
 }
 
 .lower-information-historical-header {
@@ -950,14 +941,3 @@ table td {
   text-align: center;
 }
 
-/* table tr:nth-child(even) {
-  background-color: rgb(241, 241, 241);
-  color: black
-} */
-
-/* Trending */
-.movers-wrapper {
-  margin-left: 25px;
-  margin-right: 25px;
-  margin-top: 20px;
-}
