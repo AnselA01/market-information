@@ -12,17 +12,19 @@ body {
   font-family: 'Roboto' monospace;
 }
 
+.input-wrapper {
+  width: 38.75%;
+}
+
 .stock-symbol-search-bar {
   float: right;
   border-radius: 0;
   border: solid gray 1px;
   background-color: white;
-  padding-left: 6.5px;
   border-top-left-radius: 3.5px;
   border-bottom-left-radius: 3.5px;
   width: 150px;
   height: 30px;
-  margin-top: 20px;
 }
 
 .stock-submit-button {
@@ -35,8 +37,7 @@ body {
   border: none;
   border-top-right-radius: 3.5px;
   border-bottom-right-radius: 3.5px;
-  margin-right: 2.5%;
-  margin-top: 20px;
+  margin-right: 55px;
 }
 
 .stock-symbol-search-bar:focus {
@@ -73,11 +74,6 @@ body {
   cursor: pointer;
 }
 
-.symbol-input {
-  width: 250px;
-  border-radius: 0%;
-}
-
 .stocks-wrapper {
   margin-left: 25px;
   margin-top: 20px;
@@ -92,22 +88,6 @@ body {
   padding-left: 25px;
   height: 100%;
   border-left: solid 1.325px rgb(119, 119, 119);
-}
-
-.company-financials-text {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.company-description {
-  width: 500px;
-  font-size: 15px;
-  color: rgb(83, 83, 83)
-}
-
-.index-search {
-  width: 50px;
 }
 
 .name-and-image {
@@ -131,6 +111,34 @@ body {
   font-size: 30px;
   color: rgb(100, 100, 100);
   margin-left: 1px;
+}
+
+.search-button-wrapper {
+  float: right;
+  aspect-ratio: 1;
+  width: 40px;
+  border: transparent;
+  border-radius: 90px;
+  margin-right: 40px;
+}
+
+.search-button-circle {
+  position: relative;
+  aspect-ratio: 1;
+  width: 20px;
+  border-radius: 90px;
+  border: solid black 1px;
+}
+
+.search-button-line {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-right: solid black 1px;
+}
+
+.search-button-wrapper:hover {
+  background-color: rgb(222, 222, 222);
 }
 
 .price-and-currency {
@@ -346,10 +354,7 @@ body {
   margin-bottom: 20px;
 }
 
-.lower-information-blank {
-  width: 38.75%;
-  border-bottom: solid rgb(190, 190, 190) 2.5px;
-}
+
 
 .lower-information-text {
   font-size: 15px;
@@ -768,8 +773,8 @@ body {
 .sidebar-option-title {
   text-align: center;
   font-weight: bold;
-  font-size: 15.5px;
-  margin-bottom: 5px;
+  font-size: 15px;
+  margin-bottom: 7.5px;
 }
 
 .sidebar-seperator {
@@ -791,7 +796,7 @@ body {
 
 .sidebar-text {
   font-weight: bold;
-  font-size: 15px
+  font-size: 14.5px
 }
 
 .sidebar-data {

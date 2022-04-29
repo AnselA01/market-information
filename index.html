@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="UTF-8">
   <title>Stock Information</title>
@@ -11,18 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://code.jscharting.com/latest/jscharting.js"></script>
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   <div class="stocks-wrapper">
     <div class="grid-container">
       <div class="left-side">
-        <!--left side-->
-
-        <!-- company name and image -->
         <div class="name-and-image">
           <span><img id="logo" class="logo" onerror="this.style.display='none'"></span>
           <span id="company-name" class="company-name"></span>
@@ -30,25 +23,18 @@
             <span class="ticker" id="ticker"></span>
             <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">Add to
               watchlist</span>
-            <span>
-              <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
-                text-transform:uppercase>
-              <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
-                oninput="this.value = this.value.toUpperCase()">
-            </span>
-
+          </span>
+          <span class="search-button-wrapper">
+            <span class="search-button-circle"></span>
+            <span class="search-button-line"></span>
           </span>
         </div>
-
-        <!-- regular market price -->
         <div class="price-currency-and-change">
           <div class="price-and-change" id="price-and-change">
             <span id="price-and-currency" class="price-and-currency">
               <span id="currency" class="currency"></span>
               <span id="current-price" class="current-price"></span>
             </span>
-
-            <!-- regular market change -->
             <span class="change">
               <span id="pos-day-price-change" class="pos-day-price-change"></span>
               <span id="pos-day-percent-change" class="pos-day-percent-change"></span>
@@ -58,7 +44,6 @@
               <span id="eq-day-percent-change" class="eq-day-percent-change"></span>
             </span>
           </div>
-          <!-- after hours price and change-->
           <div class="after-hours" id="after-hours">
             <span class="ah-currency" id="ah-currency"></span>
             <span class="ah-price" id="ah-price"></span>
@@ -71,7 +56,6 @@
                 class="eq-ah-change"></span>
           </div>
           </span>
-
         </div>
         <div id="lower-information-selector" class="lower-information-selector">
           <span onclick="changeInfoPaneOverview()" class="lower-information-overview-text lower-information-text"
@@ -86,12 +70,18 @@
             id="lower-information-historical-text">Historical Data</span>
           <span onclick="changeInfoPaneForum()" class="lower-information-forum-text lower-information-text"
             id="lower-information-forum-text">Forum</span>
-          <span class="lower-information-blank"></span>
+          <span class="input-wrapper">
+            <span>
+              <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
+                text-transform:uppercase>
+              <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
+                oninput="this.value = this.value.toUpperCase()">
+            </span>
+          </span>
         </div>
         <div class="lower-information-pane">
           <div class="lower-information-overview" id="lower-information-overview">
             <div class="row company-info">
-              <!-- stock price info -->
               <div class="column">
                 <div class="info-line">
                   <span class="info-line-text">Previous Close</span>
@@ -441,12 +431,12 @@
                   <span class="sidebar-option-title" id="sidebar-call-option-title"></span>
                   <div class="sidebar-row">
                     <span class="sidebar-text">Bid</span>
-                    <span class="sidebar-text">Last</span>
+                    <span class="sidebar-text">Mark</span>
                     <span class="sidebar-text">Ask</span>
                   </div>
                   <div class="sidebar-row">
                     <span class="sidebar-data" id="sidebar-call-bid"></span>
-                    <span class="sidebar-data" id="sidebar-call-last"></span>
+                    <span class="sidebar-data" id="sidebar-call-mark"></span>
                     <span class="sidebar-data" id="sidebar-call-ask"></span>
                   </div>
                   <div class="sidebar-row">
@@ -456,12 +446,12 @@
                   <div class="sidebar-row-margin"></div>
                   <div class="sidebar-row">
                     <span class="sidebar-text">High</span>
-                    <span class="sidebar-text">Mark</span>
+                    <span class="sidebar-text">Last</span>
                     <span class="sidebar-text">Low</span>
                   </div>
                   <div class="sidebar-row">
-                    <span class="sidebar-data" id="sidebar-call-mark"></span>
                     <span class="sidebar-data" id="sidebar-call-high"></span>
+                    <span class="sidebar-data" id="sidebar-call-last"></span>
                     <span class="sidebar-data" id="sidebar-call-low"></span>
                   </div>
                   <div class="sidebar-seperator"></div>
@@ -490,12 +480,12 @@
                   <span class="sidebar-option-title" id="sidebar-put-option-title"></span>
                   <div class="sidebar-row">
                     <span class="sidebar-text">Bid</span>
-                    <span class="sidebar-text">Last</span>
+                    <span class="sidebar-text">Mark</span>
                     <span class="sidebar-text">Ask</span>
                   </div>
                   <div class="sidebar-row">
                     <span class="sidebar-data" id="sidebar-put-bid"></span>
-                    <span class="sidebar-data" id="sidebar-put-last"></span>
+                    <span class="sidebar-data" id="sidebar-put-mark"></span>
                     <span class="sidebar-data" id="sidebar-put-ask"></span>
                   </div>
                   <div class="sidebar-row">
@@ -505,12 +495,12 @@
                   <div class="sidebar-row-margin"></div>
                   <div class="sidebar-row">
                     <span class="sidebar-text">High</span>
-                    <span class="sidebar-text">Mark</span>
+                    <span class="sidebar-text">Last</span>
                     <span class="sidebar-text">Low</span>
                   </div>
                   <div class="sidebar-row">
-                    <span class="sidebar-data" id="sidebar-put-mark"></span>
                     <span class="sidebar-data" id="sidebar-put-high"></span>
+                    <span class="sidebar-data" id="sidebar-put-last"></span>
                     <span class="sidebar-data" id="sidebar-put-low"></span>
                   </div>
                   <div class="sidebar-seperator"></div>
@@ -667,5 +657,4 @@
       </div>
       <script src="scripts/index.js"></script>
 </body>
-
 </html>
