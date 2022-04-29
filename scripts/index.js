@@ -1,4 +1,3 @@
-
 function saveData(symbol) {
   var symbol = {
     Symbol: symbol
@@ -14,6 +13,9 @@ function loadData() {
 function getSymbol() {
   saveData(document.getElementById("stock-symbol-input").value);
   document.location.href = "index.html";
+}
+function searchOnClick() {
+  
 }
 var symbol = loadData().toUpperCase();
 document.title = loadData();

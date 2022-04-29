@@ -16,6 +16,17 @@ body {
   width: 38.75%;
 }
 
+.search-icon {
+  position: absolute;
+  aspect-ratio: 1;
+  height: 50px;
+  padding: 5px;
+  border-radius: 90px;
+}
+.search-icon:hover {
+  cursor: pointer;
+}
+
 .stock-symbol-search-bar {
   float: right;
   border-radius: 0;
@@ -37,7 +48,6 @@ body {
   border: none;
   border-top-right-radius: 3.5px;
   border-bottom-right-radius: 3.5px;
-  margin-right: 55px;
 }
 
 .stock-symbol-search-bar:focus {

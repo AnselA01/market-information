@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>Stock Information</title>
@@ -10,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
@@ -23,10 +25,8 @@
             <span class="ticker" id="ticker"></span>
             <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">Add to
               watchlist</span>
-          </span>
-          <span class="search-button-wrapper">
-            <span class="search-button-circle"></span>
-            <span class="search-button-line"></span>
+          <span class="input-wrapper">
+            <img src="images/search--v1.png" alt="search-button" class="search-icon" onclick="searchOnClick()">
           </span>
         </div>
         <div class="price-currency-and-change">
@@ -70,14 +70,7 @@
             id="lower-information-historical-text">Historical Data</span>
           <span onclick="changeInfoPaneForum()" class="lower-information-forum-text lower-information-text"
             id="lower-information-forum-text">Forum</span>
-          <span class="input-wrapper">
-            <span>
-              <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
-                text-transform:uppercase>
-              <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
-                oninput="this.value = this.value.toUpperCase()">
-            </span>
-          </span>
+          
         </div>
         <div class="lower-information-pane">
           <div class="lower-information-overview" id="lower-information-overview">
@@ -657,4 +650,5 @@
       </div>
       <script src="scripts/index.js"></script>
 </body>
+
 </html>
