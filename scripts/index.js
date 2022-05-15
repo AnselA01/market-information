@@ -635,7 +635,6 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #356EFF 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
@@ -643,7 +642,6 @@ function changeInfoPaneOverview() {
   document.getElementById("lower-information-chart").style.display = "none";
   document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
@@ -1886,7 +1884,6 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #356EFF 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
@@ -1894,7 +1891,6 @@ function changeInfoPaneChart() {
   document.getElementById("lower-information-chart").style.display = "block";
   document.getElementById("lower-information-volume").style.display = "block";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
@@ -2351,7 +2347,6 @@ function changeInfoPaneNews() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #356EFF 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
@@ -2359,7 +2354,6 @@ function changeInfoPaneNews() {
   document.getElementById("lower-information-chart").style.display = "none";
   document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "block";
-  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("options-failed-text").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
@@ -2368,7 +2362,6 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #356EFF 2.5px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #BEBEBE 2.5px";
 
@@ -2376,7 +2369,6 @@ function changeInfoPaneOptions() {
   document.getElementById("lower-information-chart").style.display = "none";
   document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-historical").style.display = "none";
 
   getAccessToken().then(response => {
@@ -2620,7 +2612,6 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-overview-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-chart-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-news-text").style.borderBottom = "solid #BEBEBE 2.5px";
-  document.getElementById("lower-information-forum-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-options-text").style.borderBottom = "solid #BEBEBE 2.5px";
   document.getElementById("lower-information-historical-text").style.borderBottom = "solid #356EFF 2.5px";
 
@@ -2628,7 +2619,6 @@ function changeInfoPaneHistorical() {
   document.getElementById("lower-information-chart").style.display = "none";
   document.getElementById("lower-information-volume").style.display = "none";
   document.getElementById("lower-information-news").style.display = "none";
-  document.getElementById("lower-information-forum").style.display = "none";
   document.getElementById("lower-information-options").style.display = "none";
   document.getElementById("options-failed-text").style.display = "none";
   changeInfoPaneHistoricalDaily();
