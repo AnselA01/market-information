@@ -40,6 +40,7 @@ body {
 
 .stock-submit-button {
   float: right;
+  margin-right: 50px;
   background-color: rgb(63, 112, 255);
   color: white;
   font-size: 15px;

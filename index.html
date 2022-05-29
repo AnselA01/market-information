@@ -25,9 +25,12 @@
             <span class="ticker" id="ticker"></span>
             <span class="watchlist-add-button" id="watchlist-add-button" onclick="addToWatchlist()">Add to
               watchlist</span>
-          <span class="input-wrapper">
-            <img src="images/search--v1.png" alt="search-button" class="search-icon" onclick="searchOnClick()">
-          </span>
+            <span>
+              <input class="stock-submit-button" type="submit" onclick="getSymbol()" value="search"
+                text-transform:uppercase>
+              <input class="stock-symbol-search-bar" type="text" id="stock-symbol-input" placeholder="Find quote"
+                oninput="this.value = this.value.toUpperCase()">
+            </span>
         </div>
         <div class="price-currency-and-change">
           <div class="price-and-change" id="price-and-change">
