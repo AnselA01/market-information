@@ -2975,4 +2975,3 @@ function addToWatchlist() {
       })
   })
 }
-function clearWatchlist() {}
